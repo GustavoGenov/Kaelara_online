@@ -9,7 +9,11 @@ import os
 import uuid
 import cv2
 import numpy as np
-import face_recognition
+try:
+    import face_recognition
+except ImportError:
+    face_recognition = None
+    print("[Aviso] Biblioteca 'face_recognition' desativada. Rodando em modo nuvem.")
 from pathlib import Path
 from datetime import datetime, timedelta
 
