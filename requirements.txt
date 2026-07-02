@@ -6,6 +6,7 @@ SQLAlchemy==2.0.30
 psycopg2-binary==2.9.9
 python-dotenv==1.0.1
 google-api-python-client==2.132.0
+google-generativeai
 openai==1.30.0
 playwright==1.44.0
 opencv-python==4.10.0.84
@@ -14,5 +15,3 @@ pyttsx3==2.90
 redis==5.0.3
 langchain==0.2.5
 faiss-cpu==1.8.0
-torch
-transformers
