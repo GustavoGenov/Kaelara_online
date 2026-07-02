@@ -1,0 +1,21 @@
+# Arquivos de ambiente e chaves secretas (NUNCA envie ao GitHub)
+.env
+.env.local
+*.env
+
+# Pastas de ambientes virtuais do Python
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+
+# Pasta onde o modelo pesado da Kaelara fica salvo
+# Modelos gigantes de IA não devem ser versionados no Git
+models/
+/opt/kaelara/models
+
+# Arquivos temporários do sistema ou editores
+.DS_Store
+.vscode/
+.idea/

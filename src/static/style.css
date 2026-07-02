@@ -1,0 +1,10 @@
+/*
+ * style.css — Kaelara 5.0
+ * Todo o estilo visual principal está em interface/templates/index.html.
+ * Este arquivo pode ser usado para overrides globais ou temas futuros.
+ */
+
+/* Scrollbar global */
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,160,220,.4); border-radius: 4px; }
