@@ -9,7 +9,7 @@ from .database import SessionLocal, engine, Base
 from .cache import Cache
 from .rag import RAGEngine
 from .vision import Vision
-from .audio import Audio
+try:\n    from .audio import Audio\nexcept ImportError:\n    Audio = None\n    print("[Aviso] Módulo de áudio não encontrado. Continuando sem suporte a voz.")
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -21,7 +21,7 @@ Base.metadata.create_all(bind=engine)
 cache = Cache(redis_url=REDIS_URL)
 rag = RAGEngine(cache=cache)
 vision = Vision()
-audio = Audio()
+if Audio is not None:\n    audio = Audio()\nelse:\n    audio = None
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
