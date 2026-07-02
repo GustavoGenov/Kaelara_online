@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Configura a API Key do Google AI Studio
-GOOGLE_API_KEY = os.getenv("GEMINI_API_KEY")
+GOOGLE_API_KEY = os.getenv("AQ.Ab8RN6L6-3y2veQK9FywgQ2NnAHInOKhyei28bfwiC0v3IluUwY")
 if not GOOGLE_API_KEY:
     raise ValueError("ERRO: A variável GEMINI_API_KEY não foi encontrada no ambiente!")
 
