@@ -14,3 +14,4 @@ pyttsx3==2.90
 redis==5.0.3
 langchain==0.2.5
 faiss-cpu==1.8.0
+torch
