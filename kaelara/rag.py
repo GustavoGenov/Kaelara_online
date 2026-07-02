@@ -1,36 +1,29 @@
 import os
-import google.generativeai as genai
+from google import genai
 from dotenv import load_dotenv
 
-# Carrega as variáveis de ambiente (.env)
+# Carrega do .env se for local, mas na Render usa a nuvem
 load_dotenv()
 
-# Configura a API Key do Google AI Studio
-GOOGLE_API_KEY = os.getenv("AQ.Ab8RN6L6-3y2veQK9FywgQ2NnAHInOKhyei28bfwiC0v3IluUwY")
-if not GOOGLE_API_KEY:
-    raise ValueError("ERRO: A variável GEMINI_API_KEY não foi encontrada no ambiente!")
+# Pega a chave e o .strip() limpa qualquer espaço em branco acidental que tenha vindo da Render!
+api_key_bruta = os.getenv("GEMINI_API_KEY")
+if api_key_bruta:
+    GOOGLE_API_KEY = api_key_bruta.strip()
+else:
+    raise ValueError("ERRO: A variável GEMINI_API_KEY não foi encontrada! Verifique o painel da Render.")
 
-genai.configure(api_key=GOOGLE_API_KEY)
+# Inicializa o cliente NOVO da Google
+client = genai.Client(api_key=GOOGLE_API_KEY)
 
 class RAGEngine:
     def __init__(self):
         """
-        Inicializa o motor da Kaelara usando a API oficial do Google.
-        Modelos sugeridos: 
-        - 'gemini-1.5-flash' (Recomendado para RAG devido ao contexto gigante de 1 milhão de tokens)
-        - 'gemma2-9b-it' (Se você preferir manter estritamente a família Gemma)
+        Inicializa o motor da Kaelara usando a API oficial e atualizada do Google.
         """
-        # Usando o Gemini 1.5 Flash por ser otimizado para ler grandes volumes de dados (RAG)
         self.model_name = "gemini-1.5-flash"
-        self.model = genai.GenerativeModel(self.model_name)
         print(f"[*] Kaelara RAG inicializado com o modelo de nuvem: {self.model_name}")
 
     def gerar_resposta(self, mensagem_usuario: str, contexto_rag: str = "") -> str:
-        """
-        Recebe a pergunta do usuário e os dados recuperados do banco PostgreSQL/Vetor (RAG)
-        e gera uma resposta profissional consolidada.
-        """
-        # Criando a estrutura profissional do Prompt de Sistema + Contexto
         prompt_sistema = (
             "Você é a Kaelara, uma inteligência artificial assistente altamente avançada e profissional.\n"
             "Use as informações do contexto fornecido abaixo para responder de forma precisa e contextualizada ao usuário.\n"
@@ -41,8 +34,11 @@ class RAGEngine:
         prompt_final = f"{prompt_sistema}\nUsuário: {mensagem_usuario}\nKaelara:"
 
         try:
-            # Envia a requisição leve para os servidores do Google
-            response = self.model.generate_content(prompt_final)
+            # Requerimento usando a biblioteca nova (google-genai)
+            response = client.models.generate_content(
+                model=self.model_name,
+                contents=prompt_final,
+            )
             return response.text
         except Exception as e:
             print(f"[!] Erro ao chamar a API do Google: {e}")
