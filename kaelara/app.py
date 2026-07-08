@@ -8,7 +8,13 @@ from .config import REDIS_URL, DATABASE_URL, MEDIA_TTL
 from .database import SessionLocal, engine, Base
 from .cache import Cache
 from .rag import RAGEngine
-from .vision import Vision
+
+try:
+    from .vision import Vision
+except ImportError:
+    Vision = None
+    print("[Aviso] Módulo de visão não encontrado. Continuando sem suporte a visão local.")
+
 try:
     from .audio import Audio
 except ImportError:
@@ -26,11 +32,16 @@ except Exception as e:
 # Initialise shared components
 cache = Cache(redis_url=REDIS_URL)
 rag = RAGEngine(cache=cache)
-vision = Vision()
+if Vision is not None:
+    vision = Vision()
+else:
+    vision = None
+
 if Audio is not None:
     audio = Audio()
 else:
     audio = None
+
 @app.route('/api/chat', methods=['POST'])
 def chat():
     data = request.json
@@ -43,6 +54,8 @@ def chat():
 
 @app.route('/api/vision', methods=['POST'])
 def vision_endpoint():
+    if vision is None:
+        return jsonify({'error': 'Vision support not available. Install opencv-python-headless and face_recognition.'}), 400
     # Expected: JSON with "action": "capture" or "detect"
     action = request.json.get('action')
     if action == 'capture':
