@@ -30,5 +30,5 @@ COPY . .
 # Expõe a porta interna do container (Render mapeará automaticamente)
 EXPOSE 8000
 
-# Comando para iniciar a aplicação
-CMD ["python", "app.py"]
+# Comando para iniciar a aplicação usando gunicorn (necessário para Render)
+CMD gunicorn --bind 0.0.0.0:$PORT kaelara.app:app
