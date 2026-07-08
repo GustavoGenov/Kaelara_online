@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     git \
     ffmpeg \
+    libpq-dev \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Caso precise de suporte a GPU AMD (ROCm) ou Chrome/Playwright, adicione os repositórios e pacotes manualmente
