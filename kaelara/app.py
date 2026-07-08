@@ -4,6 +4,7 @@ Provides REST endpoints for chat, vision, audio, and utility operations.
 """
 import os
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from .config import REDIS_URL, DATABASE_URL, MEDIA_TTL
 from .database import SessionLocal, engine, Base
 from .cache import Cache
@@ -22,6 +23,7 @@ except ImportError:
     print("[Aviso] Módulo de áudio não encontrado. Continuando sem suporte a voz.")
 # Initialize Flask app
 app = Flask(__name__)
+CORS(app) # Allow cross-origin requests from Vercel frontend
 
 # Create DB tables if not exist
 try:

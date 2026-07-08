@@ -4,17 +4,32 @@ function ChatWindow() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return;
-    const newMsg = { role: 'user', content: input };
-    setMessages([...messages, newMsg]);
-    // Placeholder: enviar ao backend / LLM e receber resposta
+    const userMsg = input;
     setInput('');
-    // Simular resposta (para demo)
-    setTimeout(() => {
-      const reply = { role: 'assistant', content: 'Essa é uma resposta simulada da Kaelara.' };
-      setMessages(prev => [...prev, reply]);
-    }, 800);
+    const newMsg = { role: 'user', content: userMsg };
+    setMessages(prev => [...prev, newMsg]);
+    
+    try {
+      // Manda pro cérebro da Kaelara no Render
+      const response = await fetch('https://kaelara-online.onrender.com/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMsg })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setMessages(prev => [...prev, { role: 'assistant', content: data.answer }]);
+      } else {
+        setMessages(prev => [...prev, { role: 'assistant', content: `Erro: ${data.error}` }]);
+      }
+    } catch (error) {
+      console.error(error);
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Desculpe, não consegui conectar ao meu cérebro na nuvem no momento.' }]);
+    }
   };
 
   return (
