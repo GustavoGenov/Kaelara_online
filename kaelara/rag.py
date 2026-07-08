@@ -17,12 +17,17 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 
 
 class RAGEngine:
-    def __init__(self):
+    def __init__(self, cache=None):
         """
         Inicializa o motor da Kaelara usando a API oficial e atualizada do Google.
         """
+        self.cache = cache
         self.model_name = "gemini-1.5-flash"
         print(f"[*] Kaelara RAG inicializado com o modelo de nuvem: {self.model_name}")
+
+    def ask(self, message: str) -> str:
+        """Alias for gerar_resposta expected by app.py"""
+        return self.gerar_resposta(message)
 
     def gerar_resposta(self, mensagem_usuario: str, contexto_rag: str = "") -> str:
         prompt_sistema = (
