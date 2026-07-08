@@ -15,7 +15,10 @@ try:\n    from .audio import Audio\nexcept ImportError:\n    Audio = None\n    p
 app = Flask(__name__)
 
 # Create DB tables if not exist
-Base.metadata.create_all(bind=engine)
+try:
+    Base.metadata.create_all(bind=engine)
+except Exception as e:
+    print(f"[Aviso] Banco de dados não inicializado: {e}")
 
 # Initialise shared components
 cache = Cache(redis_url=REDIS_URL)
@@ -48,6 +51,8 @@ def vision_endpoint():
 
 @app.route('/api/audio', methods=['POST'])
 def audio_endpoint():
+    if Audio is None:
+        return jsonify({'error': 'Audio support not available'}), 400
     action = request.json.get('action')
     if action == 'listen':
         text = audio.listen()
