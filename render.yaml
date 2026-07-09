@@ -3,7 +3,7 @@ services:
   - type: web
     name: kaelara
     env: python
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r backend_requirements.txt
     startCommand: gunicorn kaelara.app:app
     plan: free
     region: oregon
