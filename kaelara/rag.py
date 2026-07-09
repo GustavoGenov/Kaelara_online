@@ -48,4 +48,4 @@ class RAGEngine:
             return response.text
         except Exception as e:
             print(f"[!] Erro ao chamar a API do Google: {e}")
-            return "Desculpe, tive um problema temporário ao processar minha linha de pensamento na nuvem."
+            return f"Desculpe, erro do Google API: {str(e)}"
