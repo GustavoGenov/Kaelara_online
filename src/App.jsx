@@ -1,41 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './index.css';
-import SkillButton from './components/SkillButton';
-import FooterButtons from './components/FooterButtons';
-import WebcamButton from './components/WebcamButton';
-import VoiceButton from './components/VoiceButton';
-import CodeButton from './components/CodeButton';
-import HardwareButton from './components/HardwareButton';
-import DocumentButton from './components/DocumentButton';
-import TermsOfUse from './components/TermsOfUse';
-import FeedbackField from './components/FeedbackField';
-import InternalSearch from './components/InternalSearch';
-import AvatarImg from './static/Kaelara.png';
-import ChatWindow from './components/ChatWindow';
-import Avatar from './components/Avatar';
+import LeftPanel from './components/LeftPanel';
+import CenterPanel from './components/CenterPanel';
+import RightPanel from './components/RightPanel';
 
 function App() {
+  const [messages, setMessages] = useState([
+    {
+      role: 'assistant',
+      content: 'Saudações. Matrizes neurais estão totalmente sincronizadas no núcleo v5.2. Como posso auxiliar seu fluxo de trabalho hoje?'
+    }
+  ]);
+
+  const handleSendMessage = async (text) => {
+    const newMsg = { role: 'user', content: text };
+    setMessages(prev => [...prev, newMsg]);
+
+    try {
+      const response = await fetch('https://kaelara-online.onrender.com/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setMessages(prev => [...prev, { role: 'assistant', content: data.answer }]);
+      } else {
+        setMessages(prev => [...prev, { role: 'assistant', content: `Erro: ${data.error}` }]);
+      }
+    } catch (error) {
+      console.error(error);
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Desculpe, falha na conexão neural com o núcleo.' }]);
+    }
+  };
+
   return (
-    <div className="app-container" style={{ position: 'relative' }}>
-      <div className="top-right-controls">
-        <TermsOfUse />
-        <FeedbackField />
-      </div>
-      <aside className="side-panel">
-        <h1 className="logo">Kaelara</h1>
-        <Avatar />
-        <SkillButton label="Código" icon="💻"/>
-        <CodeButton />
-        <DocumentButton />
-        <VoiceButton />
-        <WebcamButton />
-        <HardwareButton />
-      </aside>
-      <main className="main-content">
-        <ChatWindow />
-        <InternalSearch />
-      </main>
-      <FooterButtons />
+    <div className="app-container">
+      <LeftPanel />
+      <CenterPanel onSendMessage={handleSendMessage} />
+      <RightPanel messages={messages} />
     </div>
   );
 }
