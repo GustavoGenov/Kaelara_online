@@ -22,7 +22,7 @@ class RAGEngine:
         Inicializa o motor da Kaelara usando a API oficial e atualizada do Google.
         """
         self.cache = cache
-        self.model_name = "gemini-2.0-flash"
+        self.model_name = GEMINI_MODEL_NAME or "gemini-2.0-flash"
         print(f"[*] Kaelara RAG inicializado com o modelo de nuvem: {self.model_name}")
 
     def ask(self, message: str) -> str:
