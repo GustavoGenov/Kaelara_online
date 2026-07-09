@@ -20,9 +20,10 @@ body {
   font-family: 'Inter', sans-serif;
   color: var(--text-main);
   background-image: url('./assets/avatar_bg.png');
-  background-size: cover;
-  background-position: center;
+  background-size: contain;
+  background-position: center bottom;
   background-repeat: no-repeat;
+  background-color: #f0f4f8;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
