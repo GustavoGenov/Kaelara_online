@@ -34,19 +34,19 @@ function LeftPanel() {
         <div className="widget-title">ATALHOS RÁPIDOS</div>
         <div className="shortcuts-grid">
           {[
-            { icon: 'add_to_drive', title: 'Drive', url: 'https://drive.google.com/' },
-            { icon: 'videocam', title: 'Meet', url: 'https://meet.google.com/' },
-            { icon: 'event', title: 'Calendar', url: 'https://calendar.google.com/' },
-            { icon: 'chat', title: 'Chat', url: 'https://chat.google.com/' },
-            { icon: 'description', title: 'Docs', url: 'https://docs.google.com/' },
-            { icon: 'table_chart', title: 'Sheets', url: 'https://docs.google.com/spreadsheets/' },
-            { icon: 'slideshow', title: 'Slides', url: 'https://docs.google.com/presentation/' },
-            { icon: 'lightbulb', title: 'Keep', url: 'https://keep.google.com/' },
-            { icon: 'task_alt', title: 'Tasks', url: 'https://tasks.google.com/' },
-            { icon: 'translate', title: 'Tradutor', url: 'https://translate.google.com/' }
+            { imgUrl: 'https://img.icons8.com/color/96/000000/google-drive.png', title: 'Drive', url: 'https://drive.google.com/' },
+            { imgUrl: 'https://img.icons8.com/color/96/000000/google-meet.png', title: 'Meet', url: 'https://meet.google.com/' },
+            { imgUrl: 'https://img.icons8.com/color/96/000000/google-calendar.png', title: 'Calendar', url: 'https://calendar.google.com/' },
+            { imgUrl: 'https://img.icons8.com/color/96/000000/google-chat.png', title: 'Chat', url: 'https://chat.google.com/' },
+            { imgUrl: 'https://img.icons8.com/color/96/000000/google-docs.png', title: 'Docs', url: 'https://docs.google.com/' },
+            { imgUrl: 'https://img.icons8.com/color/96/000000/google-sheets.png', title: 'Sheets', url: 'https://docs.google.com/spreadsheets/' },
+            { imgUrl: 'https://img.icons8.com/color/96/000000/google-slides.png', title: 'Slides', url: 'https://docs.google.com/presentation/' },
+            { imgUrl: 'https://img.icons8.com/color/96/000000/google-keep.png', title: 'Keep', url: 'https://keep.google.com/' },
+            { imgUrl: 'https://img.icons8.com/color/96/000000/google-tasks.png', title: 'Tasks', url: 'https://tasks.google.com/' },
+            { imgUrl: 'https://img.icons8.com/color/96/000000/google-translate.png', title: 'Tradutor', url: 'https://translate.google.com/' }
           ].map((sc, idx) => (
             <a key={idx} href={sc.url} target="_blank" rel="noreferrer" className="shortcut-btn" title={sc.title}>
-              <span className="material-icons">{sc.icon}</span>
+              <img src={sc.imgUrl} alt={sc.title} style={{ width: '48px', height: '48px' }} />
             </a>
           ))}
         </div>
