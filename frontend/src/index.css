@@ -158,6 +158,35 @@ body {
   transform: translateY(-2px);
 }
 
+/* --- Atalhos --- */
+.shortcuts-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.shortcut-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+
+.shortcut-btn:hover {
+  background: var(--neon-pink);
+  color: white;
+  transform: translateY(-2px);
+}
+.shortcut-btn .material-icons {
+  font-size: 18px;
+}
+
 /* --- Center Panel --- */
 .center-panel {
   flex: 1;

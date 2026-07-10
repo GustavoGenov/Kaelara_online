@@ -30,6 +30,28 @@ function LeftPanel() {
         </div>
       </div>
 
+      <div style={{marginTop: '24px'}}>
+        <div className="widget-title">ATALHOS RÁPIDOS</div>
+        <div className="shortcuts-grid">
+          {[
+            { icon: 'add_to_drive', title: 'Drive', url: 'https://drive.google.com/' },
+            { icon: 'videocam', title: 'Meet', url: 'https://meet.google.com/' },
+            { icon: 'event', title: 'Calendar', url: 'https://calendar.google.com/' },
+            { icon: 'chat', title: 'Chat', url: 'https://chat.google.com/' },
+            { icon: 'description', title: 'Docs', url: 'https://docs.google.com/' },
+            { icon: 'table_chart', title: 'Sheets', url: 'https://docs.google.com/spreadsheets/' },
+            { icon: 'slideshow', title: 'Slides', url: 'https://docs.google.com/presentation/' },
+            { icon: 'lightbulb', title: 'Keep', url: 'https://keep.google.com/' },
+            { icon: 'task_alt', title: 'Tasks', url: 'https://tasks.google.com/' },
+            { icon: 'translate', title: 'Tradutor', url: 'https://translate.google.com/' }
+          ].map((sc, idx) => (
+            <a key={idx} href={sc.url} target="_blank" rel="noreferrer" className="shortcut-btn" title={sc.title}>
+              <span className="material-icons">{sc.icon}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+
       <div style={{marginTop: 'auto'}}>
         <div className="matriz-emocional-widget">
           <div className="widget-title">MATRIZ EMOCIONAL</div>
