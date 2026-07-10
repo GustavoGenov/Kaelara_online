@@ -21,7 +21,7 @@ function LeftPanel() {
           </div>
           <div className="nav-item">
             <span className="material-icons" style={{fontSize: '18px'}}>dashboard</span>
-            PAINEL TÁTICO
+            PAINEL DE CONTROLE
           </div>
           <div className="nav-item">
             <span className="material-icons" style={{fontSize: '18px'}}>description</span>

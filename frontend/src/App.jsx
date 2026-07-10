@@ -8,7 +8,7 @@ function App() {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: 'Saudações. Matrizes neurais estão totalmente sincronizadas no núcleo v5.2. Como posso auxiliar seu fluxo de trabalho hoje?'
+      content: 'Saudações. Sistemas sincronizados e prontos. Como posso auxiliar você hoje?'
     }
   ]);
 
@@ -32,7 +32,7 @@ function App() {
       }
     } catch (error) {
       console.error(error);
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Desculpe, falha na conexão neural com o núcleo.' }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Desculpe, falha na conexão com os servidores.' }]);
     }
   };
 

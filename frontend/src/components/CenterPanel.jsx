@@ -19,13 +19,13 @@ function CenterPanel({ onSendMessage }) {
   return (
     <div className="center-panel">
       <div className="glass-panel thought-bubble">
-        Sinta a ressoriência silenciosa do sistema. Um espaço definido pela luz, respirando com intenção arquitetônica.
+        Bem-vindo à Kaelara: sua inteligência artificial focada em resultados. Diga o que precisa e deixe a tecnologia trabalhar a seu favor para otimizar sua rotina.
       </div>
 
       <div className="glass-panel command-bar">
         <input 
           type="text" 
-          placeholder="Emitir comando tático..." 
+          placeholder="Digite sua mensagem..." 
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}

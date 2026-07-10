@@ -390,3 +390,35 @@ body {
   background: var(--neon-pink);
   border-radius: 3px;
 }
+
+/* --- Responsividade --- */
+@media (max-width: 1024px) {
+  .app-container {
+    flex-direction: column;
+    padding: 12px;
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+  body {
+    overflow-y: auto;
+    background-size: cover;
+  }
+  .left-panel, .right-panel {
+    width: 100%;
+    height: auto;
+  }
+  .center-panel {
+    margin-top: 24px;
+    margin-bottom: 24px;
+    min-height: 300px;
+  }
+  .thought-bubble {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 20px;
+  }
+  .command-bar {
+    padding: 8px;
+  }
+}
