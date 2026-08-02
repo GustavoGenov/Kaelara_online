@@ -1,80 +1,101 @@
 import React from 'react';
 
-function LeftPanel() {
-  return (
-    <div className="glass-panel left-panel">
-      <header>
-        <div className="brand-title">Luminous AI</div>
-        <div className="brand-subtitle">KAE V5.2 - MODERN CORE</div>
-      </header>
+const shortcuts = [
+  { title: 'Drive', url: 'https://drive.google.com/' },
+  { title: 'Meet', url: 'https://meet.google.com/' },
+  { title: 'Docs', url: 'https://docs.google.com/' },
+  { title: 'Agenda', url: 'https://calendar.google.com/' },
+];
 
-      <div>
-        <div className="widget-title">NÚCLEO CENTRAL<br/><span style={{fontSize:'8px', fontWeight:'normal'}}>OPERACIONAL</span></div>
+function LeftPanel({
+  activeView,
+  historyCount,
+  insights,
+  onNewChat,
+  onRefreshHistory,
+  onRunDiagnostics,
+  setActiveView,
+  theme,
+  toggleTheme,
+}) {
+  const menuItems = [
+    { id: 'chat', icon: 'forum', label: 'Conversa' },
+    { id: 'memory', icon: 'history', label: `Memória (${historyCount})` },
+    { id: 'audit', icon: 'analytics', label: 'Auditoria' },
+    { id: 'diagnostics', icon: 'monitor_heart', label: 'Diagnóstico' },
+  ];
+
+  return (
+    <aside className="glass-panel left-panel">
+      <div className="panel-section">
+        <div className="brand-block">
+          <span className="brand-badge">Kaelara online</span>
+          <h1>Interface viva, memoria real e comandos uteis.</h1>
+          <p>
+            Conversa persistente, busca de historico e recursos prontos para crescer sem perder o visual atual.
+          </p>
+        </div>
+
+        <button className="btn-primary" onClick={onNewChat}>
+          Nova conversa
+        </button>
+      </div>
+
+      <div className="panel-section">
+        <div className="section-label">Navegacao</div>
         <div className="nav-menu">
-          <div className="nav-item active">
-            <span className="material-icons" style={{fontSize: '18px'}}>sync</span>
-            SINCRONIA NEURAL
-          </div>
-          <div className="nav-item">
-            <span className="material-icons" style={{fontSize: '18px'}}>face</span>
-            AVATAR CONFIG
-          </div>
-          <div className="nav-item">
-            <span className="material-icons" style={{fontSize: '18px'}}>dashboard</span>
-            PAINEL DE CONTROLE
-          </div>
-          <div className="nav-item">
-            <span className="material-icons" style={{fontSize: '18px'}}>description</span>
-            REGISTROS
-          </div>
+          {menuItems.map((item) => (
+            <button
+              key={item.id}
+              className={`nav-item ${activeView === item.id ? 'active' : ''}`}
+              onClick={() => setActiveView(item.id)}
+              type="button"
+            >
+              <span className="material-icons">{item.icon}</span>
+              <span>{item.label}</span>
+            </button>
+          ))}
         </div>
       </div>
 
-      <div style={{marginTop: '24px'}}>
-        <div className="widget-title">ATALHOS RÁPIDOS</div>
-        <div className="shortcuts-grid">
-          {[
-            { imgUrl: 'https://img.icons8.com/color/96/000000/google-drive.png', title: 'Drive', url: 'https://drive.google.com/' },
-            { imgUrl: 'https://img.icons8.com/color/96/000000/google-meet.png', title: 'Meet', url: 'https://meet.google.com/' },
-            { imgUrl: 'https://img.icons8.com/color/96/000000/google-calendar.png', title: 'Calendar', url: 'https://calendar.google.com/' },
-            { imgUrl: 'https://img.icons8.com/color/96/000000/google-chat.png', title: 'Chat', url: 'https://chat.google.com/' },
-            { imgUrl: 'https://img.icons8.com/color/96/000000/google-docs.png', title: 'Docs', url: 'https://docs.google.com/' },
-            { imgUrl: 'https://img.icons8.com/color/96/000000/google-sheets.png', title: 'Sheets', url: 'https://docs.google.com/spreadsheets/' },
-            { imgUrl: 'https://img.icons8.com/color/96/000000/google-slides.png', title: 'Slides', url: 'https://docs.google.com/presentation/' },
-            { imgUrl: 'https://img.icons8.com/color/96/000000/google-keep.png', title: 'Keep', url: 'https://keep.google.com/' },
-            { imgUrl: 'https://img.icons8.com/color/96/000000/google-tasks.png', title: 'Tasks', url: 'https://tasks.google.com/' },
-            { imgUrl: 'https://img.icons8.com/color/96/000000/google-translate.png', title: 'Tradutor', url: 'https://translate.google.com/' }
-          ].map((sc, idx) => (
-            <a key={idx} href={sc.url} target="_blank" rel="noreferrer" className="shortcut-btn" title={sc.title}>
-              <img src={sc.imgUrl} alt={sc.title} style={{ width: '48px', height: '48px' }} />
+      <div className="panel-section">
+        <div className="section-label">Atalhos reais</div>
+        <div className="shortcut-list">
+          {shortcuts.map((shortcut) => (
+            <a key={shortcut.title} href={shortcut.url} target="_blank" rel="noreferrer" className="shortcut-card">
+              <span>{shortcut.title}</span>
+              <span className="material-icons">north_east</span>
             </a>
           ))}
         </div>
       </div>
 
-      <div style={{marginTop: 'auto'}}>
-        <div className="matriz-emocional-widget">
-          <div className="widget-title">MATRIZ EMOCIONAL</div>
-          <div className="widget-stats">
-            <div className="stat-box">
-              <span className="stat-label">Serenidade</span>
-              <span className="stat-value">92%</span>
-            </div>
-            <div className="stat-box">
-              <span className="stat-label">Foco</span>
-              <span className="stat-value">88%</span>
-            </div>
+      <div className="panel-section left-footer">
+        <div className="mini-stat-grid">
+          <div className="mini-stat-card">
+            <span className="mini-stat-label">Sessoes</span>
+            <strong>{insights?.total_sessions ?? 0}</strong>
+          </div>
+          <div className="mini-stat-card">
+            <span className="mini-stat-label">Mensagens</span>
+            <strong>{insights?.total_messages ?? 0}</strong>
           </div>
         </div>
 
-        <div className="nav-item" style={{justifyContent: 'center', marginBottom: '16px'}}>
-          <span className="material-icons" style={{fontSize: '18px'}}>tune</span>
-          DIAGNÓSTICOS
+        <div className="utility-row">
+          <button className="btn-secondary" onClick={toggleTheme} type="button">
+            {theme === 'light' ? 'Modo escuro' : 'Modo claro'}
+          </button>
+          <button className="btn-secondary" onClick={onRefreshHistory} type="button">
+            Atualizar memoria
+          </button>
         </div>
 
-        <button className="btn-primary" style={{width: '100%'}}>OTIMIZAR LINK</button>
+        <button className="btn-secondary wide" onClick={onRunDiagnostics} type="button">
+          Verificar funcoes ativas
+        </button>
       </div>
-    </div>
+    </aside>
   );
 }
 
