@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './index.css';
-import AuditPanel from './components/AuditPanel';
 import CenterPanel from './components/CenterPanel';
 import LeftPanel from './components/LeftPanel';
 import RightPanel from './components/RightPanel';
@@ -264,59 +263,32 @@ function App() {
           toggleTheme={toggleTheme}
         />
 
-        {activeView === 'audit' ? (
-          <main className="audit-main">
-            <div className="audit-main-header glass-panel">
-              <div>
-                <span className="section-label">Auditoria completa</span>
-                <h2 style={{ margin: 0, fontSize: '18px' }}>Histórico de conversas</h2>
-              </div>
-              <button className="btn-secondary" onClick={() => setActiveView('chat')}>
-                ← Voltar ao chat
-              </button>
-            </div>
-            <AuditPanel
-              historyItems={historyItems}
-              historyQuery={historyQuery}
-              insights={insights}
-              onLoadSession={loadSession}
-              onRefreshHistory={() => loadHistory(historyQuery)}
-              onSearchHistory={(value) => {
-                setHistoryQuery(value);
-                loadHistory(value);
-              }}
-            />
-          </main>
-        ) : (
-          <>
-            <CenterPanel
-              isLoading={loading}
-              onAttachClick={handleAttachClick}
-              onSendMessage={handleSendMessage}
-              sessionTitle={sessionTitle}
-              statusMessage={statusMessage}
-            />
-            <RightPanel
-              activeView={activeView}
-              historyItems={historyItems}
-              historyQuery={historyQuery}
-              insights={insights}
-              messages={messages}
-              onDetectFaces={handleVisionCheck}
-              onLoadSession={loadSession}
-              onRefreshHistory={() => loadHistory(historyQuery)}
-              onSearchHistory={(value) => {
-                setHistoryQuery(value);
-                loadHistory(value);
-              }}
-              onSpeakLast={handleSpeakLast}
-              onToggleTheme={toggleTheme}
-              onVoiceInput={handleVoiceInput}
-              sessionTitle={sessionTitle}
-              theme={theme}
-            />
-          </>
-        )}
+        <CenterPanel
+          isLoading={loading}
+          onAttachClick={handleAttachClick}
+          onSendMessage={handleSendMessage}
+          sessionTitle={sessionTitle}
+          statusMessage={statusMessage}
+        />
+        <RightPanel
+          activeView={activeView}
+          historyItems={historyItems}
+          historyQuery={historyQuery}
+          insights={insights}
+          messages={messages}
+          onDetectFaces={handleVisionCheck}
+          onLoadSession={loadSession}
+          onRefreshHistory={() => loadHistory(historyQuery)}
+          onSearchHistory={(value) => {
+            setHistoryQuery(value);
+            loadHistory(value);
+          }}
+          onSpeakLast={handleSpeakLast}
+          onToggleTheme={toggleTheme}
+          onVoiceInput={handleVoiceInput}
+          sessionTitle={sessionTitle}
+          theme={theme}
+        />
       </div>
     </div>
   );

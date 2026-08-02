@@ -21,7 +21,6 @@ function LeftPanel({
   const menuItems = [
     { id: 'chat', icon: 'forum', label: 'Conversa' },
     { id: 'memory', icon: 'history', label: `Memória (${historyCount})` },
-    { id: 'audit', icon: 'analytics', label: 'Auditoria' },
     { id: 'diagnostics', icon: 'monitor_heart', label: 'Diagnóstico' },
   ];
 
