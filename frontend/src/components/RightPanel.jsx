@@ -1,21 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 
-function RightPanel({
-  activeView,
-  historyItems,
-  historyQuery,
-  insights,
-  messages,
-  onDetectFaces,
-  onLoadSession,
-  onRefreshHistory,
-  onSearchHistory,
-  onSpeakLast,
-  onToggleTheme,
-  onVoiceInput,
-  sessionTitle,
-  theme,
-}) {
+function RightPanel({ messages }) {
   const chatEndRef = useRef(null);
 
   useEffect(() => {
@@ -23,38 +8,34 @@ function RightPanel({
   }, [messages]);
 
   return (
-    <aside className="right-panel">
-      <div className="top-bar glass-panel">
-        <div>
-          <div className="section-label">Painel ativo</div>
-          <strong>{activeView === 'memory' ? 'Memoria' : activeView === 'diagnostics' ? 'Diagnostico' : 'Chat'}</strong>
-        </div>
-        <div className="top-actions">
-          <button className="icon-btn" onClick={onToggleTheme} type="button" title="Alternar tema">
-            <span className="material-icons">{theme === 'light' ? 'dark_mode' : 'light_mode'}</span>
-          </button>
-          <button className="icon-btn" onClick={onRefreshHistory} type="button" title="Atualizar memoria">
-            <span className="material-icons">refresh</span>
-          </button>
+    <div className="right-panel">
+      <div className="top-bar">
+        <span className="material-icons" style={{color: 'var(--text-muted)', cursor: 'pointer'}}>settings</span>
+        <span className="material-icons" style={{color: 'var(--text-muted)', cursor: 'pointer'}}>history</span>
+        <div className="user-info">
+          <div className="user-text">
+            <div className="user-label">USUÁRIO</div>
+            <div className="user-name">Gustavo / Daiene</div>
+          </div>
+          <div className="user-avatar"></div>
         </div>
       </div>
 
-      <section className="glass-panel chat-container">
+      <div className="glass-panel chat-container">
         <div className="chat-header">
-          <div>
-            <span className="section-label">Conversa</span>
-            <h3>{sessionTitle}</h3>
-          </div>
-          <span className="pill">Persistencia ativa</span>
+          <span>INTERFACE NEURAL ATIVA</span>
+          <span className="enc-badge">ENCRIPTAÇÃO ATIVA</span>
         </div>
 
         <div className="chat-messages">
           {messages.map((msg, idx) => {
             const isUser = msg.role === 'user';
             return (
-              <div key={`${msg.role}-${idx}`} className={`msg-wrapper ${isUser ? 'user' : 'kae'}`}>
-                <span className="msg-author">{isUser ? 'Voce' : 'Kaelara'}</span>
-                <div className={`msg-bubble ${isUser ? 'msg-user' : 'msg-kae'}`}>{msg.content}</div>
+              <div key={idx} className={`msg-wrapper ${isUser ? 'user' : 'kae'}`}>
+                <span className="msg-author">{isUser ? 'USUÁRIO' : 'KAE'}</span>
+                <div className={`msg-bubble ${isUser ? 'msg-user' : 'msg-kae'}`}>
+                  {msg.content}
+                </div>
               </div>
             );
           })}
@@ -62,72 +43,34 @@ function RightPanel({
         </div>
 
         <div className="chat-controls">
-          <button className="control-btn" onClick={onSpeakLast} type="button">
-            <span className="material-icons">volume_up</span>
-            Ouvir
-          </button>
-          <button className="control-btn" onClick={onVoiceInput} type="button">
-            <span className="material-icons">mic</span>
-            Ditar
-          </button>
-          <button className="control-btn" onClick={onDetectFaces} type="button">
-            <span className="material-icons">videocam</span>
-            Visao
-          </button>
+          <button className="control-btn"><span className="material-icons">volume_up</span></button>
+          <button className="control-btn"><span className="material-icons">mic</span></button>
+          <button className="control-btn"><span className="material-icons">videocam</span></button>
+          <button className="control-btn"><span className="material-icons">attach_file</span></button>
         </div>
-      </section>
+      </div>
 
-      <section className="glass-panel memory-panel">
-        <div className="memory-header">
-          <div>
-            <span className="section-label">Memoria consultavel</span>
-            <h3>Historico salvo</h3>
+      <div className="status-bars glass-panel">
+        <div className="status-bar-wrapper" style={{borderBottom: '1px solid rgba(0,0,0,0.05)'}}>
+          <div className="bar-header">
+            <span>MATRIZ EMOCIONAL</span>
+            <span className="bar-value-text">Serena</span>
           </div>
-          <input
-            type="search"
-            value={historyQuery}
-            onChange={(event) => onSearchHistory(event.target.value)}
-            placeholder="Buscar no historico"
-          />
-        </div>
-
-        <div className="history-list">
-          {historyItems.length ? (
-            historyItems.map((item) => (
-              <button key={item.session_id} className="history-card" onClick={() => onLoadSession(item.session_id)} type="button">
-                <strong>{item.title}</strong>
-                <span>{item.preview || 'Sem preview'}</span>
-                <small>{item.message_count} mensagens</small>
-              </button>
-            ))
-          ) : (
-            <div className="empty-card">Nenhuma memoria encontrada ainda.</div>
-          )}
-        </div>
-      </section>
-
-      <section className="glass-panel diagnostics-panel">
-        <div className="section-label">Funcoes reais</div>
-        <div className="diagnostic-grid">
-          <div className="diagnostic-card">
-            <span>Banco de dados</span>
-            <strong>{insights ? 'Ativo' : 'Verificando'}</strong>
-          </div>
-          <div className="diagnostic-card">
-            <span>Audio</span>
-            <strong>{insights?.audio_available ? 'Ativo' : 'Indisponivel'}</strong>
-          </div>
-          <div className="diagnostic-card">
-            <span>Visao</span>
-            <strong>{insights?.vision_available ? 'Ativo' : 'Indisponivel'}</strong>
-          </div>
-          <div className="diagnostic-card">
-            <span>Ultimo provedor</span>
-            <strong>{insights?.last_provider || 'Nao usado'}</strong>
+          <div className="progress-bar-bg">
+            <div className="progress-bar-fill" style={{width: '92%'}}></div>
           </div>
         </div>
-      </section>
-    </aside>
+        <div className="status-bar-wrapper">
+          <div className="bar-header">
+            <span>CARGA DE PROCESSAMENTO</span>
+            <span className="bar-value-text" style={{color: 'var(--text-main)'}}>8.7%</span>
+          </div>
+          <div className="progress-bar-bg">
+            <div className="progress-bar-fill" style={{width: '8.7%', background: 'var(--text-main)'}}></div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

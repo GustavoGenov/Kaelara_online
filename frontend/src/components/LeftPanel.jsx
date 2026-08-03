@@ -1,99 +1,55 @@
 import React from 'react';
 
-const shortcuts = [
-  { title: 'Drive', url: 'https://drive.google.com/' },
-  { title: 'Meet', url: 'https://meet.google.com/' },
-  { title: 'Docs', url: 'https://docs.google.com/' },
-  { title: 'Agenda', url: 'https://calendar.google.com/' },
-];
-
-function LeftPanel({
-  activeView,
-  historyCount,
-  insights,
-  onNewChat,
-  onRefreshHistory,
-  onRunDiagnostics,
-  setActiveView,
-  theme,
-  toggleTheme,
-}) {
-  const menuItems = [
-    { id: 'chat', icon: 'forum', label: 'Conversa' },
-    { id: 'memory', icon: 'history', label: `Memória (${historyCount})` },
-    { id: 'diagnostics', icon: 'monitor_heart', label: 'Diagnóstico' },
-  ];
-
+function LeftPanel() {
   return (
     <aside className="glass-panel left-panel">
-      <div className="panel-section">
-        <div className="brand-block">
-          <span className="brand-badge">Kaelara online</span>
-          <h1>Interface viva, memoria real e comandos uteis.</h1>
-          <p>
-            Conversa persistente, busca de historico e recursos prontos para crescer sem perder o visual atual.
-          </p>
+      
+      <header className="brand-header">
+        <div className="brand-icon">
+          <span className="material-icons-round">auto_awesome</span>
         </div>
+        <div>
+          <div className="brand-title">Kaelara</div>
+          <div className="brand-subtitle">AI ASSISTANT</div>
+        </div>
+      </header>
 
-        <button className="btn-primary" onClick={onNewChat}>
-          Nova conversa
+      <div className="section-title">Ações Rápidas</div>
+      <div className="tools-grid">
+        <button className="tool-btn" onClick={() => alert('Recurso de voz em desenvolvimento!')}>
+          <span className="material-icons-round">mic</span>
+          <span className="label">Falar</span>
+        </button>
+        <button className="tool-btn" onClick={() => alert('Recurso de câmera em desenvolvimento!')}>
+          <span className="material-icons-round">videocam</span>
+          <span className="label">Câmera</span>
+        </button>
+        <button className="tool-btn" onClick={() => alert('Recurso de anexo em desenvolvimento!')}>
+          <span className="material-icons-round">attach_file</span>
+          <span className="label">Anexar</span>
         </button>
       </div>
 
-      <div className="panel-section">
-        <div className="section-label">Navegacao</div>
-        <div className="nav-menu">
-          {menuItems.map((item) => (
-            <button
-              key={item.id}
-              className={`nav-item ${activeView === item.id ? 'active' : ''}`}
-              onClick={() => setActiveView(item.id)}
-              type="button"
-            >
-              <span className="material-icons">{item.icon}</span>
-              <span>{item.label}</span>
-            </button>
-          ))}
-        </div>
+      <div className="section-title">Atalhos do Google</div>
+      <div className="shortcuts-list">
+        <a href="https://drive.google.com" target="_blank" rel="noreferrer" className="shortcut-item">
+          <div className="shortcut-icon"><span className="material-icons-round" style={{fontSize:'18px'}}>cloud</span></div>
+          Google Drive
+        </a>
+        <a href="https://meet.google.com" target="_blank" rel="noreferrer" className="shortcut-item">
+          <div className="shortcut-icon"><span className="material-icons-round" style={{fontSize:'18px'}}>video_call</span></div>
+          Google Meet
+        </a>
+        <a href="https://calendar.google.com" target="_blank" rel="noreferrer" className="shortcut-item">
+          <div className="shortcut-icon"><span className="material-icons-round" style={{fontSize:'18px'}}>event</span></div>
+          Google Agenda
+        </a>
+        <a href="https://docs.google.com" target="_blank" rel="noreferrer" className="shortcut-item">
+          <div className="shortcut-icon"><span className="material-icons-round" style={{fontSize:'18px'}}>description</span></div>
+          Google Docs
+        </a>
       </div>
 
-      <div className="panel-section">
-        <div className="section-label">Atalhos reais</div>
-        <div className="shortcut-list">
-          {shortcuts.map((shortcut) => (
-            <a key={shortcut.title} href={shortcut.url} target="_blank" rel="noreferrer" className="shortcut-card">
-              <span>{shortcut.title}</span>
-              <span className="material-icons">north_east</span>
-            </a>
-          ))}
-        </div>
-      </div>
-
-      <div className="panel-section left-footer">
-        <div className="mini-stat-grid">
-          <div className="mini-stat-card">
-            <span className="mini-stat-label">Sessoes</span>
-            <strong>{insights?.total_sessions ?? 0}</strong>
-          </div>
-          <div className="mini-stat-card">
-            <span className="mini-stat-label">Mensagens</span>
-            <strong>{insights?.total_messages ?? 0}</strong>
-          </div>
-        </div>
-
-        <div className="utility-row">
-          <button className="btn-secondary" onClick={toggleTheme} type="button">
-            {theme === 'light' ? 'Modo escuro' : 'Modo claro'}
-          </button>
-          <button className="btn-secondary" onClick={onRefreshHistory} type="button">
-            Atualizar memoria
-          </button>
-        </div>
-
-        <button className="btn-secondary wide" onClick={onRunDiagnostics} type="button">
-          Verificar funcoes ativas
-        </button>
-      </div>
     </aside>
   );
 }

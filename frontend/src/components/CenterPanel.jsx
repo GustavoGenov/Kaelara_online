@@ -1,60 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
-function CenterPanel({ isLoading, onAttachClick, onSendMessage, sessionTitle, statusMessage }) {
+function CenterPanel({ messages, onSendMessage, isLoading }) {
   const [input, setInput] = useState('');
+  const chatEndRef = useRef(null);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   const handleSend = () => {
-    if (!input.trim() || isLoading) {
-      return;
+    if (input.trim() && !isLoading) {
+      onSendMessage(input);
+      setInput('');
     }
-    onSendMessage(input);
-    setInput('');
   };
 
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
       handleSend();
     }
   };
 
   return (
     <main className="center-panel">
-      <section className="hero-card glass-panel">
-        <div className="hero-copy">
-          <span className="section-label">Sessao atual</span>
-          <h2>{sessionTitle}</h2>
-          <p>
-            Kaelara agora pode manter historico persistente, recuperar memorias anteriores e expor diagnosticos do que
-            esta realmente funcionando.
-          </p>
-        </div>
-        <div className="hero-status">
-          <span className={`status-dot ${isLoading ? 'busy' : 'idle'}`}></span>
-          <span>{statusMessage}</span>
-        </div>
-      </section>
+      
+      <div className="glass-panel chat-messages">
+        {messages.map((msg, idx) => {
+          const isUser = msg.role === 'user';
+          return (
+            <div key={idx} className={`msg-wrapper ${isUser ? 'user' : 'kae'}`}>
+              <span className="msg-author">{isUser ? 'Você' : 'Kaelara'}</span>
+              <div className="msg-bubble">
+                {msg.content}
+              </div>
+            </div>
+          );
+        })}
+        {isLoading && (
+          <div className="msg-wrapper kae">
+            <span className="msg-author">Kaelara</span>
+            <div className="msg-bubble" style={{display: 'flex', gap: '4px', alignItems: 'center'}}>
+              <span className="material-icons-round" style={{animation: 'twinkle 1.5s infinite'}}>auto_awesome</span>
+              Pensando...
+            </div>
+          </div>
+        )}
+        <div ref={chatEndRef} />
+      </div>
 
-      <section className="composer glass-panel">
-        <textarea
-          rows={4}
+      <div className="composer-bar">
+        <input
+          type="text"
+          placeholder="Envie uma mensagem carinhosa para Kaelara..."
           value={input}
-          onChange={(event) => setInput(event.target.value)}
+          onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Digite sua mensagem, cole contexto ou anexe um arquivo para Kaelara analisar."
+          autoFocus
+          disabled={isLoading}
         />
+        <button className="btn-send" onClick={handleSend} disabled={isLoading}>
+          <span className="material-icons-round">send</span>
+        </button>
+      </div>
 
-        <div className="composer-actions">
-          <button className="btn-secondary" type="button" onClick={onAttachClick}>
-            <span className="material-icons">attach_file</span>
-            Anexar arquivo
-          </button>
-          <button className="btn-primary" type="button" onClick={handleSend} disabled={isLoading}>
-            <span className="material-icons">send</span>
-            {isLoading ? 'Enviando...' : 'Enviar'}
-          </button>
-        </div>
-      </section>
     </main>
   );
 }
