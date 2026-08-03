@@ -4,8 +4,9 @@ import './index.css'
 import App from './App.jsx'
 import AuditPage from './AuditPage.jsx'
 
-// Simple hash-based routing: /#/audit opens the protected audit page
-const isAudit = window.location.hash === '#/audit' || window.location.pathname === '/audit';
+// Roteamento: só abre a auditoria se o hash for exatamente #audit
+// Nunca usa pathname para evitar conflito com rotas do Vercel
+const isAudit = window.location.hash === '#audit';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
