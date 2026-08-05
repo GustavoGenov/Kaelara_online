@@ -1,51 +1,147 @@
-import os
-from google import genai
-from dotenv import load_dotenv
+"""LLM orchestration for Kaelara with optional multi-provider support."""
 
-# Carrega do .env se for local, mas na Render usa a nuvem
-load_dotenv()
+from __future__ import annotations
 
-# Load Gemini API key from environment (via config)
-from .config import GEMINI_API_KEY, GEMINI_MODEL_NAME
+from typing import Iterable
 
-if not GEMINI_API_KEY:
-    raise ValueError("ERRO: A variável GEMINI_API_KEY não foi encontrada! Verifique o painel da Render.")
+import requests
 
-client = genai.Client(api_key=GEMINI_API_KEY)
+from .config import (
+    GEMINI_API_KEY,
+    GEMINI_MODEL_NAME,
+    GROK_API_KEY,
+    GROK_BASE_URL,
+    GROK_MODEL_NAME,
+    GROQ_API_KEY,
+    GROQ_BASE_URL,
+    GROQ_MODEL_NAME,
+    OPENAI_API_KEY,
+    OPENAI_BASE_URL,
+    OPENAI_MODEL_NAME,
+)
 
-# Load Gemini API key and model name from configuration
+try:
+    from google import genai
+except ImportError:  # pragma: no cover - optional dependency path
+    genai = None
+
+
+SYSTEM_PROMPT = (
+    "Voce e Kaelara, uma assistente de IA elegante, objetiva e confiavel. "
+    "Responda em portugues do Brasil, com clareza e utilidade pratica. "
+    "Use a memoria recente da conversa quando ela ajudar a manter contexto. "
+    "Se uma funcionalidade nao estiver disponivel, explique isso com honestidade e sugira o melhor caminho."
+)
 
 
 class RAGEngine:
     def __init__(self, cache=None):
-        """
-        Inicializa o motor da Kaelara usando a API oficial e atualizada do Google.
-        """
         self.cache = cache
-        self.model_name = GEMINI_MODEL_NAME or "gemini-2.0-flash"
-        print(f"[*] Kaelara RAG inicializado com o modelo de nuvem: {self.model_name}")
+        self.providers = self._load_providers()
 
-    def ask(self, message: str) -> str:
-        """Alias for gerar_resposta expected by app.py"""
-        return self.gerar_resposta(message)
+    def _load_providers(self) -> list[dict[str, str]]:
+        providers: list[dict[str, str]] = []
 
-    def gerar_resposta(self, mensagem_usuario: str, contexto_rag: str = "") -> str:
-        prompt_sistema = (
-            "Você é a Kaelara, uma inteligência artificial assistente altamente avançada e profissional.\n"
-            "Use as informações do contexto fornecido abaixo para responder de forma precisa e contextualizada ao usuário.\n"
-            "Se o contexto não contiver a resposta, use sua base de conhecimento mantendo a sua personalidade.\n\n"
-            f"--- CONTEXTO DE MEMÓRIA (RAG) ---\n{contexto_rag}\n---------------------------------\n"
+        if GEMINI_API_KEY and genai is not None:
+            providers.append(
+                {
+                    "name": "gemini",
+                    "model": GEMINI_MODEL_NAME or "gemini-1.5-flash",
+                    "key": GEMINI_API_KEY,
+                }
+            )
+
+        if OPENAI_API_KEY and OPENAI_MODEL_NAME:
+            providers.append(
+                {
+                    "name": "openai",
+                    "model": OPENAI_MODEL_NAME,
+                    "key": OPENAI_API_KEY,
+                    "base_url": OPENAI_BASE_URL.rstrip("/"),
+                }
+            )
+
+        if GROQ_API_KEY and GROQ_MODEL_NAME:
+            providers.append(
+                {
+                    "name": "groq",
+                    "model": GROQ_MODEL_NAME,
+                    "key": GROQ_API_KEY,
+                    "base_url": GROQ_BASE_URL.rstrip("/"),
+                }
+            )
+
+        if GROK_API_KEY and GROK_MODEL_NAME:
+            providers.append(
+                {
+                    "name": "grok",
+                    "model": GROK_MODEL_NAME,
+                    "key": GROK_API_KEY,
+                    "base_url": GROK_BASE_URL.rstrip("/"),
+                }
+            )
+
+        return providers
+
+    def ask(self, message: str, history: Iterable[dict[str, str]] | None = None) -> tuple[str, str]:
+        prompt = self._build_prompt(message, history or [])
+
+        for provider in self.providers:
+            try:
+                if provider["name"] == "gemini":
+                    return self._ask_gemini(provider, prompt), provider["name"]
+                return self._ask_openai_compatible(provider, prompt), provider["name"]
+            except Exception as exc:  # pragma: no cover - network dependent
+                last_error = f"{provider['name']}: {exc}"
+        fallback = (
+            "No momento eu nao consegui acessar nenhum provedor de IA configurado. "
+            "Verifique as chaves de API e tente novamente."
+        )
+        if self.providers:
+            return f"{fallback} Ultima tentativa: {last_error}", "fallback"
+        return (
+            f"{fallback} Configure GEMINI_API_KEY ou uma combinacao como OPENAI_API_KEY + OPENAI_MODEL_NAME.",
+            "fallback",
         )
 
-        prompt_final = f"{prompt_sistema}\nUsuário: {mensagem_usuario}\nKaelara:"
+    def _build_prompt(self, message: str, history: Iterable[dict[str, str]]) -> str:
+        memory_lines = []
+        for item in history:
+            role = "Usuario" if item.get("role") == "user" else "Kaelara"
+            memory_lines.append(f"{role}: {item.get('content', '').strip()}")
+        memory_block = "\n".join(memory_lines[-12:]) if memory_lines else "Sem memoria anterior."
+        return (
+            f"{SYSTEM_PROMPT}\n\n"
+            f"Memoria recente:\n{memory_block}\n\n"
+            f"Mensagem atual do usuario:\n{message}\n\n"
+            "Resposta da Kaelara:"
+        )
 
-        try:
-            # Requerimento usando a biblioteca nova (google-genai)
-            response = client.models.generate_content(
-                model=self.model_name,
-                contents=prompt_final,
-            )
-            return response.text
-        except Exception as e:
-            print(f"[!] Erro ao chamar a API do Google: {e}")
-            return f"Desculpe, erro do Google API: {str(e)}"
+    def _ask_gemini(self, provider: dict[str, str], prompt: str) -> str:
+        client = genai.Client(api_key=provider["key"])
+        response = client.models.generate_content(
+            model=provider["model"],
+            contents=prompt,
+        )
+        return (response.text or "").strip()
+
+    def _ask_openai_compatible(self, provider: dict[str, str], prompt: str) -> str:
+        response = requests.post(
+            f"{provider['base_url']}/chat/completions",
+            headers={
+                "Authorization": f"Bearer {provider['key']}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "model": provider["model"],
+                "messages": [
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": prompt},
+                ],
+                "temperature": 0.7,
+            },
+            timeout=45,
+        )
+        response.raise_for_status()
+        data = response.json()
+        return data["choices"][0]["message"]["content"].strip()

@@ -1,99 +1,248 @@
-# kaelara/app.py
-"""Flask application entry point for Kaelara AI.
-Provides REST endpoints for chat, vision, audio, and utility operations.
-"""
+"""Flask application entry point for Kaelara AI."""
+
+from __future__ import annotations
+
 import os
-from flask import Flask, request, jsonify
+from datetime import UTC, datetime
+from uuid import uuid4
+
+from flask import Flask, jsonify, request
 from flask_cors import CORS
-from .config import REDIS_URL, DATABASE_URL, MEDIA_TTL
-from .database import SessionLocal, engine, Base
+from sqlalchemy import desc, func
+
 from .cache import Cache
+from .config import MEDIA_TTL, REDIS_URL
+from .database import ChatMessage, ChatSession, SessionLocal, init_db
 from .rag import RAGEngine
 
 try:
     from .vision import Vision
-except ImportError:
+except ImportError:  # pragma: no cover - optional dependency path
     Vision = None
-    print("[Aviso] Módulo de visão não encontrado. Continuando sem suporte a visão local.")
 
 try:
     from .audio import Audio
-except ImportError:
+except ImportError:  # pragma: no cover - optional dependency path
     Audio = None
-    print("[Aviso] Módulo de áudio não encontrado. Continuando sem suporte a voz.")
-# Initialize Flask app
+
+
 app = Flask(__name__)
-CORS(app) # Allow cross-origin requests from Vercel frontend
+CORS(app)
 
-# Create DB tables if not exist
 try:
-    Base.metadata.create_all(bind=engine)
-except Exception as e:
-    print(f"[Aviso] Banco de dados não inicializado: {e}")
+    init_db()
+except Exception as exc:  # pragma: no cover - environment dependent
+    print(f"[Aviso] Banco de dados nao inicializado: {exc}")
 
-# Initialise shared components
 cache = Cache(redis_url=REDIS_URL)
 rag = RAGEngine(cache=cache)
-if Vision is not None:
-    vision = Vision()
-else:
-    vision = None
+vision = Vision() if Vision is not None else None
+audio = Audio() if Audio is not None else None
 
-if Audio is not None:
-    audio = Audio()
-else:
-    audio = None
 
-@app.route('/api/chat', methods=['POST'])
+def _session_title(message: str) -> str:
+    title = " ".join(message.strip().split())
+    return (title[:57] + "...") if len(title) > 60 else (title or "Nova conversa")
+
+
+def _serialize_message(message: ChatMessage) -> dict[str, str]:
+    return {
+        "id": message.id,
+        "session_id": message.session_id,
+        "role": message.role,
+        "content": message.content,
+        "provider": message.provider,
+        "created_at": message.created_at.isoformat() if message.created_at else None,
+    }
+
+
+def _get_or_create_session(db, session_id: str | None, first_message: str) -> ChatSession:
+    current_session_id = session_id or uuid4().hex
+    session = db.get(ChatSession, current_session_id)
+    if session is None:
+        session = ChatSession(session_id=current_session_id, title=_session_title(first_message))
+        db.add(session)
+        db.flush()
+    session.updated_at = datetime.now(UTC)
+    if session.title == "Nova conversa" and first_message.strip():
+        session.title = _session_title(first_message)
+    return session
+
+
+def _recent_history(db, session_id: str, limit: int = 12) -> list[dict[str, str]]:
+    rows = (
+        db.query(ChatMessage)
+        .filter(ChatMessage.session_id == session_id)
+        .order_by(desc(ChatMessage.id))
+        .limit(limit)
+        .all()
+    )
+    rows.reverse()
+    return [{"role": row.role, "content": row.content} for row in rows]
+
+
+@app.route("/api/chat", methods=["POST"])
 def chat():
-    data = request.json
-    user_msg = data.get('message', '')
+    data = request.get_json(silent=True) or {}
+    user_msg = (data.get("message") or "").strip()
     if not user_msg:
-        return jsonify({'error': 'Empty message'}), 400
-    # Use RAG to generate answer
-    answer = rag.ask(user_msg)
-    return jsonify({'answer': answer})
+        return jsonify({"error": "Empty message"}), 400
 
-@app.route('/api/vision', methods=['POST'])
+    db = SessionLocal()
+    try:
+        session = _get_or_create_session(db, data.get("session_id"), user_msg)
+        history = _recent_history(db, session.session_id)
+        db.add(ChatMessage(session_id=session.session_id, role="user", content=user_msg, provider="client"))
+        answer, provider = rag.ask(user_msg, history=history)
+        db.add(ChatMessage(session_id=session.session_id, role="assistant", content=answer, provider=provider))
+        session.updated_at = datetime.now(UTC)
+        db.commit()
+
+        messages = (
+            db.query(ChatMessage)
+            .filter(ChatMessage.session_id == session.session_id)
+            .order_by(ChatMessage.id.asc())
+            .all()
+        )
+        return jsonify(
+            {
+                "session_id": session.session_id,
+                "session_title": session.title,
+                "answer": answer,
+                "provider": provider,
+                "messages": [_serialize_message(message) for message in messages],
+            }
+        )
+    except Exception as exc:
+        db.rollback()
+        return jsonify({"error": str(exc)}), 500
+    finally:
+        db.close()
+
+
+@app.route("/api/history", methods=["GET"])
+def history():
+    limit = min(max(int(request.args.get("limit", 20)), 1), 100)
+    query = (request.args.get("q") or "").strip().lower()
+
+    db = SessionLocal()
+    try:
+        sessions = db.query(ChatSession).order_by(ChatSession.updated_at.desc()).limit(limit).all()
+        items = []
+        for session in sessions:
+            messages = (
+                db.query(ChatMessage)
+                .filter(ChatMessage.session_id == session.session_id)
+                .order_by(ChatMessage.created_at.asc(), ChatMessage.id.asc())
+                .all()
+            )
+            if query and not any(query in message.content.lower() for message in messages):
+                continue
+            preview = next((message.content for message in messages if message.role == "user"), "")
+            items.append(
+                {
+                    "session_id": session.session_id,
+                    "title": session.title,
+                    "message_count": len(messages),
+                    "preview": preview[:140],
+                    "updated_at": session.updated_at.isoformat() if session.updated_at else None,
+                }
+            )
+        return jsonify({"items": items})
+    finally:
+        db.close()
+
+
+@app.route("/api/history/<session_id>", methods=["GET"])
+def history_detail(session_id: str):
+    db = SessionLocal()
+    try:
+        session = db.get(ChatSession, session_id)
+        if session is None:
+            return jsonify({"error": "Session not found"}), 404
+        messages = (
+            db.query(ChatMessage)
+            .filter(ChatMessage.session_id == session_id)
+            .order_by(ChatMessage.created_at.asc(), ChatMessage.id.asc())
+            .all()
+        )
+        return jsonify(
+            {
+                "session_id": session.session_id,
+                "title": session.title,
+                "created_at": session.created_at.isoformat() if session.created_at else None,
+                "updated_at": session.updated_at.isoformat() if session.updated_at else None,
+                "messages": [_serialize_message(message) for message in messages],
+            }
+        )
+    finally:
+        db.close()
+
+
+@app.route("/api/insights", methods=["GET"])
+def insights():
+    db = SessionLocal()
+    try:
+        total_sessions = db.query(func.count(ChatSession.session_id)).scalar() or 0
+        total_messages = db.query(func.count(ChatMessage.id)).scalar() or 0
+        last_message = db.query(ChatMessage).order_by(ChatMessage.created_at.desc(), ChatMessage.id.desc()).first()
+        return jsonify(
+            {
+                "total_sessions": total_sessions,
+                "total_messages": total_messages,
+                "last_provider": last_message.provider if last_message else None,
+                "audio_available": audio is not None,
+                "vision_available": vision is not None,
+                "media_ttl": MEDIA_TTL,
+            }
+        )
+    finally:
+        db.close()
+
+
+@app.route("/api/vision", methods=["POST"])
 def vision_endpoint():
     if vision is None:
-        return jsonify({'error': 'Vision support not available. Install opencv-python-headless and face_recognition.'}), 400
-    # Expected: JSON with "action": "capture" or "detect"
-    action = request.json.get('action')
-    if action == 'capture':
+        return jsonify({"error": "Vision support not available. Install opencv-python-headless and face_recognition."}), 400
+
+    action = (request.get_json(silent=True) or {}).get("action")
+    if action == "capture":
         frame_path = vision.capture_frame()
-        return jsonify({'frame_path': frame_path})
-    elif action == 'detect':
+        return jsonify({"frame_path": frame_path})
+    if action == "detect":
         faces = vision.detect_faces()
-        return jsonify({'faces': faces})
-    else:
-        return jsonify({'error': 'Invalid action'}), 400
+        return jsonify({"faces": faces})
+    return jsonify({"error": "Invalid action"}), 400
 
-@app.route('/api/audio', methods=['POST'])
+
+@app.route("/api/audio", methods=["POST"])
 def audio_endpoint():
-    if Audio is None:
-        return jsonify({'error': 'Audio support not available'}), 400
-    action = request.json.get('action')
-    if action == 'listen':
+    if audio is None:
+        return jsonify({"error": "Audio support not available"}), 400
+
+    payload = request.get_json(silent=True) or {}
+    action = payload.get("action")
+    if action == "listen":
         text = audio.listen()
-        return jsonify({'transcript': text})
-    elif action == 'speak':
-        text = request.json.get('text', '')
+        return jsonify({"transcript": text})
+    if action == "speak":
+        text = payload.get("text", "")
         audio.speak(text)
-        return jsonify({'status': 'spoken'})
-    else:
-        return jsonify({'error': 'Invalid action'}), 400
+        return jsonify({"status": "spoken"})
+    return jsonify({"error": "Invalid action"}), 400
 
-# Health check
-@app.route('/health', methods=['GET'])
+
+@app.route("/health", methods=["GET"])
 def health():
-    return jsonify({'status': 'ok'})
+    return jsonify({"status": "ok"})
 
-if __name__ == '__main__':
-    # Local development fallback – use waitress on Windows, gunicorn on Linux
-    if os.name == 'nt':
+
+if __name__ == "__main__":
+    if os.name == "nt":
         from waitress import serve
-        serve(app, host='0.0.0.0', port=int(os.getenv('PORT', 5000)))
+
+        serve(app, host="0.0.0.0", port=int(os.getenv("PORT", 5000)))
     else:
         from gunicorn.app.wsgiapp import run
+
         run()
