@@ -52,11 +52,11 @@ function LeftPanel() {
 
       <div className="section-title" style={{marginTop: '24px'}}>Legal</div>
       <div className="shortcuts-list">
-        <a href="/termos.html" target="_blank" rel="noreferrer" className="shortcut-item">
+        <a href="/termos" target="_blank" rel="noreferrer" className="shortcut-item">
           <div className="shortcut-icon"><span className="material-icons-round" style={{fontSize:'18px'}}>gavel</span></div>
           Termos de Uso
         </a>
-        <a href="/politica-de-privacidade.html" target="_blank" rel="noreferrer" className="shortcut-item">
+        <a href="/politica-de-privacidade" target="_blank" rel="noreferrer" className="shortcut-item">
           <div className="shortcut-icon"><span className="material-icons-round" style={{fontSize:'18px'}}>security</span></div>
           Política de Privacidade
         </a>
