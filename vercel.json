@@ -19,6 +19,14 @@
       "dest": "/ads.txt"
     },
     {
+      "src": "/termos",
+      "dest": "/termos.html"
+    },
+    {
+      "src": "/politica-de-privacidade",
+      "dest": "/politica-de-privacidade.html"
+    },
+    {
       "src": "/assets/(.*)",
       "dest": "/assets/$1"
     },
