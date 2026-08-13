@@ -19,3 +19,11 @@ models/
 .DS_Store
 .vscode/
 .idea/
+
+# Node dependencies and build outputs
+node_modules/
+dist/
+.next/
+out/
+build/
+
