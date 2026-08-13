@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "src": "/google62kaLeT9Cbih2V6KHKXkv3e2thS6fXOtROjhRANRI_8.html",
+      "dest": "/google62kaLeT9Cbih2V6KHKXkv3e2thS6fXOtROjhRANRI_8.html"
+    },
+    {
+      "src": "/ads.txt",
+      "dest": "/ads.txt"
+    },
+    {
+      "src": "/termos",
+      "dest": "/termos.html"
+    },
+    {
+      "src": "/politica-de-privacidade",
+      "dest": "/politica-de-privacidade.html"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
