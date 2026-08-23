@@ -1,4 +1,4 @@
-﻿import React, { useRef } from 'react';
+import React, { useRef } from 'react';
 
 function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onToggleTheme, isDarkMode }) {
   const fileInputRef = useRef(null);
@@ -13,7 +13,7 @@ function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onT
           </div>
           <div>
             <div className="brand-title">Kaelara</div>
-            <div className="brand-subtitle">KAELARA SUA AMIGA!</div>
+            <div className="brand-subtitle">AI ASSISTANT</div>
           </div>
         </div>
         <button className="tool-btn" onClick={onToggleTheme} style={{ background: 'transparent', padding: '8px', border: 'none' }} title="Alternar Tema">
@@ -21,7 +21,7 @@ function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onT
         </button>
       </header>
 
-      <div className="section-title">AÃ§Ãµes RÃ¡pidas</div>
+      <div className="section-title">Ações Rápidas</div>
       <div className="tools-grid">
         <button className="tool-btn" onClick={onVoiceClick} style={{ background: isListening ? '#f44336' : '', color: isListening ? '#fff' : '' }}>
           <span className="material-icons-round">{isListening ? 'mic_none' : 'mic'}</span>
@@ -30,7 +30,7 @@ function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onT
         
         <button className="tool-btn" onClick={onCameraClick}>
           <span className="material-icons-round">videocam</span>
-          <span className="label">CÃ¢mera</span>
+          <span className="label">Câmera</span>
         </button>
         
         <button className="tool-btn" onClick={() => fileInputRef.current?.click()}>
