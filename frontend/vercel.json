@@ -1,4 +1,4 @@
-﻿{
+{
   "version": 2,
   "routes": [
     {
@@ -23,7 +23,7 @@
     },
     {
       "src": "/assets/(.*)",
-      "dest": "/assets/$1"
+      "dest": "/assets/"
     },
     {
       "src": "/sobre",
