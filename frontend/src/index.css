@@ -18,6 +18,16 @@
   --text-dark: #2c2c2c;
 }
 
+body.light-mode {
+  --bg-gradient: linear-gradient(to bottom right, #f8f9fa, #ffe8ef);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  --glass-glow: rgba(209, 42, 122, 0.1);
+  --text-main: #1a1a1a;
+  --text-muted: #666666;
+}
+
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -509,3 +519,12 @@ body {
     padding: 4px 8px;
   }
 }
+
+
+.kaelara-footer {
+  display: flex; gap: 20px; justify-content: center; padding: 12px; font-size: 12px;
+  width: 100%; z-index: 10;
+  backdrop-filter: blur(10px);
+}
+.kaelara-footer a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+.kaelara-footer a:hover { color: var(--primary-pink); }

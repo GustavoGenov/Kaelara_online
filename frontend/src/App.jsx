@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './index.css';
 import LeftPanel from './components/LeftPanel';
 import CenterPanel from './components/CenterPanel';
@@ -22,7 +22,17 @@ function App() {
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const videoRef = useRef(null);
 
+  // Theme state
+  const [isLightMode, setIsLightMode] = useState(false);
+
   useEffect(() => {
+    // Carregar tema salvo
+    const savedTheme = localStorage.getItem('kaelara_theme');
+    if (savedTheme === 'light') {
+      setIsLightMode(true);
+      document.body.classList.add('light-mode');
+    }
+
     const logVisit = async () => {
       try {
         await supabase.from('kaelara_visits').insert([{
@@ -34,15 +44,30 @@ function App() {
     logVisit();
   }, []);
 
+  const toggleTheme = () => {
+    if (isLightMode) {
+      document.body.classList.remove('light-mode');
+      localStorage.setItem('kaelara_theme', 'dark');
+      setIsLightMode(false);
+    } else {
+      document.body.classList.add('light-mode');
+      localStorage.setItem('kaelara_theme', 'light');
+      setIsLightMode(true);
+    }
+  };
+
   const speakText = (text) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'pt-BR';
-      utterance.pitch = 0.9;
-      utterance.rate = 0.88;
+      utterance.pitch = 1.05;
+      utterance.rate = 0.95;
       
+      let spoken = false;
       const setVoiceAndSpeak = () => {
+        if (spoken) return;
+        spoken = true;
         const voices = window.speechSynthesis.getVoices();
         const femaleNames = ['maria', 'francisca', 'luciana', 'vitoria', 'heloisa', 'zira', 'leticia', 'feminine', 'female', 'mulher'];
         let chosenVoice = voices.find(v => v.lang.includes('pt-BR') && femaleNames.some(name => v.name.toLowerCase().includes(name)));
@@ -58,11 +83,7 @@ function App() {
       if (window.speechSynthesis.getVoices().length > 0) {
         setVoiceAndSpeak();
       } else {
-        window.speechSynthesis.onvoiceschanged = () => {
-          setVoiceAndSpeak();
-          window.speechSynthesis.onvoiceschanged = null;
-        };
-        setTimeout(setVoiceAndSpeak, 200);
+        window.speechSynthesis.onvoiceschanged = setVoiceAndSpeak;
       }
     }
   };
@@ -203,15 +224,23 @@ function App() {
       <div className="sparkle" style={{top: '40%', right: '8%', width: '6px', height: '6px', animationDelay: '1s'}}></div>
       <div className="sparkle" style={{top: '60%', right: '25%', width: '3px', height: '3px', animationDelay: '2s'}}></div>
 
-      <div className="app-container">
+      <div className="app-container" style={{ paddingBottom: '50px' }}>
         <LeftPanel 
           onVoiceClick={handleVoiceClick} 
           onFileAttach={handleFileAttach} 
           isListening={isListening} 
-          onCameraClick={startCamera} 
+          onCameraClick={startCamera}
+          onToggleTheme={toggleTheme}
+          isLightMode={isLightMode}
         />
         <CenterPanel messages={messages} onSendMessage={handleSendMessage} isLoading={isLoading} />
       </div>
+
+      <footer className="kaelara-footer">
+        <a href="/sobre">Quem Somos / Equipe</a>
+        <a href="/termos">Termos de Uso</a>
+        <a href="/politica-de-privacidade">Política de Privacidade</a>
+      </footer>
 
       {isCameraOpen && (
         <div style={{
