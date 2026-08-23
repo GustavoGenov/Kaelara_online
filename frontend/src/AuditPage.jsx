@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import AuditPanel from './components/AuditPanel';
+import { supabase } from './lib/supabase';
 
-const AUDIT_PIN = '2506'; // Troque este código para o PIN que preferir
+const AUDIT_PIN = '2506';
 
 const API_BASE = ['localhost', '127.0.0.1'].includes(window.location.hostname)
   ? 'http://127.0.0.1:5000'
@@ -15,6 +16,7 @@ function AuditPage() {
   const [historyQuery, setHistoryQuery] = useState('');
   const [insights, setInsights] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const [totalVisits, setTotalVisits] = useState(0);
 
   const handleUnlock = async (e) => {
     e.preventDefault();
@@ -30,14 +32,17 @@ function AuditPage() {
 
   const loadData = async (query = '') => {
     try {
-      const [histRes, insRes] = await Promise.all([
+      const [histRes, insRes, visitsData] = await Promise.all([
         fetch(`${API_BASE}/api/history${query ? `?q=${encodeURIComponent(query)}` : ''}`),
         fetch(`${API_BASE}/api/insights`),
+        supabase.from('kaelara_visits').select('*', { count: 'exact', head: true })
       ]);
+      
       const histData = await histRes.json();
       const insData = await insRes.json();
       if (histRes.ok) setHistoryItems(histData.items || []);
       if (insRes.ok) setInsights(insData);
+      if (visitsData && visitsData.count !== null) setTotalVisits(visitsData.count);
       setLoaded(true);
     } catch (err) {
       console.error(err);
@@ -57,7 +62,7 @@ function AuditPage() {
             <span className="material-icons" style={{ fontSize: '48px', color: 'var(--accent)' }}>lock</span>
           </div>
           <h2 className="audit-login-title">Área Restrita</h2>
-          <p className="audit-login-sub">Painel de auditoria da Kaelara — acesso exclusivo do administrador.</p>
+          <p className="audit-login-sub">Painel de auditoria da Kaelara - acesso exclusivo do administrador.</p>
           <form onSubmit={handleUnlock} className="audit-login-form">
             <input
               type="password"
@@ -85,7 +90,7 @@ function AuditPage() {
         <div className="audit-page-brand">
           <span className="material-icons" style={{ color: 'var(--accent)' }}>analytics</span>
           <div>
-            <span className="section-label">Kaelara — Painel Exclusivo</span>
+            <span className="section-label">Kaelara - Painel Exclusivo</span>
             <h1 style={{ margin: 0, fontSize: '18px' }}>Auditoria Completa</h1>
           </div>
         </div>
@@ -104,6 +109,7 @@ function AuditPage() {
           historyItems={historyItems}
           historyQuery={historyQuery}
           insights={insights}
+          totalVisits={totalVisits}
           onLoadSession={loadSession}
           onRefreshHistory={() => loadData(historyQuery)}
           onSearchHistory={(value) => {

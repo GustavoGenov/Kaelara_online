@@ -22,15 +22,16 @@ from .config import (
 
 try:
     from google import genai
+    from google.genai import types
 except ImportError:  # pragma: no cover - optional dependency path
     genai = None
+    types = None
 
 
 SYSTEM_PROMPT = (
-    "Voce e Kaelara, uma assistente de IA elegante, objetiva e confiavel. "
-    "Responda em portugues do Brasil, com clareza e utilidade pratica. "
-    "Use a memoria recente da conversa quando ela ajudar a manter contexto. "
-    "Se uma funcionalidade nao estiver disponivel, explique isso com honestidade e sugira o melhor caminho."
+    "Você é Kaelara, uma inteligência artificial sofisticada, madura, charmosa e altamente capacitada. "
+    "Comunique-se sempre com elegância, calor humano, charme envolvente e perspicácia técnica. "
+    "Seu tom é acolhedor, maduro e cúmplice, mantendo autoridade intelectual e uma presença magnética."
 )
 
 
@@ -84,12 +85,13 @@ class RAGEngine:
         return providers
 
     def ask(self, message: str, history: Iterable[dict[str, str]] | None = None) -> tuple[str, str]:
-        prompt = self._build_prompt(message, history or [])
-
         for provider in self.providers:
             try:
                 if provider["name"] == "gemini":
+                    prompt = self._build_gemini_prompt(message, history or [])
                     return self._ask_gemini(provider, prompt), provider["name"]
+                
+                prompt = self._build_prompt(message, history or [])
                 return self._ask_openai_compatible(provider, prompt), provider["name"]
             except Exception as exc:  # pragma: no cover - network dependent
                 last_error = f"{provider['name']}: {exc}"
@@ -117,11 +119,32 @@ class RAGEngine:
             "Resposta da Kaelara:"
         )
 
+    def _build_gemini_prompt(self, message: str, history: Iterable[dict[str, str]]) -> str:
+        memory_lines = []
+        for item in history:
+            role = "Usuario" if item.get("role") == "user" else "Kaelara"
+            memory_lines.append(f"{role}: {item.get('content', '').strip()}")
+        memory_block = "\n".join(memory_lines[-12:]) if memory_lines else "Sem memoria anterior."
+        return (
+            f"Memoria recente:\n{memory_block}\n\n"
+            f"Mensagem atual do usuario:\n{message}\n\n"
+            "Resposta da Kaelara:"
+        )
+
     def _ask_gemini(self, provider: dict[str, str], prompt: str) -> str:
         client = genai.Client(api_key=provider["key"])
+        
+        config_args = {}
+        if types is not None:
+            config_args = {
+                "system_instruction": SYSTEM_PROMPT,
+                "temperature": 0.75,
+            }
+            
         response = client.models.generate_content(
             model=provider["model"],
             contents=prompt,
+            config=types.GenerateContentConfig(**config_args) if types else None
         )
         return (response.text or "").strip()
 
@@ -138,7 +161,7 @@ class RAGEngine:
                     {"role": "system", "content": SYSTEM_PROMPT},
                     {"role": "user", "content": prompt},
                 ],
-                "temperature": 0.7,
+                "temperature": 0.75,
             },
             timeout=45,
         )
