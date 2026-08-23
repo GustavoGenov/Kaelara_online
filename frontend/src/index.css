@@ -18,7 +18,7 @@
   --text-dark: #2c2c2c;
 }
 
-body.light-mode {
+html.light-mode, body.light-mode {
   --bg-gradient: linear-gradient(to bottom right, #f8f9fa, #ffe8ef);
   --glass-bg: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(0, 0, 0, 0.05);

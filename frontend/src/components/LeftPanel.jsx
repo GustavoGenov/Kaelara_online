@@ -60,18 +60,18 @@ function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onT
         </a>
       </div>
 
-      <div className="section-title">Atalhos do Google</div>
+            <div className="section-title">Atalhos do Google</div>
       <div className="shortcuts-grid">
         <a href="https://docs.google.com" target="_blank" rel="noreferrer" className="shortcut-item">
           <div className="shortcut-icon" style={{ background: '#4285F4' }}><span className="material-icons-round" style={{fontSize:'16px'}}>description</span></div>
           Docs
         </a>
         <a href="https://mail.google.com/tasks/canvas" target="_blank" rel="noreferrer" className="shortcut-item">
-          <div className="shortcut-icon" style={{ background: '#4285F4' }}><span className="material-icons-round" style={{fontSize:'16px'}}>task_alt</span></div>
+          <div className="shortcut-icon" style={{ background: '#9c27b0' }}><span className="material-icons-round" style={{fontSize:'16px'}}>task_alt</span></div>
           Tarefas
         </a>
         <a href="https://photos.google.com" target="_blank" rel="noreferrer" className="shortcut-item">
-          <div className="shortcut-icon" style={{ background: '#EA4335' }}><span className="material-icons-round" style={{fontSize:'16px'}}>photo</span></div>
+          <div className="shortcut-icon" style={{ background: '#00bcd4' }}><span className="material-icons-round" style={{fontSize:'16px'}}>photo</span></div>
           Fotos
         </a>
         <a href="https://mail.google.com" target="_blank" rel="noreferrer" className="shortcut-item">
@@ -83,7 +83,7 @@ function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onT
           Drive
         </a>
         <a href="https://meet.google.com" target="_blank" rel="noreferrer" className="shortcut-item">
-          <div className="shortcut-icon" style={{ background: '#34A853' }}><span className="material-icons-round" style={{fontSize:'16px'}}>video_call</span></div>
+          <div className="shortcut-icon" style={{ background: '#ff9800' }}><span className="material-icons-round" style={{fontSize:'16px'}}>video_call</span></div>
           Meet
         </a>
         <a href="https://calendar.google.com" target="_blank" rel="noreferrer" className="shortcut-item" style={{ gridColumn: '1 / -1' }}>
