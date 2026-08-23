@@ -13,7 +13,7 @@ function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onT
           </div>
           <div>
             <div className="brand-title">Kaelara</div>
-            <div className="brand-subtitle">AI ASSISTANT</div>
+            <div className="brand-subtitle">KAELARA SUA AMIGA!</div>
           </div>
         </div>
         <button className="tool-btn" onClick={onToggleTheme} style={{ background: 'transparent', padding: '8px', border: 'none' }} title="Alternar Tema">

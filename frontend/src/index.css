@@ -83,7 +83,7 @@ body {
   grid-template-columns: 340px 1fr 340px; /* Left panel, Center chat, Right spacer for avatar */
   width: 100vw;
   height: 100vh;
-  padding: 24px;
+  padding: 40px 24px 24px 24px;
   gap: 24px;
   position: relative;
   z-index: 1;
@@ -137,7 +137,7 @@ body {
   letter-spacing: -0.5px;
 }
 .brand-subtitle {
-  font-size: 12px;
+  font-size: 15px;
   color: var(--primary-pink);
   font-weight: 600;
 }
