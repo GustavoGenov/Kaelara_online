@@ -230,10 +230,10 @@ body {
   color: white;
 }
 
-.shortcut-item:nth-child(1) .shortcut-icon { background: #4285F4; } /* Drive */
-.shortcut-item:nth-child(2) .shortcut-icon { background: #34A853; } /* Meet */
-.shortcut-item:nth-child(3) .shortcut-icon { background: #FBBC05; } /* Agenda */
-.shortcut-item:nth-child(4) .shortcut-icon { background: #EA4335; } /* Docs */
+
+
+
+
 
 /* --- Center Chat Panel --- */
 .center-panel {
@@ -526,5 +526,22 @@ body {
   width: 100%; z-index: 10;
   backdrop-filter: blur(10px);
 }
-.kaelara-footer a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+.kaelara-footer a { color: #4285F4; text-decoration: none; transition: color 0.2s; font-weight: 600; }
 .kaelara-footer a:hover { color: var(--primary-pink); }
+
+
+.shortcuts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.shortcuts-grid .shortcut-item {
+  padding: 10px 12px;
+  font-size: 12px;
+  gap: 8px;
+}
+.shortcuts-grid .shortcut-icon {
+  width: 28px;
+  height: 28px;
+}
