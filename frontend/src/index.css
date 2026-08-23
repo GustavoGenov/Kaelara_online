@@ -18,13 +18,18 @@
   --text-dark: #2c2c2c;
 }
 
-html.light-mode, body.light-mode {
-  --bg-gradient: linear-gradient(to bottom right, #f8f9fa, #ffe8ef);
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(0, 0, 0, 0.05);
-  --glass-glow: rgba(209, 42, 122, 0.1);
-  --text-main: #1a1a1a;
-  --text-muted: #666666;
+html.dark-mode, body.dark-mode {
+  --primary-pink: #d12a7a;
+  --primary-pink-hover: #b02065;
+  --primary-peach: #f78da7;
+  --bg-gradient-start: #0a0a0a;
+  --bg-gradient-end: #1a1014;
+  --glass-bg: rgba(0, 0, 0, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
+  --text-main: #f0f0f0;
+  --text-muted: #a0a0a0;
+  --text-dark: #ffffff;
 }
 
 
@@ -545,3 +550,6 @@ body {
   width: 28px;
   height: 28px;
 }
+
+html.dark-mode .shortcut-item { background: rgba(0, 0, 0, 0.4); border-color: rgba(255,255,255,0.05); }
+html.dark-mode .shortcut-item:hover { background: rgba(255, 255, 255, 0.1); color: var(--primary-pink); }

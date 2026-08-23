@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 
-function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onToggleTheme, isLightMode }) {
+function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onToggleTheme, isDarkMode }) {
   const fileInputRef = useRef(null);
 
   return (
@@ -17,7 +17,7 @@ function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onT
           </div>
         </div>
         <button className="tool-btn" onClick={onToggleTheme} style={{ background: 'transparent', padding: '8px', border: 'none' }} title="Alternar Tema">
-          <span className="material-icons-round">{isLightMode ? 'dark_mode' : 'light_mode'}</span>
+          <span className="material-icons-round">{isDarkMode ? 'light_mode' : 'dark_mode'}</span>
         </button>
       </header>
 

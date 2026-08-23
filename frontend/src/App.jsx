@@ -23,14 +23,14 @@ function App() {
   const videoRef = useRef(null);
 
   // Theme state
-  const [isLightMode, setIsLightMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     // Carregar tema salvo
     const savedTheme = localStorage.getItem('kaelara_theme');
-    if (savedTheme === 'light') {
-      setIsLightMode(true);
-      document.documentElement.classList.add('light-mode'); document.body.classList.add('light-mode');
+    if (savedTheme === 'dark') {
+      setIsDarkMode(true);
+      document.documentElement.classList.add('dark-mode'); document.body.classList.add('dark-mode');
     }
 
     const logVisit = async () => {
@@ -44,15 +44,17 @@ function App() {
     logVisit();
   }, []);
 
-  const toggleTheme = () => {
-    if (isLightMode) {
-      document.documentElement.classList.remove('light-mode'); document.body.classList.remove('light-mode');
-      localStorage.setItem('kaelara_theme', 'dark');
-      setIsLightMode(false);
-    } else {
-      document.documentElement.classList.add('light-mode'); document.body.classList.add('light-mode');
+    const toggleTheme = () => {
+    if (isDarkMode) {
+      document.documentElement.classList.remove('dark-mode');
+      document.body.classList.remove('dark-mode');
       localStorage.setItem('kaelara_theme', 'light');
-      setIsLightMode(true);
+      setIsDarkMode(false);
+    } else {
+      document.documentElement.classList.add('dark-mode');
+      document.body.classList.add('dark-mode');
+      localStorage.setItem('kaelara_theme', 'dark');
+      setIsDarkMode(true);
     }
   };
 
@@ -231,7 +233,7 @@ function App() {
           isListening={isListening} 
           onCameraClick={startCamera}
           onToggleTheme={toggleTheme}
-          isLightMode={isLightMode}
+          isDarkMode={isDarkMode}
         />
         <CenterPanel messages={messages} onSendMessage={handleSendMessage} isLoading={isLoading} />
       </div>
