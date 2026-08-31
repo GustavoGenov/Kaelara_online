@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kaelara | Portfólio & Sobre</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: "Outfit", sans-serif;
+    background: #fff8ec;
+    color: #17212f;
+    line-height: 1.6;
+  }
+  .container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(47, 74, 102, 0.1);
+  }
+  h1, h2 {
+    font-family: "Playfair Display", serif;
+    color: #338bff;
+  }
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+  h2 {
+    font-size: 1.8rem;
+    margin-top: 40px;
+    border-bottom: 2px solid #ffeccf;
+    padding-bottom: 10px;
+  }
+  blockquote {
+    border-left: 4px solid #ff7f76;
+    margin: 0;
+    padding: 10px 20px;
+    background: #fffaf2;
+    font-style: italic;
+  }
+  .links-destaque {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(23, 33, 47, 0.1);
+  }
+  .links-destaque a {
+    text-decoration: none;
+    color: #ffffff;
+    background: #15c8d8;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background 0.3s;
+  }
+  .links-destaque a:hover {
+    background: #338bff;
+  }
+  .btn-voltar {
+    display: inline-block;
+    margin-bottom: 30px;
+    color: #697386;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .btn-voltar:hover {
+    color: #17212f;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <a href="/" class="btn-voltar">← Voltar para Kaelara HUD</a>
+
+  <h1>Apresentação do Projeto Kaelara</h1>
+  <p>Bem-vindo à página de portfólio da Kaelara. Aqui documentamos a jornada técnica de construção deste agente cognitivo autônomo e apresentamos nossos termos legais.</p>
+
+  <h2>1. Como construí a arquitetura cognitiva do meu próprio Agente Autônomo</h2>
+  <p><strong>Artigo Técnico (LinkedIn):</strong></p>
+  <blockquote>
+    <p>Construir IA generativa em produção é muito diferente de fazer chamadas simples em uma API. Nos últimos meses, mergulhei no desenvolvimento da <strong>Kaelara</strong>, um agente autônomo que vai muito além de um "chatbot", utilizando uma arquitetura proprietária de orquestração.</p>
+    <p>Durante esse processo de engenharia de IA, me deparei com os desafios clássicos de latência, amnésia de contexto e alucinações. Para superá-los, estruturei a aplicação com:</p>
+    <p>🧠 <strong>Modelos Abertos (Gemma):</strong> Para obter uma latência extremamente baixa nas inferências de intenção e heurísticas antes de escalar o raciocínio.<br>
+    🗃️ <strong>Memória Estratificada e Pruning (Supabase):</strong> Implementação de RAG (Vector DB) combinado com poda dinâmica de histórico, mantendo a Kaelara consciente do longo prazo sem estourar o limite de tokens da janela de contexto.<br>
+    ⚙️ <strong>Orquestração Assíncrona e Tool Calling:</strong> Para manter a UI fluida, separei o loop cognitivo da resposta HTTP. Se a IA precisa pesquisar na web ou ler um arquivo, ela planeja a execução, executa os passos internamente e aplica um 'feedback loop' para checar a qualidade do resultado antes de apresentar.</p>
+    <p>O código, a arquitetura detalhada e o manifesto das minhas decisões de design estão abertos no repositório. Documentar as falhas e os <em>trade-offs</em> foi a melhor aula de engenharia de software que eu poderia ter.</p>
+    <p>#IA #AI #EngenhariaDeSoftware #MachineLearning #GoogleGemma #Supabase #Python</p>
+  </blockquote>
+
+  <h2>2. Destaques do Currículo / Portfólio</h2>
+  <ul>
+    <li><strong>Orquestração e Arquitetura:</strong> Projetou e implementou um agente de IA autônomo (Kaelara) utilizando arquitetura assíncrona orientada a eventos e Tool Calling dinâmico, reduzindo a latência de interface em fluxos complexos de múltiplas etapas.</li>
+    <li><strong>Otimização de Contexto (RAG):</strong> Desenvolveu um sistema de memória estratificada (Curto e Longo Prazo) com Supabase Vector, aplicando algoritmos de pruning e sumarização contínua para prevenir exaustão do limite de tokens e manter consistência na personalidade do modelo.</li>
+    <li><strong>Roteamento Inteligente:</strong> Reduziu o custo de inferência e melhorou o tempo de resposta através do roteamento heurístico de intenções, selecionando modelos abertos (família Gemma) para parsing lógico rápido e delegando tarefas analíticas pesadas via Google Inference APIs.</li>
+    <li><strong>Resiliência e Fallbacks:</strong> Desenvolveu mecanismos de guardrails e degradação graciosa para chamadas falhas de LLMs/Ferramentas, garantindo estabilidade e disponibilidade no processamento do input dos usuários sem quebra da aplicação.</li>
+  </ul>
+
+  <div class="links-destaque">
+    <a href="https://kaelara-online.vercel.app/sobre" target="_blank">Quem Somos / Equipe</a>
+    <a href="https://kaelara-online.vercel.app/termos" target="_blank">Termos de Uso</a>
+    <a href="https://kaelara-online.vercel.app/politica-de-privacidade" target="_blank">Política de Privacidade</a>
+  </div>
+</div>
+
+</body>
+</html>

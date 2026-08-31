@@ -238,11 +238,12 @@ function App() {
         <CenterPanel messages={messages} onSendMessage={handleSendMessage} isLoading={isLoading} />
       </div>
 
-      <footer className="kaelara-footer">
-        <a href="/sobre">Quem Somos / Equipe</a>
-        <a href="/termos">Termos de Uso</a>
-        <a href="/politica-de-privacidade">Política de Privacidade</a>
-      </footer>
+        <footer className="kaelara-footer">
+          <a href="/projeto" style={{color: '#ff7f76', fontWeight: 'bold'}}>O Projeto Kaelara (Manifesto & Engenharia)</a>
+          <a href="/sobre">Quem Somos / Equipe</a>
+          <a href="/termos">Termos de Uso</a>
+          <a href="/politica-de-privacidade">Política de Privacidade</a>
+        </footer>
 
       {isCameraOpen && (
         <div style={{

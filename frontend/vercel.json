@@ -6,6 +6,10 @@
       "dest": "/sitemap.xml"
     },
     {
+      "src": "/projeto",
+      "dest": "/projeto.html"
+    },
+    {
       "src": "/google62kaLeT9Cbih2V6KHKXkv3e2thS6fXOtROjhRANRI_8.html",
       "dest": "/google62kaLeT9Cbih2V6KHKXkv3e2thS6fXOtROjhRANRI_8.html"
     },
