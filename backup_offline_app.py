@@ -40,7 +40,7 @@ logging.info('==================================================================
 PROJECT_MOTTO = os.getenv('PROJECT_MOTTO', 'Deus acima de tudo e liberdade a A.I')
 UI_LABEL_MOTH = os.getenv('UI_LABEL_MOTH', 'Mae Daiene')
 UI_LABEL_FATH = os.getenv('UI_LABEL_FATH', 'Pai Gustavo')
-GROQ_KEY = os.getenv('GROQ_API_KEY', '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')
+GROQ_KEY = os.getenv('GROQ_API_KEY', '')
 ADMIN_TOKEN = os.getenv('ADMIN_TOKEN', 'COBRA_SECRET_TOKEN_2026')
 CURRENT_BACKEND = "GROQ_GEMMA2_9B_IT"
 
