@@ -9,8 +9,7 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "electron-dev": "electron .",
-    "start": "npm run electron-dev",
-    "server": "node src/lib/internalServer.js"
+    "start": "npm run electron-dev"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.108.2",
@@ -19,8 +18,7 @@
     "electron": "^42.5.0",
     "pdf-lib": "^1.17.1",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "vm2": "^3.9.19"
+    "react-dom": "^19.2.7"
   },
   "devDependencies": {
     "@types/react": "^19.2.17",

@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+import json
 import os
 from datetime import UTC, datetime
 from uuid import uuid4
 
-from flask import Flask, jsonify, request
+from flask import Flask, Response, jsonify, request, stream_with_context
 from flask_cors import CORS
 from sqlalchemy import desc, func
 
@@ -85,15 +86,23 @@ def _recent_history(db, session_id: str, limit: int = 12) -> list[dict[str, str]
 def chat():
     data = request.get_json(silent=True) or {}
     user_msg = (data.get("message") or "").strip()
-    if not user_msg:
+    image_b64 = data.get("image")
+    if not user_msg and not image_b64:
         return jsonify({"error": "Empty message"}), 400
 
     db = SessionLocal()
     try:
-        session = _get_or_create_session(db, data.get("session_id"), user_msg)
+        display_msg = user_msg or "[Imagem anexada]"
+        session = _get_or_create_session(db, data.get("session_id"), display_msg)
         history = _recent_history(db, session.session_id)
-        db.add(ChatMessage(session_id=session.session_id, role="user", content=user_msg, provider="client"))
-        answer, provider = rag.ask(user_msg, history=history)
+        db.add(ChatMessage(session_id=session.session_id, role="user", content=display_msg, provider="client"))
+        if image_b64:
+            try:
+                answer, provider = rag.ask(user_msg or "Analise esta imagem, por favor.", history=history, image_base64=image_b64)
+            except TypeError:
+                answer, provider = rag.ask(user_msg or "Analise esta imagem, por favor.", history=history)
+        else:
+            answer, provider = rag.ask(user_msg, history=history)
         db.add(ChatMessage(session_id=session.session_id, role="assistant", content=answer, provider=provider))
         session.updated_at = datetime.now(UTC)
         db.commit()
@@ -118,6 +127,48 @@ def chat():
         return jsonify({"error": str(exc)}), 500
     finally:
         db.close()
+
+
+@app.route("/api/chat/stream", methods=["POST"])
+def chat_stream():
+    data = request.get_json(silent=True) or {}
+    user_msg = (data.get("message") or "").strip()
+    image_b64 = data.get("image")
+    session_id = data.get("session_id")
+    if not user_msg and not image_b64:
+        return jsonify({"error": "Empty message"}), 400
+
+    def generate():
+        db = SessionLocal()
+        try:
+            display_msg = user_msg or "[Imagem anexada]"
+            session = _get_or_create_session(db, session_id, display_msg)
+            history = _recent_history(db, session.session_id)
+            db.add(ChatMessage(session_id=session.session_id, role="user", content=display_msg, provider="client"))
+            db.commit()
+
+            yield f"data: {json.dumps({'type': 'session', 'session_id': session.session_id, 'session_title': session.title}, ensure_ascii=False)}\n\n"
+
+            accumulated = []
+            chosen_provider = "gemini"
+            query_text = user_msg or "Analise esta imagem, por favor."
+            for chunk_text, provider_name in rag.ask_stream(query_text, history=history, image_base64=image_b64):
+                chosen_provider = provider_name
+                accumulated.append(chunk_text)
+                yield f"data: {json.dumps({'type': 'chunk', 'text': chunk_text}, ensure_ascii=False)}\n\n"
+
+            full_answer = "".join(accumulated)
+            db.add(ChatMessage(session_id=session.session_id, role="assistant", content=full_answer, provider=chosen_provider))
+            session.updated_at = datetime.now(UTC)
+            db.commit()
+            yield f"data: {json.dumps({'type': 'done', 'answer': full_answer, 'provider': chosen_provider}, ensure_ascii=False)}\n\n"
+        except Exception as exc:
+            db.rollback()
+            yield f"data: {json.dumps({'type': 'error', 'error': str(exc)}, ensure_ascii=False)}\n\n"
+        finally:
+            db.close()
+
+    return Response(stream_with_context(generate()), mimetype="text/event-stream")
 
 
 @app.route("/api/history", methods=["GET"])

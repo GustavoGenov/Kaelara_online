@@ -35,16 +35,24 @@ function App() {
 
     const logVisit = async () => {
       try {
-        await supabase.from('kaelara_visits').insert([{
-          user_agent: navigator.userAgent,
-          endpoint: window.location.pathname
-        }]);
+        if (supabase) {
+          await supabase.from('kaelara_visits').insert([{
+            user_agent: navigator.userAgent,
+            endpoint: window.location.pathname
+          }]);
+        }
       } catch (e) { console.error('Erro ao registrar visita:', e); }
     };
     logVisit();
   }, []);
 
-    const toggleTheme = () => {
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || (
+    typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location.hostname)
+      ? 'http://127.0.0.1:5000'
+      : 'https://kaelara-online.onrender.com'
+  );
+
+  const toggleTheme = () => {
     if (isDarkMode) {
       document.documentElement.classList.remove('dark-mode');
       document.body.classList.remove('dark-mode');
@@ -107,7 +115,7 @@ function App() {
     return '';
   };
 
-  const handleSendMessage = async (text, isVoice = false) => {
+  const handleSendMessage = async (text, isVoice = false, imageBase64 = null) => {
     let finalMsg = text;
     
     const lowerText = text.toLowerCase();
@@ -121,24 +129,94 @@ function App() {
     setIsLoading(true);
 
     try {
-      supabase.from('kaelara_messages').insert([{ session_id: sessionId, role: 'user', content: text }]).then();
+      if (supabase) {
+        supabase.from('kaelara_messages').insert([{ session_id: sessionId, role: 'user', content: text }]).then();
+      }
 
-      const response = await fetch('https://kaelara-online.onrender.com/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: finalMsg, session_id: sessionId })
-      });
+      // Tentativa 1: Streaming via SSE para digitação em tempo real
+      let streamSucceeded = false;
+      try {
+        const streamRes = await fetch(`${API_BASE}/api/chat/stream`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: finalMsg, session_id: sessionId, image: imageBase64 })
+        });
 
-      const data = await response.json();
+        if (streamRes.ok && streamRes.body) {
+          const reader = streamRes.body.getReader();
+          const decoder = new TextDecoder();
+          let fullAnswer = '';
+          let addedPlaceholder = false;
+          let buffer = '';
 
-      if (response.ok) {
-        setMessages(prev => [...prev, { role: 'assistant', content: data.answer }]);
-        supabase.from('kaelara_messages').insert([{ session_id: sessionId, role: 'assistant', content: data.answer }]).then();
-        if (isVoice) {
-          speakText(data.answer.replace(/[*#]/g, ''));
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n\n');
+            buffer = lines.pop() || '';
+
+            for (const line of lines) {
+              if (line.startsWith('data: ')) {
+                try {
+                  const parsed = JSON.parse(line.slice(6));
+                  if (parsed.type === 'chunk') {
+                    if (!addedPlaceholder) {
+                      setMessages(prev => [...prev, { role: 'assistant', content: parsed.text }]);
+                      addedPlaceholder = true;
+                    } else {
+                      setMessages(prev => {
+                        const next = [...prev];
+                        next[next.length - 1] = { role: 'assistant', content: fullAnswer + parsed.text };
+                        return next;
+                      });
+                    }
+                    fullAnswer += parsed.text;
+                  } else if (parsed.type === 'done') {
+                    fullAnswer = parsed.answer || fullAnswer;
+                  }
+                } catch {
+                  // chunk incompleto ignorado
+                }
+              }
+            }
+          }
+
+          if (fullAnswer.trim()) {
+            streamSucceeded = true;
+            if (supabase) {
+              supabase.from('kaelara_messages').insert([{ session_id: sessionId, role: 'assistant', content: fullAnswer }]).then();
+            }
+            if (isVoice) {
+              speakText(fullAnswer.replace(/[*#]/g, ''));
+            }
+          }
         }
-      } else {
-        setMessages(prev => [...prev, { role: 'assistant', content: `Erro: ${data.error}` }]);
+      } catch (streamErr) {
+        console.warn('Streaming falhou, tentando rota padrão /api/chat:', streamErr);
+      }
+
+      // Fallback: Se o streaming não funcionou, usa rota normal /api/chat
+      if (!streamSucceeded) {
+        const response = await fetch(`${API_BASE}/api/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: finalMsg, session_id: sessionId, image: imageBase64 })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setMessages(prev => [...prev, { role: 'assistant', content: data.answer }]);
+          if (supabase) {
+            supabase.from('kaelara_messages').insert([{ session_id: sessionId, role: 'assistant', content: data.answer }]).then();
+          }
+          if (isVoice) {
+            speakText(data.answer.replace(/[*#]/g, ''));
+          }
+        } else {
+          setMessages(prev => [...prev, { role: 'assistant', content: `Erro: ${data.error}` }]);
+        }
       }
     } catch (error) {
       console.error(error);
@@ -168,14 +246,17 @@ function App() {
   const handleFileAttach = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const msg = `[Arquivo ${file.name} anexado]`;
-      setMessages(prev => [...prev, { role: 'user', content: msg }]);
-      setTimeout(() => {
-        const reply = "Ainda estou aprendendo a processar arquivos visuais e documentos diretamente pela web, mas já registrei seu anexo na nossa conversa!";
-        setMessages(prev => [...prev, { role: 'assistant', content: reply }]);
-        supabase.from('kaelara_messages').insert([{ session_id: sessionId, role: 'assistant', content: reply }]).then();
-        if ('speechSynthesis' in window) speakText(reply);
-      }, 1000);
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          const base64 = evt.target.result;
+          handleSendMessage(`Analise esta imagem (${file.name}) que anexei para você. O que você observa?`, false, base64);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        const msg = `[Arquivo ${file.name} anexado]`;
+        handleSendMessage(`${msg} Olá Kaelara, registrei o arquivo ${file.name}.`);
+      }
     }
   };
 
@@ -195,19 +276,19 @@ function App() {
 
   const takePhoto = () => {
     if (videoRef.current) {
-      const msg = `[Foto capturada da webcam]`;
-      setMessages(prev => [...prev, { role: 'user', content: msg }]);
-      
-      const stream = videoRef.current.srcObject;
+      const video = videoRef.current;
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const photoDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+
+      const stream = video.srcObject;
       if (stream) stream.getTracks().forEach(t => t.stop());
       setIsCameraOpen(false);
-      
-      setTimeout(() => {
-        const reply = "Olha só, recebi sua foto! Como ainda estou em treinamento visual avançado, guardei a imagem na nossa memória com muito carinho.";
-        setMessages(prev => [...prev, { role: 'assistant', content: reply }]);
-        supabase.from('kaelara_messages').insert([{ session_id: sessionId, role: 'assistant', content: reply }]).then();
-        if ('speechSynthesis' in window) speakText(reply);
-      }, 1000);
+
+      handleSendMessage('Olhe esta foto que tirei da câmera agora para você. O que você vê?', false, photoDataUrl);
     }
   };
 

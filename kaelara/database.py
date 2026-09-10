@@ -36,8 +36,8 @@ class ChatSession(Base):
 
     session_id = Column(String(64), primary_key=True)
     title = Column(String(160), nullable=False, default="Nova conversa")
-    created_at = Column(DateTime(timezone=True), nullable=False, default=datetime.utcnow)
-    updated_at = Column(DateTime(timezone=True), nullable=False, default=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC))
+    updated_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC))
 
     def __init__(self, session_id: str, title: str | None = None):
         now = datetime.now(UTC)
@@ -55,7 +55,7 @@ class ChatMessage(Base):
     role = Column(String(32), nullable=False)
     content = Column(Text, nullable=False)
     provider = Column(String(64), nullable=False, default="local")
-    created_at = Column(DateTime(timezone=True), nullable=False, default=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC))
 
     def __init__(self, session_id: str, role: str, content: str, provider: str = "local"):
         self.session_id = session_id

@@ -1,17 +1,29 @@
 # Arquivos de ambiente e chaves secretas (NUNCA envie ao GitHub)
-.env
-.env.local
-*.env
+.env*
+client_secret*.json
+*.pem
+*.key
 
-# Pastas de ambientes virtuais do Python
+# Bancos de dados locais
+*.db
+*.sqlite
+*.sqlite3
+
+# Pastas de ambientes virtuais do Python e caches
 venv/
 .venv/
 env/
+test_env/
 __pycache__/
 *.pyc
+.pytest_cache/
 
-# Pasta onde o modelo pesado da Kaelara fica salvo
-# Modelos gigantes de IA não devem ser versionados no Git
+# Mídia temporária e logs
+media/temp/
+uploads/
+feedback.log
+
+# Pasta de modelos pesados
 models/
 /opt/kaelara/models
 
@@ -26,5 +38,4 @@ dist/
 .next/
 out/
 build/
-
 .vercel

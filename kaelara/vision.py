@@ -7,14 +7,11 @@ Media files are written to `kaelara/media/temp/` and scheduled for deletion afte
 """
 import os
 import uuid
-import cv2
-import numpy as np
-import face_recognition
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from datetime import datetime, timedelta
 
-from .config import MEDIA_TTL
 from .cache import Cache
+from .config import MEDIA_TTL
 
 # Ensure temp directory exists
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -30,10 +27,10 @@ class Vision:
         """Remove files older than MEDIA_TTL seconds.
         This is called before each operation to keep the folder tidy.
         """
-        now = datetime.utcnow()
+        now = datetime.now(UTC)
         for file in list(TEMP_DIR.iterdir()):
             try:
-                mtime = datetime.utcfromtimestamp(file.stat().st_mtime)
+                mtime = datetime.fromtimestamp(file.stat().st_mtime, tz=UTC)
                 if (now - mtime).total_seconds() > MEDIA_TTL:
                     file.unlink()
             except Exception:
@@ -44,6 +41,11 @@ class Vision:
         The image is saved as a JPEG with a random UUID filename.
         """
         self._cleanup_expired()
+        try:
+            import cv2
+        except ImportError:
+            raise RuntimeError("opencv-python não está instalado. Instale opencv-python para suporte à webcam.")
+
         cap = cv2.VideoCapture(0)
         if not cap.isOpened():
             raise RuntimeError("Unable to access the webcam")
@@ -64,6 +66,12 @@ class Vision:
         Returns a list of dictionaries with bounding box and encoding (base64 string).
         """
         self._cleanup_expired()
+        try:
+            import cv2
+            import face_recognition
+        except ImportError:
+            raise RuntimeError("face_recognition ou opencv-python não estão instalados.")
+
         if not frame_path:
             frame_path = self.capture_frame()
         image = cv2.imread(frame_path)

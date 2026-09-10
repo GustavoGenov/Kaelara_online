@@ -1,12 +1,14 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import AuditPanel from './components/AuditPanel';
 import { supabase } from './lib/supabase';
 
 const AUDIT_PIN = '2506';
 
-const API_BASE = ['localhost', '127.0.0.1'].includes(window.location.hostname)
-  ? 'http://127.0.0.1:5000'
-  : 'https://kaelara-online.onrender.com';
+const API_BASE =
+  import.meta.env.VITE_API_BASE_URL ||
+  (['localhost', '127.0.0.1'].includes(window.location.hostname)
+    ? 'http://127.0.0.1:5000'
+    : 'https://kaelara-online.onrender.com');
 
 function AuditPage() {
   const [pin, setPin] = useState('');
@@ -32,10 +34,14 @@ function AuditPage() {
 
   const loadData = async (query = '') => {
     try {
+      const visitsPromise = supabase
+        ? supabase.from('kaelara_visits').select('*', { count: 'exact', head: true })
+        : Promise.resolve({ count: 0 });
+
       const [histRes, insRes, visitsData] = await Promise.all([
         fetch(`${API_BASE}/api/history${query ? `?q=${encodeURIComponent(query)}` : ''}`),
         fetch(`${API_BASE}/api/insights`),
-        supabase.from('kaelara_visits').select('*', { count: 'exact', head: true })
+        visitsPromise,
       ]);
       
       const histData = await histRes.json();

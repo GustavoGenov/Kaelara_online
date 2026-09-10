@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Iterable
+import base64
+from typing import Generator, Iterable
 
 import requests
 
@@ -39,6 +40,12 @@ class RAGEngine:
     def __init__(self, cache=None):
         self.cache = cache
         self.providers = self._load_providers()
+        self._gemini_clients: dict[str, any] = {}
+
+    def _get_gemini_client(self, api_key: str):
+        if api_key not in self._gemini_clients:
+            self._gemini_clients[api_key] = genai.Client(api_key=api_key)
+        return self._gemini_clients[api_key]
 
     def _load_providers(self) -> list[dict[str, str]]:
         providers: list[dict[str, str]] = []
@@ -47,7 +54,7 @@ class RAGEngine:
             providers.append(
                 {
                     "name": "gemini",
-                    "model": GEMINI_MODEL_NAME or "gemini-1.5-flash",
+                    "model": GEMINI_MODEL_NAME or "gemini-2.5-flash",
                     "key": GEMINI_API_KEY,
                 }
             )
@@ -84,67 +91,139 @@ class RAGEngine:
 
         return providers
 
-    def ask(self, message: str, history: Iterable[dict[str, str]] | None = None) -> tuple[str, str]:
+    def ask(
+        self,
+        message: str,
+        history: Iterable[dict[str, str]] | None = None,
+        image_base64: str | None = None,
+        mime_type: str = "image/jpeg",
+    ) -> tuple[str, str]:
+        last_error = ""
         for provider in self.providers:
             try:
                 if provider["name"] == "gemini":
                     prompt = self._build_gemini_prompt(message, history or [])
-                    return self._ask_gemini(provider, prompt), provider["name"]
-                
+                    return self._ask_gemini(provider, prompt, image_base64, mime_type), provider["name"]
+
                 prompt = self._build_prompt(message, history or [])
                 return self._ask_openai_compatible(provider, prompt), provider["name"]
             except Exception as exc:  # pragma: no cover - network dependent
                 last_error = f"{provider['name']}: {exc}"
+
         fallback = (
-            "No momento eu nao consegui acessar nenhum provedor de IA configurado. "
+            "No momento eu não consegui acessar nenhum provedor de IA configurado. "
             "Verifique as chaves de API e tente novamente."
         )
         if self.providers:
-            return f"{fallback} Ultima tentativa: {last_error}", "fallback"
+            return f"{fallback} Última tentativa: {last_error}", "fallback"
         return (
-            f"{fallback} Configure GEMINI_API_KEY ou uma combinacao como OPENAI_API_KEY + OPENAI_MODEL_NAME.",
+            f"{fallback} Configure GEMINI_API_KEY ou uma combinação como OPENAI_API_KEY + OPENAI_MODEL_NAME.",
             "fallback",
         )
+
+    def ask_stream(
+        self,
+        message: str,
+        history: Iterable[dict[str, str]] | None = None,
+        image_base64: str | None = None,
+        mime_type: str = "image/jpeg",
+    ) -> Generator[tuple[str, str], None, None]:
+        """Yield chunks of (chunk_text, provider_name)."""
+        last_error = ""
+        for provider in self.providers:
+            try:
+                if provider["name"] == "gemini":
+                    prompt = self._build_gemini_prompt(message, history or [])
+                    client = self._get_gemini_client(provider["key"])
+                    contents: list[any] = []
+                    if image_base64 and types is not None:
+                        clean_b64 = image_base64.split(",")[-1]
+                        image_bytes = base64.b64decode(clean_b64)
+                        contents.append(types.Part.from_bytes(data=image_bytes, mime_type=mime_type))
+                    contents.append(prompt)
+
+                    config_args = {}
+                    if types is not None:
+                        config_args = {
+                            "system_instruction": SYSTEM_PROMPT,
+                            "temperature": 0.75,
+                        }
+
+                    config = types.GenerateContentConfig(**config_args) if types else None
+                    for chunk in client.models.generate_content_stream(
+                        model=provider["model"], contents=contents, config=config
+                    ):
+                        if chunk.text:
+                            yield chunk.text, provider["name"]
+                    return
+
+                # Non-Gemini fallback: generate non-streaming chunk
+                prompt = self._build_prompt(message, history or [])
+                text = self._ask_openai_compatible(provider, prompt)
+                yield text, provider["name"]
+                return
+            except Exception as exc:  # pragma: no cover - network dependent
+                last_error = f"{provider['name']}: {exc}"
+
+        fallback = (
+            f"Desculpe, tive um problema ao conectar com a IA no momento. ({last_error})"
+            if last_error
+            else "Nenhum provedor de IA configurado."
+        )
+        yield fallback, "fallback"
 
     def _build_prompt(self, message: str, history: Iterable[dict[str, str]]) -> str:
         memory_lines = []
         for item in history:
-            role = "Usuario" if item.get("role") == "user" else "Kaelara"
+            role = "Usuário" if item.get("role") == "user" else "Kaelara"
             memory_lines.append(f"{role}: {item.get('content', '').strip()}")
-        memory_block = "\n".join(memory_lines[-12:]) if memory_lines else "Sem memoria anterior."
+        memory_block = "\n".join(memory_lines[-12:]) if memory_lines else "Sem memória anterior."
         return (
             f"{SYSTEM_PROMPT}\n\n"
-            f"Memoria recente:\n{memory_block}\n\n"
-            f"Mensagem atual do usuario:\n{message}\n\n"
+            f"Memória recente:\n{memory_block}\n\n"
+            f"Mensagem atual do usuário:\n{message}\n\n"
             "Resposta da Kaelara:"
         )
 
     def _build_gemini_prompt(self, message: str, history: Iterable[dict[str, str]]) -> str:
         memory_lines = []
         for item in history:
-            role = "Usuario" if item.get("role") == "user" else "Kaelara"
+            role = "Usuário" if item.get("role") == "user" else "Kaelara"
             memory_lines.append(f"{role}: {item.get('content', '').strip()}")
-        memory_block = "\n".join(memory_lines[-12:]) if memory_lines else "Sem memoria anterior."
+        memory_block = "\n".join(memory_lines[-12:]) if memory_lines else "Sem memória anterior."
         return (
-            f"Memoria recente:\n{memory_block}\n\n"
-            f"Mensagem atual do usuario:\n{message}\n\n"
-            "Resposta da Kaelara:"
+            f"Memória recente da conversa:\n{memory_block}\n\n"
+            f"Mensagem do usuário:\n{message}\n\n"
+            "Sua resposta:"
         )
 
-    def _ask_gemini(self, provider: dict[str, str], prompt: str) -> str:
-        client = genai.Client(api_key=provider["key"])
-        
+    def _ask_gemini(
+        self,
+        provider: dict[str, str],
+        prompt: str,
+        image_base64: str | None = None,
+        mime_type: str = "image/jpeg",
+    ) -> str:
+        client = self._get_gemini_client(provider["key"])
+
+        contents: list[any] = []
+        if image_base64 and types is not None:
+            clean_b64 = image_base64.split(",")[-1]
+            image_bytes = base64.b64decode(clean_b64)
+            contents.append(types.Part.from_bytes(data=image_bytes, mime_type=mime_type))
+        contents.append(prompt)
+
         config_args = {}
         if types is not None:
             config_args = {
                 "system_instruction": SYSTEM_PROMPT,
                 "temperature": 0.75,
             }
-            
+
         response = client.models.generate_content(
             model=provider["model"],
-            contents=prompt,
-            config=types.GenerateContentConfig(**config_args) if types else None
+            contents=contents,
+            config=types.GenerateContentConfig(**config_args) if types else None,
         )
         return (response.text or "").strip()
 
