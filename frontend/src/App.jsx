@@ -25,6 +25,12 @@ function App() {
   // Theme state
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || (
+    typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location.hostname)
+      ? 'http://127.0.0.1:5000'
+      : 'https://kaelara-online.onrender.com'
+  );
+
   useEffect(() => {
     // Carregar tema salvo
     const savedTheme = localStorage.getItem('kaelara_theme');
@@ -35,22 +41,19 @@ function App() {
 
     const logVisit = async () => {
       try {
-        if (supabase) {
-          await supabase.from('kaelara_visits').insert([{
-            user_agent: navigator.userAgent,
-            endpoint: window.location.pathname
-          }]);
-        }
+        fetch(`${API_BASE}/api/visit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            endpoint: window.location.pathname + window.location.hash,
+            referrer: document.referrer || null,
+            userAgent: navigator.userAgent
+          })
+        }).catch(() => {});
       } catch (e) { console.error('Erro ao registrar visita:', e); }
     };
     logVisit();
-  }, []);
-
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || (
-    typeof window !== 'undefined' && ['localhost', '127.0.0.1'].includes(window.location.hostname)
-      ? 'http://127.0.0.1:5000'
-      : 'https://kaelara-online.onrender.com'
-  );
+  }, [API_BASE]);
 
   const toggleTheme = () => {
     if (isDarkMode) {

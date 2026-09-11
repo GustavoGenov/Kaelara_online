@@ -65,6 +65,24 @@ class ChatMessage(Base):
         self.created_at = datetime.now(UTC)
 
 
+class Visit(Base):
+    __tablename__ = "visits"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    ip_hash = Column(String(64), nullable=True, index=True)
+    user_agent = Column(String(512), nullable=True)
+    endpoint = Column(String(128), nullable=True, default="/")
+    referrer = Column(String(256), nullable=True)
+    created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC), index=True)
+
+    def __init__(self, ip_hash: str | None = None, user_agent: str | None = None, endpoint: str = "/", referrer: str | None = None):
+        self.ip_hash = ip_hash
+        self.user_agent = user_agent
+        self.endpoint = endpoint
+        self.referrer = referrer
+        self.created_at = datetime.now(UTC)
+
+
 def init_db() -> None:
     """Create database tables if they do not exist."""
     Base.metadata.create_all(bind=engine)

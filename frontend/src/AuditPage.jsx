@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import AuditPanel from './components/AuditPanel';
-import { supabase } from './lib/supabase';
 
 const AUDIT_PIN = '2506';
 
@@ -17,8 +16,8 @@ function AuditPage() {
   const [historyItems, setHistoryItems] = useState([]);
   const [historyQuery, setHistoryQuery] = useState('');
   const [insights, setInsights] = useState(null);
+  const [visitsData, setVisitsData] = useState({ total_visits: 0, unique_visitors: 0, today_visits: 0, recent: [] });
   const [loaded, setLoaded] = useState(false);
-  const [totalVisits, setTotalVisits] = useState(0);
 
   const handleUnlock = async (e) => {
     e.preventDefault();
@@ -34,29 +33,51 @@ function AuditPage() {
 
   const loadData = async (query = '') => {
     try {
-      const visitsPromise = supabase
-        ? supabase.from('kaelara_visits').select('*', { count: 'exact', head: true })
-        : Promise.resolve({ count: 0 });
-
-      const [histRes, insRes, visitsData] = await Promise.all([
+      const [histRes, insRes, visitsRes] = await Promise.all([
         fetch(`${API_BASE}/api/history${query ? `?q=${encodeURIComponent(query)}` : ''}`),
         fetch(`${API_BASE}/api/insights`),
-        visitsPromise,
+        fetch(`${API_BASE}/api/visits?limit=50`),
       ]);
-      
-      const histData = await histRes.json();
-      const insData = await insRes.json();
-      if (histRes.ok) setHistoryItems(histData.items || []);
-      if (insRes.ok) setInsights(insData);
-      if (visitsData && visitsData.count !== null) setTotalVisits(visitsData.count);
+
+      if (histRes.ok) {
+        const histData = await histRes.json();
+        setHistoryItems(histData.items || []);
+      }
+      if (insRes.ok) {
+        const insData = await insRes.json();
+        setInsights(insData);
+      }
+      if (visitsRes.ok) {
+        const vData = await visitsRes.json();
+        setVisitsData(vData);
+      }
       setLoaded(true);
     } catch (err) {
-      console.error(err);
+      console.error('Erro ao carregar dados de auditoria:', err);
       setLoaded(true);
     }
   };
 
-  const loadSession = async (sessionId) => {
+  const handleDeleteSession = async (sessionId) => {
+    if (!window.confirm('Tem certeza que deseja excluir permanentemente esta conversa do banco de dados?')) {
+      return;
+    }
+    try {
+      const res = await fetch(`${API_BASE}/api/history/${sessionId}`, { method: 'DELETE' });
+      if (res.ok) {
+        setHistoryItems((prev) => prev.filter((item) => item.session_id !== sessionId));
+        const insRes = await fetch(`${API_BASE}/api/insights`);
+        if (insRes.ok) setInsights(await insRes.json());
+      } else {
+        alert('Erro ao excluir conversa.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Falha na comunicação com o servidor.');
+    }
+  };
+
+  const loadSession = (sessionId) => {
     window.open(`${API_BASE}/api/history/${sessionId}`, '_blank');
   };
 
@@ -65,10 +86,10 @@ function AuditPage() {
       <div className="audit-login-screen">
         <div className="audit-login-card glass-panel">
           <div className="audit-login-icon">
-            <span className="material-icons" style={{ fontSize: '48px', color: 'var(--accent)' }}>lock</span>
+            <span className="material-icons" style={{ fontSize: '48px', color: 'var(--primary-pink)' }}>lock</span>
           </div>
           <h2 className="audit-login-title">Área Restrita</h2>
-          <p className="audit-login-sub">Painel de auditoria da Kaelara - acesso exclusivo do administrador.</p>
+          <p className="audit-login-sub">Painel de auditoria da Kaelara - banco de dados e tráfego em tempo real.</p>
           <form onSubmit={handleUnlock} className="audit-login-form">
             <input
               type="password"
@@ -94,15 +115,15 @@ function AuditPage() {
     <div className="audit-page-shell">
       <header className="audit-page-header glass-panel">
         <div className="audit-page-brand">
-          <span className="material-icons" style={{ color: 'var(--accent)' }}>analytics</span>
+          <span className="material-icons" style={{ color: 'var(--primary-pink)', fontSize: '28px' }}>analytics</span>
           <div>
-            <span className="section-label">Kaelara - Painel Exclusivo</span>
-            <h1 style={{ margin: 0, fontSize: '18px' }}>Auditoria Completa</h1>
+            <span className="section-label">Kaelara - Inteligência & Auditoria</span>
+            <h1 style={{ margin: 0, fontSize: '20px', fontWeight: 800 }}>Painel Administrativo</h1>
           </div>
         </div>
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-            {loaded ? `${historyItems.length} conversas carregadas` : 'Carregando...'}
+        <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+          <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
+            {loaded ? `${historyItems.length} conversas | ${visitsData?.total_visits || 0} visitas` : 'Carregando...'}
           </span>
           <a href="/" className="btn-secondary" style={{ textDecoration: 'none' }}>
             ← Interface Principal
@@ -115,8 +136,9 @@ function AuditPage() {
           historyItems={historyItems}
           historyQuery={historyQuery}
           insights={insights}
-          totalVisits={totalVisits}
+          visitsData={visitsData}
           onLoadSession={loadSession}
+          onDeleteSession={handleDeleteSession}
           onRefreshHistory={() => loadData(historyQuery)}
           onSearchHistory={(value) => {
             setHistoryQuery(value);

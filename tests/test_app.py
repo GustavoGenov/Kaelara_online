@@ -73,3 +73,53 @@ def test_chat_with_image(client, monkeypatch):
     data = resp.get_json()
     assert data['answer'] == 'Vejo a imagem enviada!'
     assert called_with_image == ['data:image/jpeg;base64,dGVzdA==']
+
+
+def test_visit_tracking_and_insights(client):
+    # Registrar visita
+    visit_payload = {
+        "endpoint": "/#audit",
+        "referrer": "https://google.com",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0"
+    }
+    resp = client.post('/api/visit', json=visit_payload)
+    assert resp.status_code == 201
+    assert resp.json.get('status') == 'recorded'
+
+    # Consultar estatísticas de visitas
+    visits_resp = client.get('/api/visits')
+    assert visits_resp.status_code == 200
+    visits_data = visits_resp.get_json()
+    assert visits_data['total_visits'] >= 1
+    assert visits_data['unique_visitors'] >= 1
+    assert visits_data['today_visits'] >= 1
+    assert len(visits_data['recent']) >= 1
+    assert visits_data['recent'][0]['endpoint'] == '/#audit'
+
+    # Consultar insights consolidado
+    ins_resp = client.get('/api/insights')
+    assert ins_resp.status_code == 200
+    ins_data = ins_resp.get_json()
+    assert ins_data['total_visits'] >= 1
+    assert 'unique_visitors' in ins_data
+    assert 'today_visits' in ins_data
+
+
+def test_delete_history_session(client):
+    # Criar uma sessão para deletar
+    from kaelara.database import ChatMessage, ChatSession, SessionLocal
+    db = SessionLocal()
+    sess = ChatSession(session_id="to-delete-123", title="Para deletar")
+    msg = ChatMessage(session_id="to-delete-123", role="user", content="teste delecao")
+    db.add(sess)
+    db.add(msg)
+    db.commit()
+    db.close()
+
+    del_resp = client.delete('/api/history/to-delete-123')
+    assert del_resp.status_code == 200
+    assert del_resp.json.get('status') == 'deleted'
+
+    get_resp = client.get('/api/history/to-delete-123')
+    assert get_resp.status_code == 404
+

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 from datetime import UTC, datetime
@@ -13,7 +14,7 @@ from sqlalchemy import desc, func
 
 from .cache import Cache
 from .config import MEDIA_TTL, REDIS_URL
-from .database import ChatMessage, ChatSession, SessionLocal, init_db
+from .database import ChatMessage, ChatSession, SessionLocal, Visit, init_db
 from .rag import RAGEngine
 
 try:
@@ -230,6 +231,85 @@ def history_detail(session_id: str):
         db.close()
 
 
+@app.route("/api/history/<session_id>", methods=["DELETE"])
+def history_delete(session_id: str):
+    db = SessionLocal()
+    try:
+        session = db.get(ChatSession, session_id)
+        if session is None:
+            return jsonify({"error": "Session not found"}), 404
+        db.query(ChatMessage).filter(ChatMessage.session_id == session_id).delete()
+        db.delete(session)
+        db.commit()
+        return jsonify({"status": "deleted", "session_id": session_id})
+    except Exception as exc:
+        db.rollback()
+        return jsonify({"error": str(exc)}), 500
+    finally:
+        db.close()
+
+
+@app.route("/api/visit", methods=["POST"])
+def record_visit():
+    data = request.get_json(silent=True) or {}
+    endpoint = str(data.get("endpoint") or "/")[:128]
+    referrer = str(data.get("referrer") or request.referrer or "")[:256] or None
+    user_agent = str(data.get("userAgent") or request.headers.get("User-Agent") or "")[:512]
+
+    # IP anonimizado para contagem segura de visitantes únicos
+    raw_ip = request.headers.get("X-Forwarded-For", request.remote_addr or "127.0.0.1")
+    ip_first = raw_ip.split(",")[0].strip()
+    ip_hash = hashlib.sha256(f"kae_{ip_first}".encode("utf-8")).hexdigest()[:16]
+
+    db = SessionLocal()
+    try:
+        visit = Visit(ip_hash=ip_hash, user_agent=user_agent, endpoint=endpoint, referrer=referrer)
+        db.add(visit)
+        db.commit()
+        return jsonify({"status": "recorded", "id": visit.id}), 201
+    except Exception as exc:
+        db.rollback()
+        return jsonify({"error": str(exc)}), 500
+    finally:
+        db.close()
+
+
+@app.route("/api/visits", methods=["GET"])
+def get_visits():
+    limit = min(max(int(request.args.get("limit", 50)), 1), 100)
+    db = SessionLocal()
+    try:
+        total_visits = db.query(func.count(Visit.id)).scalar() or 0
+        unique_visitors = db.query(func.count(func.distinct(Visit.ip_hash))).scalar() or 0
+
+        now = datetime.now(UTC)
+        start_of_today = datetime(now.year, now.month, now.day, tzinfo=UTC)
+        today_visits = db.query(func.count(Visit.id)).filter(Visit.created_at >= start_of_today).scalar() or 0
+
+        recent_rows = db.query(Visit).order_by(Visit.created_at.desc(), Visit.id.desc()).limit(limit).all()
+        recent = [
+            {
+                "id": row.id,
+                "ip_hash": row.ip_hash,
+                "user_agent": row.user_agent,
+                "endpoint": row.endpoint,
+                "referrer": row.referrer,
+                "created_at": row.created_at.isoformat() if row.created_at else None,
+            }
+            for row in recent_rows
+        ]
+        return jsonify(
+            {
+                "total_visits": total_visits,
+                "unique_visitors": unique_visitors,
+                "today_visits": today_visits,
+                "recent": recent,
+            }
+        )
+    finally:
+        db.close()
+
+
 @app.route("/api/insights", methods=["GET"])
 def insights():
     db = SessionLocal()
@@ -237,10 +317,20 @@ def insights():
         total_sessions = db.query(func.count(ChatSession.session_id)).scalar() or 0
         total_messages = db.query(func.count(ChatMessage.id)).scalar() or 0
         last_message = db.query(ChatMessage).order_by(ChatMessage.created_at.desc(), ChatMessage.id.desc()).first()
+
+        total_visits = db.query(func.count(Visit.id)).scalar() or 0
+        unique_visitors = db.query(func.count(func.distinct(Visit.ip_hash))).scalar() or 0
+        now = datetime.now(UTC)
+        start_of_today = datetime(now.year, now.month, now.day, tzinfo=UTC)
+        today_visits = db.query(func.count(Visit.id)).filter(Visit.created_at >= start_of_today).scalar() or 0
+
         return jsonify(
             {
                 "total_sessions": total_sessions,
                 "total_messages": total_messages,
+                "total_visits": total_visits,
+                "unique_visitors": unique_visitors,
+                "today_visits": today_visits,
                 "last_provider": last_message.provider if last_message else None,
                 "audio_available": audio is not None,
                 "vision_available": vision is not None,
