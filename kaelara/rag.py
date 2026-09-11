@@ -151,7 +151,7 @@ class RAGEngine:
                         }
 
                     config = types.GenerateContentConfig(**config_args) if types else None
-                    candidate_models = [provider["model"], "gemini-flash-latest", "gemini-3.6-flash", "gemini-2.5-flash-lite"]
+                    candidate_models = list(dict.fromkeys([provider["model"], "gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-flash-latest"]))
                     stream_started = False
                     for candidate in candidate_models:
                         try:
@@ -164,7 +164,8 @@ class RAGEngine:
                             if stream_started:
                                 return
                         except Exception as stream_err:
-                            if "404" in str(stream_err) or "NOT_FOUND" in str(stream_err):
+                            err_msg = str(stream_err)
+                            if any(c in err_msg for c in ["404", "NOT_FOUND", "503", "UNAVAILABLE", "429", "ResourceExhausted"]):
                                 continue
                             raise stream_err
                     return
@@ -233,7 +234,7 @@ class RAGEngine:
             }
 
         config = types.GenerateContentConfig(**config_args) if types else None
-        candidate_models = [provider["model"], "gemini-flash-latest", "gemini-3.6-flash", "gemini-2.5-flash-lite"]
+        candidate_models = list(dict.fromkeys([provider["model"], "gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-flash-latest"]))
         last_exc = None
         for candidate in candidate_models:
             try:
@@ -245,7 +246,8 @@ class RAGEngine:
                 return (response.text or "").strip()
             except Exception as exc:
                 last_exc = exc
-                if "404" in str(exc) or "NOT_FOUND" in str(exc):
+                err_msg = str(exc)
+                if any(c in err_msg for c in ["404", "NOT_FOUND", "503", "UNAVAILABLE", "429", "ResourceExhausted"]):
                     continue
                 raise exc
         if last_exc:

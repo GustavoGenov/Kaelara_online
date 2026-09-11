@@ -31,7 +31,7 @@ GOOGLE_API_KEY = _clean_env("GOOGLE_API_KEY")
 GOOGLE_CSE_ID = _clean_env("GOOGLE_CSE_ID")
 
 GEMINI_API_KEY = _clean_env("GEMINI_API_KEY")
-GEMINI_MODEL_NAME = _clean_env("GEMINI_MODEL_NAME", "gemini-flash-latest")
+GEMINI_MODEL_NAME = _clean_env("GEMINI_MODEL_NAME", "gemini-3.6-flash")
 
 OPENAI_API_KEY = _clean_env("OPENAI_API_KEY")
 OPENAI_MODEL_NAME = _clean_env("OPENAI_MODEL_NAME")
