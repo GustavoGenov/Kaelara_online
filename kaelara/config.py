@@ -12,29 +12,37 @@ if env_path.is_file():
     load_dotenv(dotenv_path=env_path)
 
 
-DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{(BASE_DIR / 'kaelara.db').as_posix()}")
+def _clean_env(key: str, default: str | None = None) -> str | None:
+    val = os.getenv(key, default)
+    if val is None:
+        return None
+    cleaned = val.strip().strip("'\"").strip()
+    return cleaned if cleaned else default
 
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY") or os.getenv("SUPABASE_KEY")
 
-REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+DATABASE_URL = _clean_env("DATABASE_URL", f"sqlite:///{(BASE_DIR / 'kaelara.db').as_posix()}")
 
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
+SUPABASE_URL = _clean_env("SUPABASE_URL")
+SUPABASE_KEY = _clean_env("SUPABASE_SERVICE_ROLE_KEY") or _clean_env("SUPABASE_KEY")
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_MODEL_NAME = os.getenv("GEMINI_MODEL_NAME", "gemini-flash-latest")
+REDIS_URL = _clean_env("REDIS_URL", "redis://localhost:6379/0")
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-OPENAI_MODEL_NAME = os.getenv("OPENAI_MODEL_NAME")
-OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
+GOOGLE_API_KEY = _clean_env("GOOGLE_API_KEY")
+GOOGLE_CSE_ID = _clean_env("GOOGLE_CSE_ID")
 
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-GROQ_MODEL_NAME = os.getenv("GROQ_MODEL_NAME")
-GROQ_BASE_URL = os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1")
+GEMINI_API_KEY = _clean_env("GEMINI_API_KEY")
+GEMINI_MODEL_NAME = _clean_env("GEMINI_MODEL_NAME", "gemini-flash-latest")
 
-GROK_API_KEY = os.getenv("GROK_API_KEY")
-GROK_MODEL_NAME = os.getenv("GROK_MODEL_NAME")
-GROK_BASE_URL = os.getenv("GROK_BASE_URL", "https://api.x.ai/v1")
+OPENAI_API_KEY = _clean_env("OPENAI_API_KEY")
+OPENAI_MODEL_NAME = _clean_env("OPENAI_MODEL_NAME")
+OPENAI_BASE_URL = _clean_env("OPENAI_BASE_URL", "https://api.openai.com/v1")
 
-MEDIA_TTL = int(os.getenv("MEDIA_TTL", "86400"))
+GROQ_API_KEY = _clean_env("GROQ_API_KEY")
+GROQ_MODEL_NAME = _clean_env("GROQ_MODEL_NAME")
+GROQ_BASE_URL = _clean_env("GROQ_BASE_URL", "https://api.groq.com/openai/v1")
+
+GROK_API_KEY = _clean_env("GROK_API_KEY")
+GROK_MODEL_NAME = _clean_env("GROK_MODEL_NAME")
+GROK_BASE_URL = _clean_env("GROK_BASE_URL", "https://api.x.ai/v1")
+
+MEDIA_TTL = int(_clean_env("MEDIA_TTL", "86400") or "86400")

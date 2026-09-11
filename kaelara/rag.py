@@ -43,9 +43,10 @@ class RAGEngine:
         self._gemini_clients: dict[str, any] = {}
 
     def _get_gemini_client(self, api_key: str):
-        if api_key not in self._gemini_clients:
-            self._gemini_clients[api_key] = genai.Client(api_key=api_key)
-        return self._gemini_clients[api_key]
+        clean_key = api_key.strip().strip("'\"").strip()
+        if clean_key not in self._gemini_clients:
+            self._gemini_clients[clean_key] = genai.Client(api_key=clean_key)
+        return self._gemini_clients[clean_key]
 
     def _load_providers(self) -> list[dict[str, str]]:
         providers: list[dict[str, str]] = []
