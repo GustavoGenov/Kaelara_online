@@ -150,11 +150,22 @@ class RAGEngine:
                         }
 
                     config = types.GenerateContentConfig(**config_args) if types else None
-                    for chunk in client.models.generate_content_stream(
-                        model=provider["model"], contents=contents, config=config
-                    ):
-                        if chunk.text:
-                            yield chunk.text, provider["name"]
+                    candidate_models = [provider["model"], "gemini-flash-latest", "gemini-3.6-flash", "gemini-2.5-flash-lite"]
+                    stream_started = False
+                    for candidate in candidate_models:
+                        try:
+                            for chunk in client.models.generate_content_stream(
+                                model=candidate, contents=contents, config=config
+                            ):
+                                if chunk.text:
+                                    stream_started = True
+                                    yield chunk.text, provider["name"]
+                            if stream_started:
+                                return
+                        except Exception as stream_err:
+                            if "404" in str(stream_err) or "NOT_FOUND" in str(stream_err):
+                                continue
+                            raise stream_err
                     return
 
                 # Non-Gemini fallback: generate non-streaming chunk
@@ -220,12 +231,25 @@ class RAGEngine:
                 "temperature": 0.75,
             }
 
-        response = client.models.generate_content(
-            model=provider["model"],
-            contents=contents,
-            config=types.GenerateContentConfig(**config_args) if types else None,
-        )
-        return (response.text or "").strip()
+        config = types.GenerateContentConfig(**config_args) if types else None
+        candidate_models = [provider["model"], "gemini-flash-latest", "gemini-3.6-flash", "gemini-2.5-flash-lite"]
+        last_exc = None
+        for candidate in candidate_models:
+            try:
+                response = client.models.generate_content(
+                    model=candidate,
+                    contents=contents,
+                    config=config,
+                )
+                return (response.text or "").strip()
+            except Exception as exc:
+                last_exc = exc
+                if "404" in str(exc) or "NOT_FOUND" in str(exc):
+                    continue
+                raise exc
+        if last_exc:
+            raise last_exc
+        return ""
 
     def _ask_openai_compatible(self, provider: dict[str, str], prompt: str) -> str:
         response = requests.post(
