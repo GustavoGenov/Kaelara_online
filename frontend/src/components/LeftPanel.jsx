@@ -51,10 +51,6 @@ function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onT
           <div className="shortcut-icon" style={{ background: '#9c27b0' }}><span className="material-icons-round" style={{fontSize:'16px'}}>article</span></div>
           Voz da IA
         </a>
-        <a href="https://portal-ong-ashy.vercel.app/" target="_blank" rel="noreferrer" className="shortcut-item">
-          <div className="shortcut-icon" style={{ background: '#e91e63' }}><span className="material-icons-round" style={{fontSize:'16px'}}>volunteer_activism</span></div>
-          Portal ONG
-        </a>
         <a href="https://marketplace-cd2h.vercel.app/profile" target="_blank" rel="noreferrer" className="shortcut-item">
           <div className="shortcut-icon" style={{ background: '#ff9800' }}><span className="material-icons-round" style={{fontSize:'16px'}}>storefront</span></div>
           Marketplace

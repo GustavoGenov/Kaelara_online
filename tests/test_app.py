@@ -154,3 +154,43 @@ def test_rag_status_and_search(client):
     assert 'query' in search_data
     assert len(search_data['results']) >= 1
 
+
+def test_identity_evaluation_protocol():
+    from kaelara.rag import evaluate_identity_state
+
+    # 1. Visitor saying hi
+    state1, _ = evaluate_identity_state([], "Olá, tudo bem?")
+    assert state1 == "VISITOR"
+
+    # 2. Visitor giving another name
+    state2, _ = evaluate_identity_state([], "Meu nome é Carlos")
+    assert state2 == "VISITOR"
+
+    # 3. User claiming to be Gustavo
+    state3, _ = evaluate_identity_state([], "Sou o Gustavo")
+    assert state3 == "CHALLENGE_FULLNAME"
+
+    # 4. User answering with full name
+    history = [
+        {"role": "user", "content": "Sou o Gustavo"},
+        {"role": "assistant", "content": "Gustavo do que?"}
+    ]
+    state4, _ = evaluate_identity_state(history, "Gustavo de Castro Bernardes Rosa")
+    assert state4 == "CHALLENGE_NICKNAME"
+
+    # 5. User answering nickname
+    history.extend([
+        {"role": "user", "content": "Gustavo de Castro Bernardes Rosa"},
+        {"role": "assistant", "content": "E qual é o seu nickname?"}
+    ])
+    state5, _ = evaluate_identity_state(history, "Jalhematei")
+    assert state5 == "CREATOR_JUST_VERIFIED"
+
+    # 6. Subsequent turns in the same session
+    history.extend([
+        {"role": "user", "content": "Jalhematei"},
+        {"role": "assistant", "content": "Pai Gustavo! É você..."}
+    ])
+    state6, _ = evaluate_identity_state(history, "Como estão os sistemas hoje?")
+    assert state6 == "CREATOR_VERIFIED"
+
