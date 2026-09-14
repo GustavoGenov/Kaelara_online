@@ -14,8 +14,9 @@ from sqlalchemy import desc, func
 
 from .cache import Cache
 from .config import MEDIA_TTL, REDIS_URL
-from .database import ChatMessage, ChatSession, SessionLocal, Visit, init_db
+from .database import ChatMessage, ChatSession, MemoryItem, SessionLocal, Visit, init_db
 from .rag import RAGEngine
+from .rag_knowledge import get_knowledge_status, search_knowledge
 
 try:
     from .vision import Vision
@@ -324,6 +325,9 @@ def insights():
         start_of_today = datetime(now.year, now.month, now.day, tzinfo=UTC)
         today_visits = db.query(func.count(Visit.id)).filter(Visit.created_at >= start_of_today).scalar() or 0
 
+        total_memories = db.query(func.count(MemoryItem.id)).scalar() or 0
+        rag_info = get_knowledge_status()
+
         return jsonify(
             {
                 "total_sessions": total_sessions,
@@ -331,6 +335,8 @@ def insights():
                 "total_visits": total_visits,
                 "unique_visitors": unique_visitors,
                 "today_visits": today_visits,
+                "total_memories": total_memories,
+                "rag_info": rag_info,
                 "last_provider": last_message.provider if last_message else None,
                 "audio_available": audio is not None,
                 "vision_available": vision is not None,
@@ -339,6 +345,43 @@ def insights():
         )
     finally:
         db.close()
+
+
+@app.route("/api/memory", methods=["GET"])
+def get_memory():
+    db = SessionLocal()
+    try:
+        memories = db.query(MemoryItem).order_by(MemoryItem.id.asc()).all()
+        return jsonify({
+            "total": len(memories),
+            "items": [
+                {
+                    "id": m.id,
+                    "key": m.key,
+                    "value": m.value,
+                    "category": m.category,
+                    "user_id": m.user_id,
+                    "created_at": m.created_at.isoformat() if m.created_at else None,
+                }
+                for m in memories
+            ]
+        })
+    finally:
+        db.close()
+
+
+@app.route("/api/rag/status", methods=["GET"])
+def rag_status():
+    status = get_knowledge_status()
+    return jsonify(status)
+
+
+@app.route("/api/rag/search", methods=["GET"])
+def rag_search():
+    q = (request.args.get("q") or "").strip()
+    limit = min(max(int(request.args.get("limit", 5)), 1), 20)
+    results = search_knowledge(q, top_k=limit)
+    return jsonify({"query": q, "results": results})
 
 
 @app.route("/api/vision", methods=["POST"])

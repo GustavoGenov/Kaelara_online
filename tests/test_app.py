@@ -123,3 +123,34 @@ def test_delete_history_session(client):
     get_resp = client.get('/api/history/to-delete-123')
     assert get_resp.status_code == 404
 
+
+def test_memory_endpoint(client):
+    resp = client.get('/api/memory')
+    assert resp.status_code == 200
+    data = resp.get_json()
+    assert 'items' in data
+    assert 'total' in data
+    assert data['total'] >= 1
+    # Check that creator memory exists
+    keys = [item['key'] for item in data['items']]
+    assert any('criador' in k or 'creator' in k for k in keys)
+
+
+def test_rag_status_and_search(client):
+    # Status
+    status_resp = client.get('/api/rag/status')
+    assert status_resp.status_code == 200
+    status_data = status_resp.get_json()
+    assert 'local_path' in status_data
+    assert 'local_connected' in status_data
+    assert 'total_documents_catalog' in status_data
+    assert status_data['total_documents_catalog'] >= 1
+
+    # Search
+    search_resp = client.get('/api/rag/search?q=Gustavo')
+    assert search_resp.status_code == 200
+    search_data = search_resp.get_json()
+    assert 'results' in search_data
+    assert 'query' in search_data
+    assert len(search_data['results']) >= 1
+

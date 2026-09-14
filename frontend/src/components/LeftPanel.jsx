@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 
-function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onToggleTheme, isDarkMode }) {
+function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onToggleTheme, isDarkMode, onNewChat }) {
   const fileInputRef = useRef(null);
 
   return (
@@ -23,6 +23,11 @@ function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onT
 
       <div className="section-title">Ações Rápidas</div>
       <div className="tools-grid">
+        <button className="tool-btn" onClick={onNewChat} title="Iniciar nova conversa mantendo o histórico no banco">
+          <span className="material-icons-round">add_comment</span>
+          <span className="label">Novo Chat</span>
+        </button>
+
         <button className="tool-btn" onClick={onVoiceClick} style={{ background: isListening ? '#f44336' : '', color: isListening ? '#fff' : '' }}>
           <span className="material-icons-round">{isListening ? 'mic_none' : 'mic'}</span>
           <span className="label">{isListening ? 'Ouvindo...' : 'Falar'}</span>

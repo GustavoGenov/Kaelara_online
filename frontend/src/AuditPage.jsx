@@ -17,6 +17,7 @@ function AuditPage() {
   const [historyQuery, setHistoryQuery] = useState('');
   const [insights, setInsights] = useState(null);
   const [visitsData, setVisitsData] = useState({ total_visits: 0, unique_visitors: 0, today_visits: 0, recent: [] });
+  const [memoriesData, setMemoriesData] = useState([]);
   const [loaded, setLoaded] = useState(false);
 
   const handleUnlock = async (e) => {
@@ -33,10 +34,11 @@ function AuditPage() {
 
   const loadData = async (query = '') => {
     try {
-      const [histRes, insRes, visitsRes] = await Promise.all([
+      const [histRes, insRes, visitsRes, memRes] = await Promise.all([
         fetch(`${API_BASE}/api/history${query ? `?q=${encodeURIComponent(query)}` : ''}`),
         fetch(`${API_BASE}/api/insights`),
         fetch(`${API_BASE}/api/visits?limit=50`),
+        fetch(`${API_BASE}/api/memory`),
       ]);
 
       if (histRes.ok) {
@@ -50,6 +52,10 @@ function AuditPage() {
       if (visitsRes.ok) {
         const vData = await visitsRes.json();
         setVisitsData(vData);
+      }
+      if (memRes.ok) {
+        const mData = await memRes.json();
+        setMemoriesData(mData.items || []);
       }
       setLoaded(true);
     } catch (err) {
@@ -137,6 +143,7 @@ function AuditPage() {
           historyQuery={historyQuery}
           insights={insights}
           visitsData={visitsData}
+          memoriesData={memoriesData}
           onLoadSession={loadSession}
           onDeleteSession={handleDeleteSession}
           onRefreshHistory={() => loadData(historyQuery)}

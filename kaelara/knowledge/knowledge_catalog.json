@@ -1,0 +1,1550 @@
+{
+  "total_documents": 705,
+  "categories_count": 20,
+  "categories": {
+    "Geral": 2,
+    "Advogado": 1,
+    "CARDIOLOGIA": 4,
+    "CUIDADOS COM IDOSOS": 7,
+    "cybersecurity": 21,
+    "Desenhista": 8,
+    "ENFERMAGEM": 13,
+    "Estrategista": 92,
+    "GRAMÁTICA COMPLETO": 84,
+    "hacker": 25,
+    "Higiene_pessoal": 7,
+    "Historico_Decisao": 15,
+    "Jogadora": 30,
+    "Limpeza_casa": 3,
+    "Loterias_caixa": 14,
+    "Manutencao_residencial": 11,
+    "Medicina": 92,
+    "NEUROCIÊNCIA E A.I": 57,
+    "Professora": 202,
+    "Religiao": 17
+  },
+  "documents": [
+    {
+      "file": "AUTOCONHECIMENTO_OPERACIONAL_KAELARA.md",
+      "category": "Geral",
+      "path": ".\\AUTOCONHECIMENTO_OPERACIONAL_KAELARA.md"
+    },
+    {
+      "file": "AUTOCONHECIMENTO_OPERACIONAL_KAELARA.txt",
+      "category": "Geral",
+      "path": ".\\AUTOCONHECIMENTO_OPERACIONAL_KAELARA.txt"
+    },
+    {
+      "file": "links seja advogado.docx",
+      "category": "Advogado",
+      "path": "Advogado\\links seja advogado.docx"
+    },
+    {
+      "file": "Cardiologia-Teoria-e-Pratica-Ed-II.docx",
+      "category": "CARDIOLOGIA",
+      "path": "CARDIOLOGIA\\Cardiologia-Teoria-e-Pratica-Ed-II.docx"
+    },
+    {
+      "file": "CardiologianaEmergencia.docx",
+      "category": "CARDIOLOGIA",
+      "path": "CARDIOLOGIA\\CardiologianaEmergencia.docx"
+    },
+    {
+      "file": "hemodinamica-cardiovasular.docx",
+      "category": "CARDIOLOGIA",
+      "path": "CARDIOLOGIA\\hemodinamica-cardiovasular.docx"
+    },
+    {
+      "file": "Livro-DCCCP-2023.docx",
+      "category": "CARDIOLOGIA",
+      "path": "CARDIOLOGIA\\Livro-DCCCP-2023.docx"
+    },
+    {
+      "file": "Cuidadordeidosos.docx",
+      "category": "CUIDADOS COM IDOSOS",
+      "path": "CUIDADOS COM IDOSOS\\Cuidadordeidosos.docx"
+    },
+    {
+      "file": "dorlivete,+e282101523024.docx",
+      "category": "CUIDADOS COM IDOSOS",
+      "path": "CUIDADOS COM IDOSOS\\dorlivete,+e282101523024.docx"
+    },
+    {
+      "file": "download (1).docx",
+      "category": "CUIDADOS COM IDOSOS",
+      "path": "CUIDADOS COM IDOSOS\\download (1).docx"
+    },
+    {
+      "file": "download (2).docx",
+      "category": "CUIDADOS COM IDOSOS",
+      "path": "CUIDADOS COM IDOSOS\\download (2).docx"
+    },
+    {
+      "file": "guia_pratico_cuidador.docx",
+      "category": "CUIDADOS COM IDOSOS",
+      "path": "CUIDADOS COM IDOSOS\\guia_pratico_cuidador.docx"
+    },
+    {
+      "file": "Orientação Fundamentada - 020.docx",
+      "category": "CUIDADOS COM IDOSOS",
+      "path": "CUIDADOS COM IDOSOS\\Orientação Fundamentada - 020.docx"
+    },
+    {
+      "file": "TRABALHO_COMPLETO_EV191_MD5_ID535_TB544_12092023082257.docx",
+      "category": "CUIDADOS COM IDOSOS",
+      "path": "CUIDADOS COM IDOSOS\\TRABALHO_COMPLETO_EV191_MD5_ID535_TB544_12092023082257.docx"
+    },
+    {
+      "file": "2020_01_0863_0877.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\2020_01_0863_0877.txt"
+    },
+    {
+      "file": "59_TDSE_103.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\59_TDSE_103.txt"
+    },
+    {
+      "file": "95. Apontamentos sobre Segurança Cibernética no Setor Elétrico.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\95. Apontamentos sobre Segurança Cibernética no Setor Elétrico.txt"
+    },
+    {
+      "file": "ABB_9AKK107992A4788_OT Cyber Security Paper_20201221_PT.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\ABB_9AKK107992A4788_OT Cyber Security Paper_20201221_PT.txt"
+    },
+    {
+      "file": "aescsf-framework-overview.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\aescsf-framework-overview.txt"
+    },
+    {
+      "file": "AISecuritySurvey2024.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\AISecuritySurvey2024.txt"
+    },
+    {
+      "file": "Art-19-On-the-Effectiveness-of-Machine-and-Deep-Learning-for-Cyber-Security.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\Art-19-On-the-Effectiveness-of-Machine-and-Deep-Learning-for-Cyber-Security.txt"
+    },
+    {
+      "file": "AVIATION-CYBERSECURITY-STRATEGY.EN_.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\AVIATION-CYBERSECURITY-STRATEGY.EN_.txt"
+    },
+    {
+      "file": "bim-cyber.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\bim-cyber.txt"
+    },
+    {
+      "file": "CIBERSEGURANÇA_EM_SISTEMAS_SCADA.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\CIBERSEGURANÇA_EM_SISTEMAS_SCADA.txt"
+    },
+    {
+      "file": "Cyber Security Framework.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\Cyber Security Framework.txt"
+    },
+    {
+      "file": "cyber-advisory---grant-thornton.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\cyber-advisory---grant-thornton.txt"
+    },
+    {
+      "file": "cyber-security-strategy-for-germany2021.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\cyber-security-strategy-for-germany2021.txt"
+    },
+    {
+      "file": "CyberSecurity-EBOOK.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\CyberSecurity-EBOOK.txt"
+    },
+    {
+      "file": "Guia_de_Segurança_Cibernética_no_Agronegócio_-_OSCA.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\Guia_de_Segurança_Cibernética_no_Agronegócio_-_OSCA.txt"
+    },
+    {
+      "file": "Manual_de_conscientizacao_sobre_Ciberseguranca.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\Manual_de_conscientizacao_sobre_Ciberseguranca.txt"
+    },
+    {
+      "file": "MBA-em-Cyber-Security-Forensics-Ethical-Hacking-DevSecOps-Paulista.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\MBA-em-Cyber-Security-Forensics-Ethical-Hacking-DevSecOps-Paulista.txt"
+    },
+    {
+      "file": "Pol-SI-V05-set2025-site-ConectCar.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\Pol-SI-V05-set2025-site-ConectCar.txt"
+    },
+    {
+      "file": "recovery-appliance-cyber-security-twp.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\recovery-appliance-cyber-security-twp.txt"
+    },
+    {
+      "file": "RSP V.68 N.1_artigo de 107-130.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\RSP V.68 N.1_artigo de 107-130.txt"
+    },
+    {
+      "file": "supply-chain-cyber-security-in-safe-hands.txt",
+      "category": "cybersecurity",
+      "path": "cybersecurity\\supply-chain-cyber-security-in-safe-hands.txt"
+    },
+    {
+      "file": "COMO DESENHAR COM PIXELS.docx",
+      "category": "Desenhista",
+      "path": "Desenhista\\COMO DESENHAR COM PIXELS.docx"
+    },
+    {
+      "file": "Como-eu-Desenho-um-Retrato-Realista-por-Carlos-Damasceno.docx",
+      "category": "Desenhista",
+      "path": "Desenhista\\Como-eu-Desenho-um-Retrato-Realista-por-Carlos-Damasceno.docx"
+    },
+    {
+      "file": "como_desenhar_tringulos.docx",
+      "category": "Desenhista",
+      "path": "Desenhista\\como_desenhar_tringulos.docx"
+    },
+    {
+      "file": "DESENHAR, MODELAR E DESIGN DE NÍVEL COMO PROCESSOS ONTOLÓGICOS NA PRODUÇÃO DE JOGOS DIGITAIS.docx",
+      "category": "Desenhista",
+      "path": "Desenhista\\DESENHAR, MODELAR E DESIGN DE NÍVEL COMO PROCESSOS ONTOLÓGICOS NA PRODUÇÃO DE JOGOS DIGITAIS.docx"
+    },
+    {
+      "file": "Dica-do-Dia-AutoCAD-Perspectivas-Isometricas.docx",
+      "category": "Desenhista",
+      "path": "Desenhista\\Dica-do-Dia-AutoCAD-Perspectivas-Isometricas.docx"
+    },
+    {
+      "file": "figurahumanacabelo.docx",
+      "category": "Desenhista",
+      "path": "Desenhista\\figurahumanacabelo.docx"
+    },
+    {
+      "file": "planta baixa.docx",
+      "category": "Desenhista",
+      "path": "Desenhista\\planta baixa.docx"
+    },
+    {
+      "file": "tutorial-gerar-kml-no-google-earth.docx",
+      "category": "Desenhista",
+      "path": "Desenhista\\tutorial-gerar-kml-no-google-earth.docx"
+    },
+    {
+      "file": "1_Atencao_a_Saude_da_Crianca_e_Adolescente.docx",
+      "category": "ENFERMAGEM",
+      "path": "ENFERMAGEM\\1_Atencao_a_Saude_da_Crianca_e_Adolescente.docx"
+    },
+    {
+      "file": "atenção primária.docx",
+      "category": "ENFERMAGEM",
+      "path": "ENFERMAGEM\\atenção primária.docx"
+    },
+    {
+      "file": "livro-completo_digital-1.docx",
+      "category": "ENFERMAGEM",
+      "path": "ENFERMAGEM\\livro-completo_digital-1.docx"
+    },
+    {
+      "file": "LIVRO-NOCOES-BASICAS-DE-ONCOLOGIA.docx",
+      "category": "ENFERMAGEM",
+      "path": "ENFERMAGEM\\LIVRO-NOCOES-BASICAS-DE-ONCOLOGIA.docx"
+    },
+    {
+      "file": "Livro-Novo-Anatomia.docx",
+      "category": "ENFERMAGEM",
+      "path": "ENFERMAGEM\\Livro-Novo-Anatomia.docx"
+    },
+    {
+      "file": "manual de cuidado enfermagem.docx",
+      "category": "ENFERMAGEM",
+      "path": "ENFERMAGEM\\manual de cuidado enfermagem.docx"
+    },
+    {
+      "file": "MANUAL ENFERMAGEM ATENCAO PARTO E NASCIMENTO.docx",
+      "category": "ENFERMAGEM",
+      "path": "ENFERMAGEM\\MANUAL ENFERMAGEM ATENCAO PARTO E NASCIMENTO.docx"
+    },
+    {
+      "file": "Manual-de-Procedimentos-Básicos-de-Enfermagem.docx",
+      "category": "ENFERMAGEM",
+      "path": "ENFERMAGEM\\Manual-de-Procedimentos-Básicos-de-Enfermagem.docx"
+    },
+    {
+      "file": "manual_de_normas_rotinas_e_protocolos_da_enfermagem_do_topdf.docx",
+      "category": "ENFERMAGEM",
+      "path": "ENFERMAGEM\\manual_de_normas_rotinas_e_protocolos_da_enfermagem_do_topdf.docx"
+    },
+    {
+      "file": "procedimentos enfermagem.docx",
+      "category": "ENFERMAGEM",
+      "path": "ENFERMAGEM\\procedimentos enfermagem.docx"
+    },
+    {
+      "file": "simulação clinica.docx",
+      "category": "ENFERMAGEM",
+      "path": "ENFERMAGEM\\simulação clinica.docx"
+    },
+    {
+      "file": "SMC-GEMCA-Livro-Eletronico-Principios-da-Religiosidade-e-Espiritualidade-na-Medicina-Enfoque.docx",
+      "category": "ENFERMAGEM",
+      "path": "ENFERMAGEM\\SMC-GEMCA-Livro-Eletronico-Principios-da-Religiosidade-e-Espiritualidade-na-Medicina-Enfoque.docx"
+    },
+    {
+      "file": "teoria e pratica enfermagem.docx",
+      "category": "ENFERMAGEM",
+      "path": "ENFERMAGEM\\teoria e pratica enfermagem.docx"
+    },
+    {
+      "file": "tecnicas de krav maga.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Krav_Maga\\tecnicas de krav maga.docx"
+    },
+    {
+      "file": "tecnicas de krav maga.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Krav_Maga\\tecnicas de krav maga.pdf"
+    },
+    {
+      "file": "12 REGRAS PARA VIDA.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_estrátegia\\12 REGRAS PARA VIDA.docx"
+    },
+    {
+      "file": "A Arte da Guerra - Sun Tzu.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_estrátegia\\A Arte da Guerra - Sun Tzu.docx"
+    },
+    {
+      "file": "o principe livro maquiavel.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_estrátegia\\o principe livro maquiavel.docx"
+    },
+    {
+      "file": "ABRIGOS E ESPALDÕES.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\ABRIGOS E ESPALDÕES.docx"
+    },
+    {
+      "file": "ABRIGOS E ESPALDÕES.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\ABRIGOS E ESPALDÕES.pdf"
+    },
+    {
+      "file": "areas interesse do Exército.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\areas interesse do Exército.docx"
+    },
+    {
+      "file": "areas interesse do Exército.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\areas interesse do Exército.pdf"
+    },
+    {
+      "file": "armas improvisadas.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\armas improvisadas.pdf"
+    },
+    {
+      "file": "atirador de elite.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\atirador de elite.docx"
+    },
+    {
+      "file": "atirador de elite.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\atirador de elite.pdf"
+    },
+    {
+      "file": "catalogo de armas.doc",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\catalogo de armas.doc"
+    },
+    {
+      "file": "caçador.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\caçador.docx"
+    },
+    {
+      "file": "caçador.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\caçador.pdf"
+    },
+    {
+      "file": "cioesp.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\cioesp.docx"
+    },
+    {
+      "file": "cioesp.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\cioesp.pdf"
+    },
+    {
+      "file": "combate edificado.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\combate edificado.docx"
+    },
+    {
+      "file": "combate edificado.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\combate edificado.pdf"
+    },
+    {
+      "file": "combate urbano.doc",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\combate urbano.doc"
+    },
+    {
+      "file": "Curso de Formação de Bombeiro Civil.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\Curso de Formação de Bombeiro Civil.docx"
+    },
+    {
+      "file": "Curso de Formação de Bombeiro Civil.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\Curso de Formação de Bombeiro Civil.pdf"
+    },
+    {
+      "file": "guerrilheiro urbano.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\guerrilheiro urbano.docx"
+    },
+    {
+      "file": "guerrilheiro urbano.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\guerrilheiro urbano.pdf"
+    },
+    {
+      "file": "KIT DE MANUTENÇÃO DE COTURNO.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\KIT DE MANUTENÇÃO DE COTURNO.docx"
+    },
+    {
+      "file": "MANUAL REGRAS.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\MANUAL REGRAS.docx"
+    },
+    {
+      "file": "MANUAL REGRAS.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\MANUAL REGRAS.pdf"
+    },
+    {
+      "file": "Manual-de-Campanha-Instrucao-Individual-para-o-Combate-pdf.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\Manual-de-Campanha-Instrucao-Individual-para-o-Combate-pdf.docx"
+    },
+    {
+      "file": "Manual-de-Campanha-Instrucao-Individual-para-o-Combate-pdf.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\Manual-de-Campanha-Instrucao-Individual-para-o-Combate-pdf.pdf"
+    },
+    {
+      "file": "MANUALl - Blaster.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\MANUALl - Blaster.docx"
+    },
+    {
+      "file": "MANUALl - Blaster.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\MANUALl - Blaster.pdf"
+    },
+    {
+      "file": "Manual_de_Nos_2005.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\Manual_de_Nos_2005.pdf"
+    },
+    {
+      "file": "MINAS E ARMADILHAS.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\MINAS E ARMADILHAS.docx"
+    },
+    {
+      "file": "MINAS E ARMADILHAS.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\MINAS E ARMADILHAS.pdf"
+    },
+    {
+      "file": "operações de choque.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\operações de choque.docx"
+    },
+    {
+      "file": "operações de choque.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\operações de choque.pdf"
+    },
+    {
+      "file": "OPERAÇÕES NA SELVA.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\OPERAÇÕES NA SELVA.docx"
+    },
+    {
+      "file": "OPERAÇÕES NA SELVA.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\OPERAÇÕES NA SELVA.pdf"
+    },
+    {
+      "file": "ORIENTAÇÃO MILITAR.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\ORIENTAÇÃO MILITAR.docx"
+    },
+    {
+      "file": "ORIENTAÇÃO MILITAR.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\ORIENTAÇÃO MILITAR.pdf"
+    },
+    {
+      "file": "produtos controlados.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\produtos controlados.docx"
+    },
+    {
+      "file": "produtos controlados.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\produtos controlados.pdf"
+    },
+    {
+      "file": "sistema de patrulhas.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\sistema de patrulhas.docx"
+    },
+    {
+      "file": "sistema de patrulhas.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\sistema de patrulhas.pdf"
+    },
+    {
+      "file": "sobrevivencia na selva.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\sobrevivencia na selva.docx"
+    },
+    {
+      "file": "sobrevivencia na selva.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\sobrevivencia na selva.pdf"
+    },
+    {
+      "file": "TABELA_CLASSIFICACAO_DAS_ARMAS.doc",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\TABELA_CLASSIFICACAO_DAS_ARMAS.doc"
+    },
+    {
+      "file": "UNIFORMES TATICOS.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\UNIFORMES TATICOS.docx"
+    },
+    {
+      "file": "UNIFORMES TATICOS.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\APOSTILA EXERCITO BRASILEIRO\\UNIFORMES TATICOS.pdf"
+    },
+    {
+      "file": "FigueroaRivero_PascualJovino_D.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\TÉCNICAS DE RASTREAMENTO\\FigueroaRivero_PascualJovino_D.docx"
+    },
+    {
+      "file": "manual-33.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\TÉCNICAS DE RASTREAMENTO\\manual-33.docx"
+    },
+    {
+      "file": "manual-de-sobrevivc3aancia-completo-us-army.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\TÉCNICAS DE RASTREAMENTO\\manual-de-sobrevivc3aancia-completo-us-army.docx"
+    },
+    {
+      "file": "TECNICAS DE RASTREIO SELVA.txt",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\TÉCNICAS DE RASTREAMENTO\\TECNICAS DE RASTREIO SELVA.txt"
+    },
+    {
+      "file": "tu000014.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Livros_guerrilha\\TÉCNICAS DE RASTREAMENTO\\tu000014.docx"
+    },
+    {
+      "file": "alarme caseiro.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\APOSTILA MATA\\alarme caseiro.docx"
+    },
+    {
+      "file": "alarme caseiro.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\APOSTILA MATA\\alarme caseiro.pdf"
+    },
+    {
+      "file": "apostila mata.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\APOSTILA MATA\\apostila mata.docx"
+    },
+    {
+      "file": "apostila mata.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\APOSTILA MATA\\apostila mata.pdf"
+    },
+    {
+      "file": "arapuca.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\APOSTILA MATA\\arapuca.docx"
+    },
+    {
+      "file": "arapuca.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\APOSTILA MATA\\arapuca.pdf"
+    },
+    {
+      "file": "armadilha de pedra.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\APOSTILA MATA\\armadilha de pedra.docx"
+    },
+    {
+      "file": "armadilha de pedra.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\APOSTILA MATA\\armadilha de pedra.pdf"
+    },
+    {
+      "file": "armadilha laço.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\APOSTILA MATA\\armadilha laço.docx"
+    },
+    {
+      "file": "armadilha laço.pdf",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\APOSTILA MATA\\armadilha laço.pdf"
+    },
+    {
+      "file": "armas improvisadas.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\APOSTILA MATA\\armas improvisadas.docx"
+    },
+    {
+      "file": "1 - Nós e Amarras.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\1 - Nós e Amarras.docx"
+    },
+    {
+      "file": "10 - Instalações de Cozinha.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\10 - Instalações de Cozinha.docx"
+    },
+    {
+      "file": "11 - Trabalhando com Cabos.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\11 - Trabalhando com Cabos.docx"
+    },
+    {
+      "file": "12 - Instalações de Campo 2.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\12 - Instalações de Campo 2.docx"
+    },
+    {
+      "file": "13 - Instalações de Cozinha 2.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\13 - Instalações de Cozinha 2.docx"
+    },
+    {
+      "file": "14 - Fogo e Cozinha Mateira.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\14 - Fogo e Cozinha Mateira.docx"
+    },
+    {
+      "file": "2 - Abrigos e Barracas.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\2 - Abrigos e Barracas.docx"
+    },
+    {
+      "file": "3 - Ferramentas no Campo.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\3 - Ferramentas no Campo.docx"
+    },
+    {
+      "file": "4 - Balsas e Canoas.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\4 - Balsas e Canoas.docx"
+    },
+    {
+      "file": "5 - Pontes.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\5 - Pontes.docx"
+    },
+    {
+      "file": "7 - Instalações de Campo.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\7 - Instalações de Campo.docx"
+    },
+    {
+      "file": "8 - Truques e Habilidades.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\8 - Truques e Habilidades.docx"
+    },
+    {
+      "file": "9 - Atividades Jogos com Pioneiria.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\9 - Atividades Jogos com Pioneiria.docx"
+    },
+    {
+      "file": "Apostila Tecnica de Nos.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\Apostila Tecnica de Nos.docx"
+    },
+    {
+      "file": "Apostila_Curso_Preliminar-Apostila_do_Formadorate_26032012.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\Apostila_Curso_Preliminar-Apostila_do_Formadorate_26032012.docx"
+    },
+    {
+      "file": "DESCRITIVO-DE-CARGOS-LOCAL-FINAL.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\DESCRITIVO-DE-CARGOS-LOCAL-FINAL.docx"
+    },
+    {
+      "file": "MANUAL DE ESCOTISMO.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\MANUAL DE ESCOTISMO.docx"
+    },
+    {
+      "file": "Manual de Nós e Amarras.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\Manual de Nós e Amarras.docx"
+    },
+    {
+      "file": "Manual_de_Nos_2005.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\ESCOTISMO\\Manual_de_Nos_2005.docx"
+    },
+    {
+      "file": "abertura_planner2022_atualizacao.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\LIVRO BATATA\\abertura_planner2022_atualizacao.docx"
+    },
+    {
+      "file": "conservacao_armazenamento_de_alimentos_cozinha_sobrevivencia_guiadosobrevivente.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\LIVRO BATATA\\conservacao_armazenamento_de_alimentos_cozinha_sobrevivencia_guiadosobrevivente.docx"
+    },
+    {
+      "file": "divisorias_planner_GuiaSobrevivente.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\LIVRO BATATA\\divisorias_planner_GuiaSobrevivente.docx"
+    },
+    {
+      "file": "gs_preparacao_civil_sobrevivencialismo_volume1_final.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\LIVRO BATATA\\gs_preparacao_civil_sobrevivencialismo_volume1_final.docx"
+    },
+    {
+      "file": "instrucoes_impressao_GUIAPLANEJAMENTO_GDS.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\LIVRO BATATA\\instrucoes_impressao_GUIAPLANEJAMENTO_GDS.docx"
+    },
+    {
+      "file": "LIVRO DE SOBREVIVENCIA.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\LIVRO BATATA\\LIVRO DE SOBREVIVENCIA.docx"
+    },
+    {
+      "file": "miolomes_planner_GuiadoSobrevivente.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\LIVRO BATATA\\miolomes_planner_GuiadoSobrevivente.docx"
+    },
+    {
+      "file": "SUSTENTABILIDADE CASA.docx",
+      "category": "Estrategista",
+      "path": "Estrategista\\Sobrevivencialista\\LIVRO BATATA\\SUSTENTABILIDADE CASA.docx"
+    },
+    {
+      "file": "Aula 1 _ Regras ortograficas, etimologia e leitura.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\1 - Ortografia\\Aula 1 _ Regras ortograficas, etimologia e leitura.txt"
+    },
+    {
+      "file": "Aula 2 _ Leitura de conteudo e leitura critica.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\1 - Ortografia\\Aula 2 _ Leitura de conteudo e leitura critica.txt"
+    },
+    {
+      "file": "Aula 3 _ Homonimos, paronimos, formas variantes e aportuguesamentos.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\1 - Ortografia\\Aula 3 _ Homonimos, paronimos, formas variantes e aportuguesamentos.txt"
+    },
+    {
+      "file": "Aula 4 _ Hifen.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\1 - Ortografia\\Aula 4 _ Hifen.txt"
+    },
+    {
+      "file": "TEMA 10 - AULA 1.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\10 - Concordância Nominal\\TEMA 10 - AULA 1.txt"
+    },
+    {
+      "file": "TEMA 10 - AULA 2.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\10 - Concordância Nominal\\TEMA 10 - AULA 2.txt"
+    },
+    {
+      "file": "TEMA 10 - AULA 3.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\10 - Concordância Nominal\\TEMA 10 - AULA 3.txt"
+    },
+    {
+      "file": "TEMA 10 - AULA 4.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\10 - Concordância Nominal\\TEMA 10 - AULA 4.txt"
+    },
+    {
+      "file": "TEMA 10 - AULA 5.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\10 - Concordância Nominal\\TEMA 10 - AULA 5.txt"
+    },
+    {
+      "file": "TEMA 11 - AULA 1.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\11 - Flexão Verbal\\TEMA 11 - AULA 1.txt"
+    },
+    {
+      "file": "TEMA 11 - AULA 10.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\11 - Flexão Verbal\\TEMA 11 - AULA 10.txt"
+    },
+    {
+      "file": "TEMA 11 - AULA 2.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\11 - Flexão Verbal\\TEMA 11 - AULA 2.txt"
+    },
+    {
+      "file": "TEMA 11 - AULA 3.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\11 - Flexão Verbal\\TEMA 11 - AULA 3.txt"
+    },
+    {
+      "file": "TEMA 11 - AULA 4.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\11 - Flexão Verbal\\TEMA 11 - AULA 4.txt"
+    },
+    {
+      "file": "TEMA 11 - AULA 5.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\11 - Flexão Verbal\\TEMA 11 - AULA 5.txt"
+    },
+    {
+      "file": "TEMA 11 - AULA 6.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\11 - Flexão Verbal\\TEMA 11 - AULA 6.txt"
+    },
+    {
+      "file": "TEMA 11 - AULA 7.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\11 - Flexão Verbal\\TEMA 11 - AULA 7.txt"
+    },
+    {
+      "file": "TEMA 11 - AULA 8.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\11 - Flexão Verbal\\TEMA 11 - AULA 8.txt"
+    },
+    {
+      "file": "TEMA 11 - AULA 9.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\11 - Flexão Verbal\\TEMA 11 - AULA 9.txt"
+    },
+    {
+      "file": "Aula 1 _ Conceitos gerais.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\2 - Acentuação Gráfica\\Aula 1 _ Conceitos gerais.txt"
+    },
+    {
+      "file": "Aula 2 _ Regras gerais.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\2 - Acentuação Gráfica\\Aula 2 _ Regras gerais.txt"
+    },
+    {
+      "file": "Aula_3_Regras_Especiais.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\2 - Acentuação Gráfica\\Aula_3_Regras_Especiais.txt"
+    },
+    {
+      "file": "TEMA 3 - AULA 1.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\3 - Sintaxe da Oração e do Período\\TEMA 3 - AULA 1.txt"
+    },
+    {
+      "file": "TEMA 3 - AULA 2.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\3 - Sintaxe da Oração e do Período\\TEMA 3 - AULA 2.txt"
+    },
+    {
+      "file": "TEMA 3 - AULA 3.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\3 - Sintaxe da Oração e do Período\\TEMA 3 - AULA 3.txt"
+    },
+    {
+      "file": "TEMA 3 - AULA 4.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\3 - Sintaxe da Oração e do Período\\TEMA 3 - AULA 4.txt"
+    },
+    {
+      "file": "TEMA 3 - AULA 5.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\3 - Sintaxe da Oração e do Período\\TEMA 3 - AULA 5.txt"
+    },
+    {
+      "file": "TEMA 3 - AULA 6.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\3 - Sintaxe da Oração e do Período\\TEMA 3 - AULA 6.txt"
+    },
+    {
+      "file": "TEMA 4 - AULA 1.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\4 - Sujeito e Predicado\\TEMA 4 - AULA 1.txt"
+    },
+    {
+      "file": "TEMA 4 - AULA 2.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\4 - Sujeito e Predicado\\TEMA 4 - AULA 2.txt"
+    },
+    {
+      "file": "TEMA 4 - AULA 3.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\4 - Sujeito e Predicado\\TEMA 4 - AULA 3.txt"
+    },
+    {
+      "file": "TEMA 4 - AULA 4.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\4 - Sujeito e Predicado\\TEMA 4 - AULA 4.txt"
+    },
+    {
+      "file": "TEMA 5 - AULA 1.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\5 - Período Simples e Período Composto\\TEMA 5 - AULA 1.txt"
+    },
+    {
+      "file": "TEMA 5 - AULA 10.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\5 - Período Simples e Período Composto\\TEMA 5 - AULA 10.txt"
+    },
+    {
+      "file": "TEMA 5 - AULA 2.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\5 - Período Simples e Período Composto\\TEMA 5 - AULA 2.txt"
+    },
+    {
+      "file": "TEMA 5 - AULA 3.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\5 - Período Simples e Período Composto\\TEMA 5 - AULA 3.txt"
+    },
+    {
+      "file": "TEMA 5 - AULA 4.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\5 - Período Simples e Período Composto\\TEMA 5 - AULA 4.txt"
+    },
+    {
+      "file": "TEMA 5 - AULA 5.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\5 - Período Simples e Período Composto\\TEMA 5 - AULA 5.txt"
+    },
+    {
+      "file": "TEMA 5 - AULA 6.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\5 - Período Simples e Período Composto\\TEMA 5 - AULA 6.txt"
+    },
+    {
+      "file": "TEMA 5 - AULA 7.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\5 - Período Simples e Período Composto\\TEMA 5 - AULA 7.txt"
+    },
+    {
+      "file": "TEMA 5 - AULA 8.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\5 - Período Simples e Período Composto\\TEMA 5 - AULA 8.txt"
+    },
+    {
+      "file": "TEMA 5 - AULA 9.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\5 - Período Simples e Período Composto\\TEMA 5 - AULA 9.txt"
+    },
+    {
+      "file": "TEMA 6 - AULA 1.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\6 - Regência Nominal\\TEMA 6 - AULA 1.txt"
+    },
+    {
+      "file": "TEMA 6 - AULA 2.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\6 - Regência Nominal\\TEMA 6 - AULA 2.txt"
+    },
+    {
+      "file": "TEMA 6 - AULA 3.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\6 - Regência Nominal\\TEMA 6 - AULA 3.txt"
+    },
+    {
+      "file": "TEMA 6 - AULA 4.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\6 - Regência Nominal\\TEMA 6 - AULA 4.txt"
+    },
+    {
+      "file": "TEMA 7 - AULA 1.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\7 - Regência Verbal\\TEMA 7 - AULA 1.txt"
+    },
+    {
+      "file": "TEMA 7 - AULA 10.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\7 - Regência Verbal\\TEMA 7 - AULA 10.txt"
+    },
+    {
+      "file": "TEMA 7 - AULA 11.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\7 - Regência Verbal\\TEMA 7 - AULA 11.txt"
+    },
+    {
+      "file": "TEMA 7 - AULA 12.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\7 - Regência Verbal\\TEMA 7 - AULA 12.txt"
+    },
+    {
+      "file": "TEMA 7 - AULA 2.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\7 - Regência Verbal\\TEMA 7 - AULA 2.txt"
+    },
+    {
+      "file": "TEMA 7 - AULA 3.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\7 - Regência Verbal\\TEMA 7 - AULA 3.txt"
+    },
+    {
+      "file": "TEMA 7 - AULA 4.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\7 - Regência Verbal\\TEMA 7 - AULA 4.txt"
+    },
+    {
+      "file": "TEMA 7 - AULA 5.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\7 - Regência Verbal\\TEMA 7 - AULA 5.txt"
+    },
+    {
+      "file": "TEMA 7 - AULA 6.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\7 - Regência Verbal\\TEMA 7 - AULA 6.txt"
+    },
+    {
+      "file": "TEMA 7 - AULA 7.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\7 - Regência Verbal\\TEMA 7 - AULA 7.txt"
+    },
+    {
+      "file": "TEMA 7 - AULA 8.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\7 - Regência Verbal\\TEMA 7 - AULA 8.txt"
+    },
+    {
+      "file": "TEMA 7 - AULA 9.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\7 - Regência Verbal\\TEMA 7 - AULA 9.txt"
+    },
+    {
+      "file": "TEMA 8 - AULA 1.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\8 - Crase\\TEMA 8 - AULA 1.txt"
+    },
+    {
+      "file": "TEMA 8 - AULA 10.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\8 - Crase\\TEMA 8 - AULA 10.txt"
+    },
+    {
+      "file": "TEMA 8 - AULA 11.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\8 - Crase\\TEMA 8 - AULA 11.txt"
+    },
+    {
+      "file": "TEMA 8 - AULA 12.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\8 - Crase\\TEMA 8 - AULA 12.txt"
+    },
+    {
+      "file": "TEMA 8 - AULA 13.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\8 - Crase\\TEMA 8 - AULA 13.txt"
+    },
+    {
+      "file": "TEMA 8 - AULA 14.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\8 - Crase\\TEMA 8 - AULA 14.txt"
+    },
+    {
+      "file": "TEMA 8 - AULA 15.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\8 - Crase\\TEMA 8 - AULA 15.txt"
+    },
+    {
+      "file": "TEMA 8 - AULA 16.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\8 - Crase\\TEMA 8 - AULA 16.txt"
+    },
+    {
+      "file": "TEMA 8 - AULA 2.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\8 - Crase\\TEMA 8 - AULA 2.txt"
+    },
+    {
+      "file": "TEMA 8 - AULA 3.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\8 - Crase\\TEMA 8 - AULA 3.txt"
+    },
+    {
+      "file": "TEMA 8 - AULA 4.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\8 - Crase\\TEMA 8 - AULA 4.txt"
+    },
+    {
+      "file": "TEMA 8 - AULA 5.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\8 - Crase\\TEMA 8 - AULA 5.txt"
+    },
+    {
+      "file": "TEMA 8 - AULA 6.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\8 - Crase\\TEMA 8 - AULA 6.txt"
+    },
+    {
+      "file": "TEMA 8 - AULA 7.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\8 - Crase\\TEMA 8 - AULA 7.txt"
+    },
+    {
+      "file": "TEMA 8 - AULA 8.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\8 - Crase\\TEMA 8 - AULA 8.txt"
+    },
+    {
+      "file": "TEMA 8 - AULA 9.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\8 - Crase\\TEMA 8 - AULA 9.txt"
+    },
+    {
+      "file": "TEMA 9 - AULA 1.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\9 - Flexão Nominal\\TEMA 9 - AULA 1.txt"
+    },
+    {
+      "file": "TEMA 9 - AULA 2.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\9 - Flexão Nominal\\TEMA 9 - AULA 2.txt"
+    },
+    {
+      "file": "TEMA 9 - AULA 3.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\9 - Flexão Nominal\\TEMA 9 - AULA 3.txt"
+    },
+    {
+      "file": "TEMA 9 - AULA 4.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\9 - Flexão Nominal\\TEMA 9 - AULA 4.txt"
+    },
+    {
+      "file": "TEMA 9 - AULA 5.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\9 - Flexão Nominal\\TEMA 9 - AULA 5.txt"
+    },
+    {
+      "file": "TEMA 9 - AULA 6.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\9 - Flexão Nominal\\TEMA 9 - AULA 6.txt"
+    },
+    {
+      "file": "TEMA 9 - AULA 7.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\9 - Flexão Nominal\\TEMA 9 - AULA 7.txt"
+    },
+    {
+      "file": "TEMA 9 - AULA 8.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\9 - Flexão Nominal\\TEMA 9 - AULA 8.txt"
+    },
+    {
+      "file": "TEMA 9 - AULA 9.txt",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\9 - Flexão Nominal\\TEMA 9 - AULA 9.txt"
+    },
+    {
+      "file": "erros_mais_comuns_da_lingua_portuguesa (1).docx",
+      "category": "GRAMÁTICA COMPLETO",
+      "path": "GRAMÁTICA COMPLETO\\Portugues\\erros_mais_comuns_da_lingua_portuguesa (1).docx"
+    },
+    {
+      "file": "000757768.txt",
+      "category": "hacker",
+      "path": "hacker\\000757768.txt"
+    },
+    {
+      "file": "23-09-16-204239-livroproibidodocursodehackercompleto1.txt",
+      "category": "hacker",
+      "path": "hacker\\23-09-16-204239-livroproibidodocursodehackercompleto1.txt"
+    },
+    {
+      "file": "27956-2510-22889-1-10-20240326.txt",
+      "category": "hacker",
+      "path": "hacker\\27956-2510-22889-1-10-20240326.txt"
+    },
+    {
+      "file": "6.1.txt",
+      "category": "hacker",
+      "path": "hacker\\6.1.txt"
+    },
+    {
+      "file": "6774_UkraineCyber_DEW_20161014_Web_pt-BR.txt",
+      "category": "hacker",
+      "path": "hacker\\6774_UkraineCyber_DEW_20161014_Web_pt-BR.txt"
+    },
+    {
+      "file": "8_Teoria Critica da Tecnologia.txt",
+      "category": "hacker",
+      "path": "hacker\\8_Teoria Critica da Tecnologia.txt"
+    },
+    {
+      "file": "arq_63fdcfcc7a308.txt",
+      "category": "hacker",
+      "path": "hacker\\arq_63fdcfcc7a308.txt"
+    },
+    {
+      "file": "CIBERSEGURANÇA+E+DIRETO+MERCANTIL_+LIÇÕES+DO+ATAQUE+HACKER+À+UBER.txt",
+      "category": "hacker",
+      "path": "hacker\\CIBERSEGURANÇA+E+DIRETO+MERCANTIL_+LIÇÕES+DO+ATAQUE+HACKER+À+UBER.txt"
+    },
+    {
+      "file": "criptografia_whatsapp.txt",
+      "category": "hacker",
+      "path": "hacker\\criptografia_whatsapp.txt"
+    },
+    {
+      "file": "Davi Eduardo Rodrigues Domingues (1).txt",
+      "category": "hacker",
+      "path": "hacker\\Davi Eduardo Rodrigues Domingues (1).txt"
+    },
+    {
+      "file": "Davi Eduardo Rodrigues Domingues.txt",
+      "category": "hacker",
+      "path": "hacker\\Davi Eduardo Rodrigues Domingues.txt"
+    },
+    {
+      "file": "download (1).txt",
+      "category": "hacker",
+      "path": "hacker\\download (1).txt"
+    },
+    {
+      "file": "download (2).txt",
+      "category": "hacker",
+      "path": "hacker\\download (2).txt"
+    },
+    {
+      "file": "download (3).txt",
+      "category": "hacker",
+      "path": "hacker\\download (3).txt"
+    },
+    {
+      "file": "download.txt",
+      "category": "hacker",
+      "path": "hacker\\download.txt"
+    },
+    {
+      "file": "FOCO+152.txt",
+      "category": "hacker",
+      "path": "hacker\\FOCO+152.txt"
+    },
+    {
+      "file": "GuiaEducativo10AtaquesCiberneticos.txt",
+      "category": "hacker",
+      "path": "hacker\\GuiaEducativo10AtaquesCiberneticos.txt"
+    },
+    {
+      "file": "hackersdesfiguracaopaginasbrasil.txt",
+      "category": "hacker",
+      "path": "hacker\\hackersdesfiguracaopaginasbrasil.txt"
+    },
+    {
+      "file": "HELDER SEIJI KATO TCC-PRO15.txt",
+      "category": "hacker",
+      "path": "hacker\\HELDER SEIJI KATO TCC-PRO15.txt"
+    },
+    {
+      "file": "luanbettiol,+MARQUES,+Antonio+Carlos+Conceição,+Resenha.+WALTER,+Bruno+Eduardo+Procopiuk,+Hacking+e+dispositivos+tecnológicos+prátic.txt",
+      "category": "hacker",
+      "path": "hacker\\luanbettiol,+MARQUES,+Antonio+Carlos+Conceição,+Resenha.+WALTER,+Bruno+Eduardo+Procopiuk,+Hacking+e+dispositivos+tecnológicos+prátic.txt"
+    },
+    {
+      "file": "MONOGRAFIA_EstudoTecnicasAtaque.txt",
+      "category": "hacker",
+      "path": "hacker\\MONOGRAFIA_EstudoTecnicasAtaque.txt"
+    },
+    {
+      "file": "pdf_2449.txt",
+      "category": "hacker",
+      "path": "hacker\\pdf_2449.txt"
+    },
+    {
+      "file": "pentest-ios-gohacking.txt",
+      "category": "hacker",
+      "path": "hacker\\pentest-ios-gohacking.txt"
+    },
+    {
+      "file": "Projeto-Basico.txt",
+      "category": "hacker",
+      "path": "hacker\\Projeto-Basico.txt"
+    },
+    {
+      "file": "RBCP_N5_P19-48.txt",
+      "category": "hacker",
+      "path": "hacker\\RBCP_N5_P19-48.txt"
+    },
+    {
+      "file": "cfo-lança-Manual-de-Boas-Práticas-em-Biossegurança-para-Ambientes-Odontologicos.docx",
+      "category": "Higiene_pessoal",
+      "path": "Higiene_pessoal\\cfo-lança-Manual-de-Boas-Práticas-em-Biossegurança-para-Ambientes-Odontologicos.docx"
+    },
+    {
+      "file": "MANUAL-DE-HIGIENIZACAO-E-LIMPEZA.docx",
+      "category": "Higiene_pessoal",
+      "path": "Higiene_pessoal\\MANUAL-DE-HIGIENIZACAO-E-LIMPEZA.docx"
+    },
+    {
+      "file": "cfo-lança-Manual-de-Boas-Práticas-em-Biossegurança-para-Ambientes-Odontologicos.docx",
+      "category": "Higiene_pessoal",
+      "path": "Higiene_pessoal\\limpeza hospitalar\\cfo-lança-Manual-de-Boas-Práticas-em-Biossegurança-para-Ambientes-Odontologicos.docx"
+    },
+    {
+      "file": "MANUAL-DE-HIGIENIZACAO-E-LIMPEZA.docx",
+      "category": "Higiene_pessoal",
+      "path": "Higiene_pessoal\\limpeza hospitalar\\MANUAL-DE-HIGIENIZACAO-E-LIMPEZA.docx"
+    },
+    {
+      "file": "Dialnet-QuimicaDosProdutosDeLimpeza-8499546.docx",
+      "category": "Higiene_pessoal",
+      "path": "Higiene_pessoal\\Limpeza_casa\\Dialnet-QuimicaDosProdutosDeLimpeza-8499546.docx"
+    },
+    {
+      "file": "MANUAL-DE-HIGIENIZACAO-E-LIMPEZA.docx",
+      "category": "Higiene_pessoal",
+      "path": "Higiene_pessoal\\Limpeza_casa\\MANUAL-DE-HIGIENIZACAO-E-LIMPEZA.docx"
+    },
+    {
+      "file": "seguranca-no-ambiente-hospitalar.docx",
+      "category": "Higiene_pessoal",
+      "path": "Higiene_pessoal\\Limpeza_casa\\seguranca-no-ambiente-hospitalar.docx"
+    },
+    {
+      "file": "11693-Texto do artigo-41174-43033-10-20120712.docx",
+      "category": "Historico_Decisao",
+      "path": "Historico_Decisao\\11693-Texto do artigo-41174-43033-10-20120712.docx"
+    },
+    {
+      "file": "31363-1838-25672-1-10-20241119.docx",
+      "category": "Historico_Decisao",
+      "path": "Historico_Decisao\\31363-1838-25672-1-10-20241119.docx"
+    },
+    {
+      "file": "34875-Texto do artigo-142320-1-10-20210715.docx",
+      "category": "Historico_Decisao",
+      "path": "Historico_Decisao\\34875-Texto do artigo-142320-1-10-20210715.docx"
+    },
+    {
+      "file": "A-teoria-radical-de-um-neurocientista-sobre-como-redes-se-tornam-conscientes.docx",
+      "category": "Historico_Decisao",
+      "path": "Historico_Decisao\\A-teoria-radical-de-um-neurocientista-sobre-como-redes-se-tornam-conscientes.docx"
+    },
+    {
+      "file": "AGI-report-Portugues.docx",
+      "category": "Historico_Decisao",
+      "path": "Historico_Decisao\\AGI-report-Portugues.docx"
+    },
+    {
+      "file": "Caderno-Robotica-Programacao-e-Pensamento-Computacional010425.docx",
+      "category": "Historico_Decisao",
+      "path": "Historico_Decisao\\Caderno-Robotica-Programacao-e-Pensamento-Computacional010425.docx"
+    },
+    {
+      "file": "consciencia_analise_comportamento_2009.docx",
+      "category": "Historico_Decisao",
+      "path": "Historico_Decisao\\consciencia_analise_comportamento_2009.docx"
+    },
+    {
+      "file": "Cybermarvel  5-6 Learning from home Week1-4.docx",
+      "category": "Historico_Decisao",
+      "path": "Historico_Decisao\\Cybermarvel  5-6 Learning from home Week1-4.docx"
+    },
+    {
+      "file": "download (1).docx",
+      "category": "Historico_Decisao",
+      "path": "Historico_Decisao\\download (1).docx"
+    },
+    {
+      "file": "download.docx",
+      "category": "Historico_Decisao",
+      "path": "Historico_Decisao\\download.docx"
+    },
+    {
+      "file": "GrokUnleashed.docx",
+      "category": "Historico_Decisao",
+      "path": "Historico_Decisao\\GrokUnleashed.docx"
+    },
+    {
+      "file": "Inteligência Artificial Generativa & Educação.docx",
+      "category": "Historico_Decisao",
+      "path": "Historico_Decisao\\Inteligência Artificial Generativa & Educação.docx"
+    },
+    {
+      "file": "kairs-2006.1-eneagrama.docx",
+      "category": "Historico_Decisao",
+      "path": "Historico_Decisao\\kairs-2006.1-eneagrama.docx"
+    },
+    {
+      "file": "Superinteligencia.docx",
+      "category": "Historico_Decisao",
+      "path": "Historico_Decisao\\Superinteligencia.docx"
+    },
+    {
+      "file": "TRABALHO_EV117_MD1_SA11_ID5519_09082018085808.docx",
+      "category": "Historico_Decisao",
+      "path": "Historico_Decisao\\TRABALHO_EV117_MD1_SA11_ID5519_09082018085808.docx"
+    },
+    {
+      "file": "damas_manual_table_games.docx",
+      "category": "Jogadora",
+      "path": "Jogadora\\Jogadora_dama\\damas_manual_table_games.docx"
+    },
+    {
+      "file": "damas_manual_table_games.pdf",
+      "category": "Jogadora",
+      "path": "Jogadora\\Jogadora_dama\\damas_manual_table_games.pdf"
+    },
+    {
+      "file": "Poker-Regulamento.docx",
+      "category": "Jogadora",
+      "path": "Jogadora\\Jogadora_poker\\Poker-Regulamento.docx"
+    },
+    {
+      "file": "Poker-Regulamento.pdf",
+      "category": "Jogadora",
+      "path": "Jogadora\\Jogadora_poker\\Poker-Regulamento.pdf"
+    },
+    {
+      "file": "Rafael Andrade Pereira Polesi.docx",
+      "category": "Jogadora",
+      "path": "Jogadora\\Jogadora_poker\\Rafael Andrade Pereira Polesi.docx"
+    },
+    {
+      "file": "Rafael Andrade Pereira Polesi.pdf",
+      "category": "Jogadora",
+      "path": "Jogadora\\Jogadora_poker\\Rafael Andrade Pereira Polesi.pdf"
+    },
+    {
+      "file": "regulamento-2025.docx",
+      "category": "Jogadora",
+      "path": "Jogadora\\Jogadora_poker\\regulamento-2025.docx"
+    },
+    {
+      "file": "regulamento-2025.pdf",
+      "category": "Jogadora",
+      "path": "Jogadora\\Jogadora_poker\\regulamento-2025.pdf"
+    },
+    {
+      "file": "SistemaAutomatizadoDecisão.docx",
+      "category": "Jogadora",
+      "path": "Jogadora\\Jogadora_poker\\SistemaAutomatizadoDecisão.docx"
+    },
+    {
+      "file": "SistemaAutomatizadoDecisão.pdf",
+      "category": "Jogadora",
+      "path": "Jogadora\\Jogadora_poker\\SistemaAutomatizadoDecisão.pdf"
+    },
+    {
+      "file": "tcc final e artigo.docx",
+      "category": "Jogadora",
+      "path": "Jogadora\\Jogadora_poker\\tcc final e artigo.docx"
+    },
+    {
+      "file": "tcc final e artigo.pdf",
+      "category": "Jogadora",
+      "path": "Jogadora\\Jogadora_poker\\tcc final e artigo.pdf"
+    },
+    {
+      "file": "Vampiro A Mascara 3ed.docx",
+      "category": "Jogadora",
+      "path": "Jogadora\\Jogadora_RPG\\Vampiro A Mascara 3ed.docx"
+    },
+    {
+      "file": "Vampiro A Mascara 3ed.pdf",
+      "category": "Jogadora",
+      "path": "Jogadora\\Jogadora_RPG\\Vampiro A Mascara 3ed.pdf"
+    },
+    {
+      "file": "Bobby Fischer Teaches Chess.docx",
+      "category": "Jogadora",
+      "path": "Jogadora\\Jogadora_xadrez\\Bobby Fischer Teaches Chess.docx"
+    },
+    {
+      "file": "Bobby Fischer Teaches Chess.pdf",
+      "category": "Jogadora",
+      "path": "Jogadora\\Jogadora_xadrez\\Bobby Fischer Teaches Chess.pdf"
+    },
+    {
+      "file": "6_modelo_probabilistico.docx",
+      "category": "Jogadora",
+      "path": "Jogadora\\Loterias_caixa\\6_modelo_probabilistico.docx"
+    },
+    {
+      "file": "apostila-introducao-a-estatistica-ifmg-cl.docx",
+      "category": "Jogadora",
+      "path": "Jogadora\\Loterias_caixa\\apostila-introducao-a-estatistica-ifmg-cl.docx"
+    },
+    {
+      "file": "capitulo_1_-_principios_de_amostragem_2.docx",
+      "category": "Jogadora",
+      "path": "Jogadora\\Loterias_caixa\\capitulo_1_-_principios_de_amostragem_2.docx"
+    },
+    {
+      "file": "manual_tecnico_posicionamento_1ed.docx",
+      "category": "Jogadora",
+      "path": "Jogadora\\Loterias_caixa\\manual_tecnico_posicionamento_1ed.docx"
+    },
+    {
+      "file": "MONOGRAFIA_AnáliseProbabilísticaAplicada.docx",
+      "category": "Jogadora",
+      "path": "Jogadora\\Loterias_caixa\\MONOGRAFIA_AnáliseProbabilísticaAplicada.docx"
+    }
+  ],
+  "all_categories_list": [
+    "Geral",
+    "Advogado",
+    "CARDIOLOGIA",
+    "CUIDADOS COM IDOSOS",
+    "cybersecurity",
+    "Desenhista",
+    "ENFERMAGEM",
+    "Estrategista",
+    "GRAMÁTICA COMPLETO",
+    "hacker",
+    "Higiene_pessoal",
+    "Historico_Decisao",
+    "Jogadora",
+    "Limpeza_casa",
+    "Loterias_caixa",
+    "Manutencao_residencial",
+    "Medicina",
+    "NEUROCIÊNCIA E A.I",
+    "Professora",
+    "Religiao"
+  ]
+}

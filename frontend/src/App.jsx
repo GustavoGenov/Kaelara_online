@@ -16,7 +16,17 @@ function App() {
     }
   ]);
   const [isLoading, setIsLoading] = useState(false);
-  const [sessionId] = useState(generateSessionId());
+  const [sessionId, setSessionId] = useState(() => {
+    try {
+      const saved = localStorage.getItem('kaelara_session_id');
+      if (saved) return saved;
+      const newId = generateSessionId();
+      localStorage.setItem('kaelara_session_id', newId);
+      return newId;
+    } catch {
+      return generateSessionId();
+    }
+  });
   const [isListening, setIsListening] = useState(false);
   
   const [isCameraOpen, setIsCameraOpen] = useState(false);
@@ -39,6 +49,23 @@ function App() {
       document.documentElement.classList.add('dark-mode'); document.body.classList.add('dark-mode');
     }
 
+    // Carregar histórico de conversa anterior da sessão salva
+    if (sessionId) {
+      fetch(`${API_BASE}/api/history/${sessionId}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data && data.messages && data.messages.length > 0) {
+            setMessages(
+              data.messages.map((m) => ({
+                role: m.role,
+                content: m.content,
+              }))
+            );
+          }
+        })
+        .catch(() => {});
+    }
+
     const logVisit = async () => {
       try {
         fetch(`${API_BASE}/api/visit`, {
@@ -53,7 +80,21 @@ function App() {
       } catch (e) { console.error('Erro ao registrar visita:', e); }
     };
     logVisit();
-  }, [API_BASE]);
+  }, [API_BASE, sessionId]);
+
+  const startNewChat = () => {
+    const newId = generateSessionId();
+    try {
+      localStorage.setItem('kaelara_session_id', newId);
+    } catch {}
+    setSessionId(newId);
+    setMessages([
+      {
+        role: 'assistant',
+        content: 'Olá! Sou a Kaelara. Como posso ajudar a tornar seu dia mais produtivo e tranquilo hoje?'
+      }
+    ]);
+  };
 
   const toggleTheme = () => {
     if (isDarkMode) {
@@ -318,6 +359,7 @@ function App() {
           onCameraClick={startCamera}
           onToggleTheme={toggleTheme}
           isDarkMode={isDarkMode}
+          onNewChat={startNewChat}
         />
         <CenterPanel messages={messages} onSendMessage={handleSendMessage} isLoading={isLoading} />
       </div>

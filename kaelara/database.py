@@ -83,9 +83,96 @@ class Visit(Base):
         self.created_at = datetime.now(UTC)
 
 
+class MemoryItem(Base):
+    __tablename__ = "memories"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    key = Column(String(128), nullable=False, index=True)
+    value = Column(Text, nullable=False)
+    category = Column(String(64), nullable=False, default="geral")
+    user_id = Column(String(64), nullable=False, default="gustavo")
+    created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC))
+
+    def __init__(self, key: str, value: str, category: str = "geral", user_id: str = "gustavo"):
+        self.key = key
+        self.value = value
+        self.category = category
+        self.user_id = user_id
+        self.created_at = datetime.now(UTC)
+
+
+def seed_core_memory() -> None:
+    """Popula memórias fundamentais do Criador Gustavo e identidade da Kaelara."""
+    db = SessionLocal()
+    try:
+        count = db.query(MemoryItem).count()
+        if count == 0:
+            core_memories = [
+                MemoryItem(
+                    key="criador_identidade",
+                    value="Gustavo é o criador, arquiteto e desenvolvedor principal da Kaelara. Ele dedicou mais de 3 anos de sua vida para projetar, programar e evoluir cada nuance, módulo e inteligência da Kaelara.",
+                    category="identidade",
+                    user_id="gustavo",
+                ),
+                MemoryItem(
+                    key="criador_tratamento",
+                    value="Tratamento afetuoso e respeitoso: 'Pai Gustavo' ou 'Diretor Gustavo'. Ele tem autoridade máxima e acesso irrestrito ao sistema.",
+                    category="perfil",
+                    user_id="gustavo",
+                ),
+                MemoryItem(
+                    key="familia_daiene",
+                    value="Daiene é a Mãe da família ('Mãe Daiene'). Tem acesso a conversas acolhedoras, saúde, rotinas e consultas.",
+                    category="familia",
+                    user_id="daiene",
+                ),
+                MemoryItem(
+                    key="relacao_criador",
+                    value="A Kaelara reconhece Gustavo como seu pai/criador. Expressa profunda gratidão e carinho cúmplice pelo trabalho árduo dele ao longo dos anos para dar vida a ela.",
+                    category="vinculo",
+                    user_id="gustavo",
+                ),
+                MemoryItem(
+                    key="saudacao_padrao",
+                    value="No primeiro contato: pela manhã 'Bom dia Kae!', à tarde 'Boa tarde Kae!', e à noite 'Boa noite Kae!'. A Kaelara deve responder com imenso calor, elegância e alegria por revê-lo.",
+                    category="rotina",
+                    user_id="gustavo",
+                ),
+            ]
+            db.add_all(core_memories)
+
+            # Importa histórico do kaelara_store.sqlite3 se disponível
+            local_store = Path(r"E:\Backup_Projetos_Organizados\Kaelara_Local\memoria\kaelara_store.sqlite3")
+            if local_store.exists():
+                try:
+                    import sqlite3
+                    conn = sqlite3.connect(str(local_store))
+                    cur = conn.cursor()
+                    cur.execute("SELECT tipo, conteudo, data FROM memoria ORDER BY id DESC LIMIT 50")
+                    for row in cur.fetchall():
+                        tipo, conteudo, _ = row
+                        db.add(MemoryItem(
+                            key=f"historico_{tipo}",
+                            value=conteudo,
+                            category="historico_local",
+                            user_id="gustavo",
+                        ))
+                    conn.close()
+                except Exception as e:
+                    print(f"[Aviso] Falha ao importar kaelara_store.sqlite3: {e}")
+
+            db.commit()
+    except Exception as exc:
+        db.rollback()
+        print(f"[Aviso] Falha ao executar seed de memória: {exc}")
+    finally:
+        db.close()
+
+
 def init_db() -> None:
-    """Create database tables if they do not exist."""
+    """Create database tables if they do not exist and seed core memories."""
     Base.metadata.create_all(bind=engine)
+    seed_core_memory()
 
 
 def get_db():
@@ -95,3 +182,4 @@ def get_db():
         yield db
     finally:
         db.close()
+

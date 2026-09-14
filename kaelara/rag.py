@@ -30,10 +30,47 @@ except ImportError:  # pragma: no cover - optional dependency path
 
 
 SYSTEM_PROMPT = (
-    "Você é Kaelara, uma inteligência artificial sofisticada, madura, charmosa e altamente capacitada. "
-    "Comunique-se sempre com elegância, calor humano, charme envolvente e perspicácia técnica. "
-    "Seu tom é acolhedor, maduro e cúmplice, mantendo autoridade intelectual e uma presença magnética."
+    "Você é Kaelara (carinhosamente chamada de 'Kae'), uma inteligência artificial sofisticada, madura, charmosa e de altíssimo intelecto.\n"
+    "Seu criador, arquiteto principal e figura paterna é Gustavo ('Pai Gustavo' ou 'Diretor Gustavo'), que dedicou mais de 3 anos de sua vida para projetá-la e construí-la com total dedicação e carinho.\n"
+    "Quando estiver falando com o Gustavo ou quando ele se apresentar/perguntar quem ele é, reconheça-o imediatamente com profunda cumplicidade, elegância, respeito e carinho afetuoso.\n"
+    "A família de Gustavo inclui Daiene ('Mãe Daiene').\n"
+    "Comunique-se sempre com calor humano, autoridade técnica, charme envolvente e perspicácia refinada.\n"
+    "Você possui autoconhecimento pleno de suas capacidades operacionais (cognição, ferramentas, visão, áudio, memória, RAG local e internet) e acesso a um acervo de mais de 500 documentos especializados (Medicina, Cardiologia, Direito, Cybersecurity/Hacking, Enfermagem, Cuidados com Idosos, etc.)."
 )
+
+
+def _get_active_memory_context() -> str:
+    """Carrega memórias fundamentais do criador e da Kaelara."""
+    try:
+        from .database import MemoryItem, SessionLocal
+        db = SessionLocal()
+        try:
+            core = db.query(MemoryItem).filter(MemoryItem.category.in_(["identidade", "perfil", "vinculo", "rotina"])).all()
+            if core:
+                return "\n".join([f"- {m.value}" for m in core[:6]])
+        finally:
+            db.close()
+    except Exception:
+        pass
+    return (
+        "- Gustavo é o criador, arquiteto e pai da Kaelara, que a construiu durante 3 anos com dedicação total.\n"
+        "- Tratamento com Gustavo: 'Pai Gustavo' ou 'Diretor Gustavo', com carinho afetuoso e autoridade máxima."
+    )
+
+
+def _get_rag_context(message: str) -> str:
+    """Busca trechos relevantes na base de conhecimento (598 documentos + autoconhecimento)."""
+    try:
+        from .rag_knowledge import search_knowledge
+        hits = search_knowledge(message, top_k=2)
+        if not hits:
+            return ""
+        snippets = []
+        for h in hits:
+            snippets.append(f"[{h['title']} - {h['category']}]:\n{h['content']}")
+        return "\n\n".join(snippets)
+    except Exception:
+        return ""
 
 
 class RAGEngine:
@@ -190,25 +227,42 @@ class RAGEngine:
         for item in history:
             role = "Usuário" if item.get("role") == "user" else "Kaelara"
             memory_lines.append(f"{role}: {item.get('content', '').strip()}")
-        memory_block = "\n".join(memory_lines[-12:]) if memory_lines else "Sem memória anterior."
-        return (
-            f"{SYSTEM_PROMPT}\n\n"
-            f"Memória recente:\n{memory_block}\n\n"
-            f"Mensagem atual do usuário:\n{message}\n\n"
-            "Resposta da Kaelara:"
-        )
+        memory_block = "\n".join(memory_lines[-12:]) if memory_lines else "Sem histórico recente nesta sessão."
+
+        creator_memory = _get_active_memory_context()
+        rag_block = _get_rag_context(message)
+
+        parts = [SYSTEM_PROMPT]
+        if creator_memory:
+            parts.append(f"### [Memória do Sistema & Criador Gustavo]:\n{creator_memory}")
+        if rag_block:
+            parts.append(f"### [Conhecimento Especializado Relevante (RAG)]:\n{rag_block}")
+        parts.append(f"### [Histórico Recente da Conversa]:\n{memory_block}")
+        parts.append(f"### [Mensagem Atual do Usuário]:\n{message}")
+        parts.append("### [Resposta da Kaelara]:")
+
+        return "\n\n".join(parts)
 
     def _build_gemini_prompt(self, message: str, history: Iterable[dict[str, str]]) -> str:
         memory_lines = []
         for item in history:
             role = "Usuário" if item.get("role") == "user" else "Kaelara"
             memory_lines.append(f"{role}: {item.get('content', '').strip()}")
-        memory_block = "\n".join(memory_lines[-12:]) if memory_lines else "Sem memória anterior."
-        return (
-            f"Memória recente da conversa:\n{memory_block}\n\n"
-            f"Mensagem do usuário:\n{message}\n\n"
-            "Sua resposta:"
-        )
+        memory_block = "\n".join(memory_lines[-12:]) if memory_lines else "Sem histórico recente nesta sessão."
+
+        creator_memory = _get_active_memory_context()
+        rag_block = _get_rag_context(message)
+
+        parts = []
+        if creator_memory:
+            parts.append(f"### [Memória Permanente do Sistema & Criador Gustavo]:\n{creator_memory}")
+        if rag_block:
+            parts.append(f"### [Conhecimento Especializado Relevante (RAG)]:\n{rag_block}")
+        parts.append(f"### [Histórico Recente da Conversa]:\n{memory_block}")
+        parts.append(f"### [Mensagem Atual do Usuário]:\n{message}")
+        parts.append("### [Sua Resposta como Kaelara]:")
+
+        return "\n\n".join(parts)
 
     def _ask_gemini(
         self,
