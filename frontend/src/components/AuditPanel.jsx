@@ -6,6 +6,7 @@ function AuditPanel({
   insights,
   visitsData,
   memoriesData = [],
+  profilesData = [],
   onLoadSession,
   onDeleteSession,
   onRefreshHistory,
@@ -455,6 +456,48 @@ function AuditPanel({
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Perfis de Usuários Registrados */}
+          <div className="audit-history-item" style={{ background: 'var(--glass-bg)', padding: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <div>
+                <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 700 }}>
+                  Perfis de Usuários Registrados
+                </h3>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                  Total de {profilesData.length} perfis criados e identificados no banco
+                </span>
+              </div>
+              <button onClick={onRefreshHistory} className="audit-btn-action" title="Recarregar perfis">
+                <span className="material-icons" style={{ fontSize: '16px' }}>refresh</span>
+                Atualizar
+              </button>
+            </div>
+
+            {profilesData.length === 0 ? (
+              <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0 }}>
+                Nenhum perfil de usuário registrado ainda.
+              </p>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '10px' }}>
+                {profilesData.map((p) => (
+                  <div key={p.id || p.username} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--glass-border)', borderRadius: '12px', padding: '12px 14px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                      <span className="material-icons" style={{ fontSize: '18px', color: 'var(--primary-pink)' }}>
+                        {p.username === 'gustavo' ? 'workspace_premium' : 'account_circle'}
+                      </span>
+                      <strong style={{ fontSize: '13px' }}>{p.display_name}</strong>
+                    </div>
+                    <div style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <span>Usuário: <code>{p.username}</code></span>
+                      <span>Criado em: {formatDate(p.created_at)}</span>
+                      {p.updated_at && <span>Última atividade: {formatDate(p.updated_at)}</span>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

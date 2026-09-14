@@ -18,6 +18,7 @@ function AuditPage() {
   const [insights, setInsights] = useState(null);
   const [visitsData, setVisitsData] = useState({ total_visits: 0, unique_visitors: 0, today_visits: 0, recent: [] });
   const [memoriesData, setMemoriesData] = useState([]);
+  const [profilesData, setProfilesData] = useState([]);
   const [loaded, setLoaded] = useState(false);
 
   const handleUnlock = async (e) => {
@@ -34,11 +35,12 @@ function AuditPage() {
 
   const loadData = async (query = '') => {
     try {
-      const [histRes, insRes, visitsRes, memRes] = await Promise.all([
+      const [histRes, insRes, visitsRes, memRes, profRes] = await Promise.all([
         fetch(`${API_BASE}/api/history${query ? `?q=${encodeURIComponent(query)}` : ''}`),
         fetch(`${API_BASE}/api/insights`),
         fetch(`${API_BASE}/api/visits?limit=50`),
         fetch(`${API_BASE}/api/memory`),
+        fetch(`${API_BASE}/api/profiles`),
       ]);
 
       if (histRes.ok) {
@@ -56,6 +58,10 @@ function AuditPage() {
       if (memRes.ok) {
         const mData = await memRes.json();
         setMemoriesData(mData.items || []);
+      }
+      if (profRes && profRes.ok) {
+        const pData = await profRes.json();
+        setProfilesData(pData.items || []);
       }
       setLoaded(true);
     } catch (err) {
@@ -144,6 +150,7 @@ function AuditPage() {
           insights={insights}
           visitsData={visitsData}
           memoriesData={memoriesData}
+          profilesData={profilesData}
           onLoadSession={loadSession}
           onDeleteSession={handleDeleteSession}
           onRefreshHistory={() => loadData(historyQuery)}

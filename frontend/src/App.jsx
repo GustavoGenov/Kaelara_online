@@ -8,11 +8,13 @@ function generateSessionId() {
   return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 }
 
+const INITIAL_GREETING = 'Olá! Sou a Kaelara. Como posso te chamar?';
+
 function App() {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: 'Olá! Sou a Kaelara. Como posso ajudar a tornar seu dia mais produtivo e tranquilo hoje?'
+      content: INITIAL_GREETING
     }
   ]);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,23 +51,6 @@ function App() {
       document.documentElement.classList.add('dark-mode'); document.body.classList.add('dark-mode');
     }
 
-    // Carregar histórico de conversa anterior da sessão salva
-    if (sessionId) {
-      fetch(`${API_BASE}/api/history/${sessionId}`)
-        .then((res) => (res.ok ? res.json() : null))
-        .then((data) => {
-          if (data && data.messages && data.messages.length > 0) {
-            setMessages(
-              data.messages.map((m) => ({
-                role: m.role,
-                content: m.content,
-              }))
-            );
-          }
-        })
-        .catch(() => {});
-    }
-
     const logVisit = async () => {
       try {
         fetch(`${API_BASE}/api/visit`, {
@@ -80,7 +65,7 @@ function App() {
       } catch (e) { console.error('Erro ao registrar visita:', e); }
     };
     logVisit();
-  }, [API_BASE, sessionId]);
+  }, [API_BASE]);
 
   const startNewChat = () => {
     const newId = generateSessionId();
@@ -91,7 +76,7 @@ function App() {
     setMessages([
       {
         role: 'assistant',
-        content: 'Olá! Sou a Kaelara. Como posso ajudar a tornar seu dia mais produtivo e tranquilo hoje?'
+        content: INITIAL_GREETING
       }
     ]);
   };
@@ -218,6 +203,13 @@ function App() {
                     fullAnswer += parsed.text;
                   } else if (parsed.type === 'done') {
                     fullAnswer = parsed.answer || fullAnswer;
+                    if (parsed.profile && parsed.profile.is_returning && parsed.messages && parsed.messages.length > 0) {
+                      if (parsed.session_id) {
+                        setSessionId(parsed.session_id);
+                        try { localStorage.setItem('kaelara_session_id', parsed.session_id); } catch {}
+                      }
+                      setMessages(parsed.messages.map(m => ({ role: m.role, content: m.content })));
+                    }
                   }
                 } catch {
                   // chunk incompleto ignorado
@@ -251,7 +243,15 @@ function App() {
         const data = await response.json();
 
         if (response.ok) {
-          setMessages(prev => [...prev, { role: 'assistant', content: data.answer }]);
+          if (data.profile && data.profile.is_returning && data.messages && data.messages.length > 0) {
+            if (data.session_id) {
+              setSessionId(data.session_id);
+              try { localStorage.setItem('kaelara_session_id', data.session_id); } catch {}
+            }
+            setMessages(data.messages.map(m => ({ role: m.role, content: m.content })));
+          } else {
+            setMessages(prev => [...prev, { role: 'assistant', content: data.answer }]);
+          }
           if (supabase) {
             supabase.from('kaelara_messages').insert([{ session_id: sessionId, role: 'assistant', content: data.answer }]).then();
           }

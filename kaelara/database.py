@@ -101,10 +101,34 @@ class MemoryItem(Base):
         self.created_at = datetime.now(UTC)
 
 
+class UserProfile(Base):
+    __tablename__ = "user_profiles"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String(64), unique=True, nullable=False, index=True)
+    display_name = Column(String(128), nullable=False)
+    current_session_id = Column(String(64), nullable=True)
+    created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC))
+    updated_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC))
+
+    def __init__(self, username: str, display_name: str, current_session_id: str | None = None):
+        now = datetime.now(UTC)
+        self.username = username
+        self.display_name = display_name
+        self.current_session_id = current_session_id
+        self.created_at = now
+        self.updated_at = now
+
+
 def seed_core_memory() -> None:
-    """Popula memórias fundamentais do Criador Gustavo e identidade da Kaelara."""
+    """Popula memórias fundamentais do Criador Gustavo e perfis de usuário."""
     db = SessionLocal()
     try:
+        # Seed creator profile
+        gustavo_prof = db.query(UserProfile).filter(UserProfile.username == "gustavo").first()
+        if not gustavo_prof:
+            db.add(UserProfile(username="gustavo", display_name="Gustavo de Castro Bernardes Rosa"))
+            db.commit()
         count = db.query(MemoryItem).count()
         if count == 0:
             core_memories = [

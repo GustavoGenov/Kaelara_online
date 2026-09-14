@@ -5,7 +5,9 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 from datetime import UTC, datetime
+import unicodedata
 from uuid import uuid4
 
 from flask import Flask, Response, jsonify, request, stream_with_context
@@ -14,7 +16,7 @@ from sqlalchemy import desc, func
 
 from .cache import Cache
 from .config import MEDIA_TTL, REDIS_URL
-from .database import ChatMessage, ChatSession, MemoryItem, SessionLocal, Visit, init_db
+from .database import ChatMessage, ChatSession, MemoryItem, SessionLocal, UserProfile, Visit, init_db
 from .rag import RAGEngine
 from .rag_knowledge import get_knowledge_status, search_knowledge
 
@@ -84,6 +86,47 @@ def _recent_history(db, session_id: str, limit: int = 12) -> list[dict[str, str]
     return [{"role": row.role, "content": row.content} for row in rows]
 
 
+def _normalize_name(text: str) -> str:
+    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("utf-8")
+    return re.sub(r"\s+", " ", text.strip().lower())
+
+
+def extract_name_intent(text: str) -> str | None:
+    if not text:
+        return None
+    norm = _normalize_name(text)
+
+    # 1. Patterns with explicit intro keywords
+    connectors = r"(?:\s+(?:e|que|como|mas|queria|gostaria|qual|o\s+que|prazer)\b|[,\.!\?]|$)"
+    patterns = [
+        r"(?:me\s+chamo|meu\s+nome\s+e|chamo-me)\s+([a-z]+(?:\s+(?!(?:e|que|como|mas|queria|gostaria)\b)[a-z]+)?)" + connectors,
+        r"(?:eu\s+sou|sou\s+(?:o|a)?)\s+([a-z]+(?:\s+(?!(?:e|que|como|mas|queria|gostaria)\b)[a-z]+)?)" + connectors,
+        r"(?:pode\s+me\s+chamar\s+de)\s+([a-z]+(?:\s+(?!(?:e|que|como|mas|queria|gostaria)\b)[a-z]+)?)" + connectors,
+    ]
+    for pat in patterns:
+        m = re.search(pat, norm)
+        if m:
+            cand = m.group(1).strip()
+            cand_words = [w for w in cand.split() if w not in ["um", "uma", "alguem", "humano", "amigo", "usuario", "cliente", "aqui"]]
+            if cand_words:
+                return " ".join(cand_words).title()
+
+    # 2. Short response answering "Como posso te chamar?" (1 to 3 words)
+    words = text.strip().split()
+    if 1 <= len(words) <= 3:
+        w1_norm = _normalize_name(words[0])
+        stopwords = {
+            "ola", "oi", "bom", "boa", "dia", "tarde", "noite", "tudo", "bem",
+            "como", "vai", "quem", "voce", "kaelara", "kae", "sim", "nao",
+            "clima", "tempo", "ajuda", "obrigado", "obrigada", "teste", "por", "favor",
+            "qual", "onde", "quando", "porque", "oque"
+        }
+        if w1_norm not in stopwords and len(w1_norm) >= 2 and words[0].isalpha():
+            return " ".join([w.capitalize() for w in words if w.isalpha()])
+
+    return None
+
+
 @app.route("/api/chat", methods=["POST"])
 def chat():
     data = request.get_json(silent=True) or {}
@@ -96,15 +139,69 @@ def chat():
     try:
         display_msg = user_msg or "[Imagem anexada]"
         session = _get_or_create_session(db, data.get("session_id"), display_msg)
+
+        profile_data = None
+        extracted_name = extract_name_intent(user_msg)
+        if extracted_name:
+            norm_u = _normalize_name(extracted_name)
+            if "gustavo" not in norm_u:
+                existing_profile = db.query(UserProfile).filter(UserProfile.username == norm_u).first()
+                if existing_profile:
+                    profile_data = {
+                        "is_returning": True,
+                        "display_name": existing_profile.display_name,
+                        "username": existing_profile.username,
+                    }
+                    if existing_profile.current_session_id and existing_profile.current_session_id != session.session_id:
+                        old_session = db.get(ChatSession, existing_profile.current_session_id)
+                        if old_session:
+                            session = old_session
+                    existing_profile.current_session_id = session.session_id
+                    existing_profile.updated_at = datetime.now(UTC)
+                else:
+                    new_profile = UserProfile(
+                        username=norm_u,
+                        display_name=extracted_name,
+                        current_session_id=session.session_id,
+                    )
+                    db.add(new_profile)
+                    profile_data = {
+                        "is_returning": False,
+                        "display_name": extracted_name,
+                        "username": norm_u,
+                    }
+        else:
+            active_prof = db.query(UserProfile).filter(UserProfile.current_session_id == session.session_id).first()
+            if active_prof:
+                profile_data = {
+                    "is_returning": False,
+                    "display_name": active_prof.display_name,
+                    "username": active_prof.username,
+                }
+
+        if "jalhematei" in _normalize_name(user_msg):
+            g_prof = db.query(UserProfile).filter(UserProfile.username == "gustavo").first()
+            if g_prof:
+                g_prof.current_session_id = session.session_id
+
         history = _recent_history(db, session.session_id)
         db.add(ChatMessage(session_id=session.session_id, role="user", content=display_msg, provider="client"))
+        db.commit()
+
         if image_b64:
             try:
-                answer, provider = rag.ask(user_msg or "Analise esta imagem, por favor.", history=history, image_base64=image_b64)
+                answer, provider = rag.ask(user_msg or "Analise esta imagem, por favor.", history=history, image_base64=image_b64, profile_info=profile_data)
             except TypeError:
-                answer, provider = rag.ask(user_msg or "Analise esta imagem, por favor.", history=history)
+                try:
+                    answer, provider = rag.ask(user_msg or "Analise esta imagem, por favor.", history=history, image_base64=image_b64)
+                except TypeError:
+                    answer, provider = rag.ask(user_msg or "Analise esta imagem, por favor.", history=history)
         else:
-            answer, provider = rag.ask(user_msg, history=history)
+            try:
+                answer, provider = rag.ask(user_msg, history=history, profile_info=profile_data)
+            except TypeError:
+                answer, provider = rag.ask(user_msg, history=history)
+
         db.add(ChatMessage(session_id=session.session_id, role="assistant", content=answer, provider=provider))
         session.updated_at = datetime.now(UTC)
         db.commit()
@@ -121,6 +218,7 @@ def chat():
                 "session_title": session.title,
                 "answer": answer,
                 "provider": provider,
+                "profile": profile_data,
                 "messages": [_serialize_message(message) for message in messages],
             }
         )
@@ -145,16 +243,65 @@ def chat_stream():
         try:
             display_msg = user_msg or "[Imagem anexada]"
             session = _get_or_create_session(db, session_id, display_msg)
+
+            profile_data = None
+            extracted_name = extract_name_intent(user_msg)
+            if extracted_name:
+                norm_u = _normalize_name(extracted_name)
+                if "gustavo" not in norm_u:
+                    existing_profile = db.query(UserProfile).filter(UserProfile.username == norm_u).first()
+                    if existing_profile:
+                        profile_data = {
+                            "is_returning": True,
+                            "display_name": existing_profile.display_name,
+                            "username": existing_profile.username,
+                        }
+                        if existing_profile.current_session_id and existing_profile.current_session_id != session.session_id:
+                            old_session = db.get(ChatSession, existing_profile.current_session_id)
+                            if old_session:
+                                session = old_session
+                        existing_profile.current_session_id = session.session_id
+                        existing_profile.updated_at = datetime.now(UTC)
+                    else:
+                        new_profile = UserProfile(
+                            username=norm_u,
+                            display_name=extracted_name,
+                            current_session_id=session.session_id,
+                        )
+                        db.add(new_profile)
+                        profile_data = {
+                            "is_returning": False,
+                            "display_name": extracted_name,
+                            "username": norm_u,
+                        }
+            else:
+                active_prof = db.query(UserProfile).filter(UserProfile.current_session_id == session.session_id).first()
+                if active_prof:
+                    profile_data = {
+                        "is_returning": False,
+                        "display_name": active_prof.display_name,
+                        "username": active_prof.username,
+                    }
+
+            if "jalhematei" in _normalize_name(user_msg):
+                g_prof = db.query(UserProfile).filter(UserProfile.username == "gustavo").first()
+                if g_prof:
+                    g_prof.current_session_id = session.session_id
+
             history = _recent_history(db, session.session_id)
             db.add(ChatMessage(session_id=session.session_id, role="user", content=display_msg, provider="client"))
             db.commit()
 
-            yield f"data: {json.dumps({'type': 'session', 'session_id': session.session_id, 'session_title': session.title}, ensure_ascii=False)}\n\n"
+            yield f"data: {json.dumps({'type': 'session', 'session_id': session.session_id, 'session_title': session.title, 'profile': profile_data}, ensure_ascii=False)}\n\n"
 
             accumulated = []
             chosen_provider = "gemini"
             query_text = user_msg or "Analise esta imagem, por favor."
-            for chunk_text, provider_name in rag.ask_stream(query_text, history=history, image_base64=image_b64):
+            try:
+                stream_gen = rag.ask_stream(query_text, history=history, image_base64=image_b64, profile_info=profile_data)
+            except TypeError:
+                stream_gen = rag.ask_stream(query_text, history=history, image_base64=image_b64)
+            for chunk_text, provider_name in stream_gen:
                 chosen_provider = provider_name
                 accumulated.append(chunk_text)
                 yield f"data: {json.dumps({'type': 'chunk', 'text': chunk_text}, ensure_ascii=False)}\n\n"
@@ -163,7 +310,14 @@ def chat_stream():
             db.add(ChatMessage(session_id=session.session_id, role="assistant", content=full_answer, provider=chosen_provider))
             session.updated_at = datetime.now(UTC)
             db.commit()
-            yield f"data: {json.dumps({'type': 'done', 'answer': full_answer, 'provider': chosen_provider}, ensure_ascii=False)}\n\n"
+
+            all_msgs = (
+                db.query(ChatMessage)
+                .filter(ChatMessage.session_id == session.session_id)
+                .order_by(ChatMessage.id.asc())
+                .all()
+            )
+            yield f"data: {json.dumps({'type': 'done', 'answer': full_answer, 'provider': chosen_provider, 'session_id': session.session_id, 'profile': profile_data, 'messages': [_serialize_message(m) for m in all_msgs]}, ensure_ascii=False)}\n\n"
         except Exception as exc:
             db.rollback()
             yield f"data: {json.dumps({'type': 'error', 'error': str(exc)}, ensure_ascii=False)}\n\n"
@@ -326,6 +480,7 @@ def insights():
         today_visits = db.query(func.count(Visit.id)).filter(Visit.created_at >= start_of_today).scalar() or 0
 
         total_memories = db.query(func.count(MemoryItem.id)).scalar() or 0
+        total_profiles = db.query(func.count(UserProfile.id)).scalar() or 0
         rag_info = get_knowledge_status()
 
         return jsonify(
@@ -336,6 +491,7 @@ def insights():
                 "unique_visitors": unique_visitors,
                 "today_visits": today_visits,
                 "total_memories": total_memories,
+                "total_profiles": total_profiles,
                 "rag_info": rag_info,
                 "last_provider": last_message.provider if last_message else None,
                 "audio_available": audio is not None,
@@ -343,6 +499,29 @@ def insights():
                 "media_ttl": MEDIA_TTL,
             }
         )
+    finally:
+        db.close()
+
+
+@app.route("/api/profiles", methods=["GET"])
+def get_profiles():
+    db = SessionLocal()
+    try:
+        profiles = db.query(UserProfile).order_by(desc(UserProfile.updated_at)).all()
+        return jsonify({
+            "total": len(profiles),
+            "items": [
+                {
+                    "id": p.id,
+                    "username": p.username,
+                    "display_name": p.display_name,
+                    "current_session_id": p.current_session_id,
+                    "created_at": p.created_at.isoformat() if p.created_at else None,
+                    "updated_at": p.updated_at.isoformat() if p.updated_at else None,
+                }
+                for p in profiles
+            ]
+        })
     finally:
         db.close()
 

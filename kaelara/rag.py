@@ -234,15 +234,16 @@ class RAGEngine:
         history: Iterable[dict[str, str]] | None = None,
         image_base64: str | None = None,
         mime_type: str = "image/jpeg",
+        profile_info: dict | None = None,
     ) -> tuple[str, str]:
         last_error = ""
         for provider in self.providers:
             try:
                 if provider["name"] == "gemini":
-                    prompt = self._build_gemini_prompt(message, history or [])
+                    prompt = self._build_gemini_prompt(message, history or [], profile_info=profile_info)
                     return self._ask_gemini(provider, prompt, image_base64, mime_type), provider["name"]
 
-                prompt = self._build_prompt(message, history or [])
+                prompt = self._build_prompt(message, history or [], profile_info=profile_info)
                 return self._ask_openai_compatible(provider, prompt), provider["name"]
             except Exception as exc:  # pragma: no cover - network dependent
                 last_error = f"{provider['name']}: {exc}"
@@ -264,13 +265,14 @@ class RAGEngine:
         history: Iterable[dict[str, str]] | None = None,
         image_base64: str | None = None,
         mime_type: str = "image/jpeg",
+        profile_info: dict | None = None,
     ) -> Generator[tuple[str, str], None, None]:
         """Yield chunks of (chunk_text, provider_name)."""
         last_error = ""
         for provider in self.providers:
             try:
                 if provider["name"] == "gemini":
-                    prompt = self._build_gemini_prompt(message, history or [])
+                    prompt = self._build_gemini_prompt(message, history or [], profile_info=profile_info)
                     client = self._get_gemini_client(provider["key"])
                     contents: list[any] = []
                     if image_base64 and types is not None:
@@ -307,7 +309,7 @@ class RAGEngine:
                     return
 
                 # Non-Gemini fallback: generate non-streaming chunk
-                prompt = self._build_prompt(message, history or [])
+                prompt = self._build_prompt(message, history or [], profile_info=profile_info)
                 text = self._ask_openai_compatible(provider, prompt)
                 yield text, provider["name"]
                 return
@@ -321,7 +323,7 @@ class RAGEngine:
         )
         yield fallback, "fallback"
 
-    def _build_prompt(self, message: str, history: Iterable[dict[str, str]]) -> str:
+    def _build_prompt(self, message: str, history: Iterable[dict[str, str]], profile_info: dict | None = None) -> str:
         memory_lines = []
         for item in history:
             role = "Usuário" if item.get("role") == "user" else "Kaelara"
@@ -334,6 +336,19 @@ class RAGEngine:
 
         parts = [SYSTEM_PROMPT]
         parts.append(f"### [DIRETRIZ DE SEGURANÇA E AUTENTICAÇÃO DO USUÁRIO]:\n{auth_instruction}")
+        if profile_info:
+            if profile_info.get("is_returning"):
+                parts.append(
+                    f"### [PERFIL DO USUÁRIO IDENTIFICADO]:\n"
+                    f"O usuário se identificou como '{profile_info['display_name']}' (USUÁRIO RECORRENTE COM PERFIL SALVO NO BANCO).\n"
+                    f"INSTRUÇÃO OBRIGATÓRIA: Diga que se lembra dele com carinho e dê as boas-vindas calorosas de volta ('Olá novamente, {profile_info['display_name']}! Que bom ter você de volta. Vamos continuar de onde paramos...'). Continue a conversa a partir de onde pararam."
+                )
+            else:
+                parts.append(
+                    f"### [PERFIL DO USUÁRIO IDENTIFICADO]:\n"
+                    f"O usuário se identificou como '{profile_info['display_name']}' (NOVO PERFIL CRIADO NO BANCO DE DADOS).\n"
+                    f"INSTRUÇÃO OBRIGATÓRIA: Cumprimente-o com simpatia e elegância, confirme que você acabou de criar o perfil dele ('Prazer em conhecer você, {profile_info['display_name']}! Criei o seu perfil com sucesso.') e pergunte como pode ajudá-lo hoje."
+                )
         if creator_memory:
             parts.append(f"### [Memória do Sistema & Criador Gustavo]:\n{creator_memory}")
         if rag_block:
@@ -344,7 +359,7 @@ class RAGEngine:
 
         return "\n\n".join(parts)
 
-    def _build_gemini_prompt(self, message: str, history: Iterable[dict[str, str]]) -> str:
+    def _build_gemini_prompt(self, message: str, history: Iterable[dict[str, str]], profile_info: dict | None = None) -> str:
         memory_lines = []
         for item in history:
             role = "Usuário" if item.get("role") == "user" else "Kaelara"
@@ -357,6 +372,19 @@ class RAGEngine:
 
         parts = []
         parts.append(f"### [DIRETRIZ DE SEGURANÇA E AUTENTICAÇÃO DO USUÁRIO]:\n{auth_instruction}")
+        if profile_info:
+            if profile_info.get("is_returning"):
+                parts.append(
+                    f"### [PERFIL DO USUÁRIO IDENTIFICADO]:\n"
+                    f"O usuário se identificou como '{profile_info['display_name']}' (USUÁRIO RECORRENTE COM PERFIL SALVO NO BANCO).\n"
+                    f"INSTRUÇÃO OBRIGATÓRIA: Diga que se lembra dele com carinho e dê as boas-vindas calorosas de volta ('Olá novamente, {profile_info['display_name']}! Que bom ter você de volta. Vamos continuar de onde paramos...'). Continue a conversa a partir de onde pararam."
+                )
+            else:
+                parts.append(
+                    f"### [PERFIL DO USUÁRIO IDENTIFICADO]:\n"
+                    f"O usuário se identificou como '{profile_info['display_name']}' (NOVO PERFIL CRIADO NO BANCO DE DADOS).\n"
+                    f"INSTRUÇÃO OBRIGATÓRIA: Cumprimente-o com simpatia e elegância, confirme que você acabou de criar o perfil dele ('Prazer em conhecer você, {profile_info['display_name']}! Criei o seu perfil com sucesso.') e pergunte como pode ajudá-lo hoje."
+                )
         if creator_memory:
             parts.append(f"### [Memória Permanente do Sistema & Criador Gustavo]:\n{creator_memory}")
         if rag_block:

@@ -194,3 +194,54 @@ def test_identity_evaluation_protocol():
     state6, _ = evaluate_identity_state(history, "Como estão os sistemas hoje?")
     assert state6 == "CREATOR_VERIFIED"
 
+
+def test_user_profile_lifecycle(client, monkeypatch):
+    from kaelara.database import SessionLocal, UserProfile
+    db = SessionLocal()
+    db.query(UserProfile).filter(UserProfile.username == "giuliano").delete()
+    db.commit()
+    db.close()
+
+    class DummyRag:
+        def ask(self, message, history=None, image_base64=None, profile_info=None):
+            if profile_info and profile_info.get("is_returning"):
+                return (f"Olá novamente, {profile_info['display_name']}!", "test-provider")
+            elif profile_info:
+                return (f"Prazer, {profile_info['display_name']}! Perfil criado.", "test-provider")
+            return ("Resposta teste", "test-provider")
+
+    monkeypatch.setattr('kaelara.app.rag', DummyRag())
+
+    # 1. New user Giuliano says hi
+    resp1 = client.post('/api/chat', json={'message': 'Me chamo Giuliano e queria saber como você funciona'})
+    assert resp1.status_code == 200
+    data1 = resp1.get_json()
+    assert data1['profile'] is not None
+    assert data1['profile']['is_returning'] is False
+    assert data1['profile']['display_name'] == 'Giuliano'
+    sess1 = data1['session_id']
+
+    # 2. Profiles endpoint should now list Giuliano
+    prof_resp = client.get('/api/profiles')
+    assert prof_resp.status_code == 200
+    prof_data = prof_resp.get_json()
+    usernames = [p['username'] for p in prof_data['items']]
+    assert 'giuliano' in usernames
+
+    # 3. Giuliano returns in a new session and identifies himself
+    resp2 = client.post('/api/chat', json={'message': 'Sou o Giuliano'})
+    assert resp2.status_code == 200
+    data2 = resp2.get_json()
+    assert data2['profile'] is not None
+    assert data2['profile']['is_returning'] is True
+    assert data2['profile']['display_name'] == 'Giuliano'
+    # Returned messages should include the previous conversation
+    assert len(data2['messages']) >= 2
+
+    # 4. Insights endpoint includes total_profiles
+    ins_resp = client.get('/api/insights')
+    assert ins_resp.status_code == 200
+    ins_data = ins_resp.get_json()
+    assert 'total_profiles' in ins_data
+    assert ins_data['total_profiles'] >= 1
+
