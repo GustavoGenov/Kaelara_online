@@ -107,32 +107,80 @@ function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onT
 
       <div className="section-title">Atalhos do Google</div>
       <div className="shortcuts-grid">
-        <a href="https://docs.google.com" target="_blank" rel="noreferrer" className="shortcut-item">
-          <div className="shortcut-icon" style={{ background: '#4285F4' }}><span className="material-icons-round" style={{fontSize:'16px'}}>description</span></div>
+        <a href="https://docs.google.com" target="_blank" rel="noreferrer" className="shortcut-item" title="Google Docs">
+          <div className="shortcut-icon" style={{ background: 'rgba(66, 133, 244, 0.1)' }}>
+            <img 
+              src="https://www.google.com/s2/favicons?domain=docs.google.com&sz=64" 
+              alt="Docs" 
+              style={{ width: '18px', height: '18px', display: 'block' }} 
+            />
+          </div>
           Docs
         </a>
-        <a href="https://mail.google.com/tasks/canvas" target="_blank" rel="noreferrer" className="shortcut-item">
-          <div className="shortcut-icon" style={{ background: '#9c27b0' }}><span className="material-icons-round" style={{fontSize:'16px'}}>task_alt</span></div>
+
+        <a href="https://mail.google.com/tasks/canvas" target="_blank" rel="noreferrer" className="shortcut-item" title="Google Tarefas">
+          <div className="shortcut-icon" style={{ background: 'rgba(66, 133, 244, 0.1)' }}>
+            <img 
+              src="https://www.google.com/s2/favicons?domain=tasks.google.com&sz=64" 
+              alt="Tarefas" 
+              style={{ width: '18px', height: '18px', display: 'block' }} 
+            />
+          </div>
           Tarefas
         </a>
-        <a href="https://photos.google.com" target="_blank" rel="noreferrer" className="shortcut-item">
-          <div className="shortcut-icon" style={{ background: '#00bcd4' }}><span className="material-icons-round" style={{fontSize:'16px'}}>photo</span></div>
+
+        <a href="https://photos.google.com" target="_blank" rel="noreferrer" className="shortcut-item" title="Google Fotos">
+          <div className="shortcut-icon" style={{ background: 'rgba(234, 67, 53, 0.1)' }}>
+            <img 
+              src="https://www.google.com/s2/favicons?domain=photos.google.com&sz=64" 
+              alt="Fotos" 
+              style={{ width: '18px', height: '18px', display: 'block' }} 
+            />
+          </div>
           Fotos
         </a>
-        <a href="https://mail.google.com" target="_blank" rel="noreferrer" className="shortcut-item">
-          <div className="shortcut-icon" style={{ background: '#EA4335' }}><span className="material-icons-round" style={{fontSize:'16px'}}>mail</span></div>
+
+        <a href="https://mail.google.com" target="_blank" rel="noreferrer" className="shortcut-item" title="Gmail">
+          <div className="shortcut-icon" style={{ background: 'rgba(234, 67, 53, 0.1)' }}>
+            <img 
+              src="https://www.google.com/s2/favicons?domain=mail.google.com&sz=64" 
+              alt="Gmail" 
+              style={{ width: '18px', height: '18px', display: 'block' }} 
+            />
+          </div>
           Gmail
         </a>
-        <a href="https://drive.google.com" target="_blank" rel="noreferrer" className="shortcut-item">
-          <div className="shortcut-icon" style={{ background: '#34A853' }}><span className="material-icons-round" style={{fontSize:'16px'}}>cloud</span></div>
+
+        <a href="https://drive.google.com" target="_blank" rel="noreferrer" className="shortcut-item" title="Google Drive">
+          <div className="shortcut-icon" style={{ background: 'rgba(52, 168, 83, 0.1)' }}>
+            <img 
+              src="https://www.google.com/s2/favicons?domain=drive.google.com&sz=64" 
+              alt="Drive" 
+              style={{ width: '18px', height: '18px', display: 'block' }} 
+            />
+          </div>
           Drive
         </a>
-        <a href="https://meet.google.com" target="_blank" rel="noreferrer" className="shortcut-item">
-          <div className="shortcut-icon" style={{ background: '#ff9800' }}><span className="material-icons-round" style={{fontSize:'16px'}}>video_call</span></div>
+
+        <a href="https://meet.google.com" target="_blank" rel="noreferrer" className="shortcut-item" title="Google Meet">
+          <div className="shortcut-icon" style={{ background: 'rgba(0, 137, 123, 0.1)' }}>
+            <img 
+              src="https://www.google.com/s2/favicons?domain=meet.google.com&sz=64" 
+              alt="Meet" 
+              style={{ width: '18px', height: '18px', display: 'block' }} 
+            />
+          </div>
           Meet
         </a>
-        <a href="https://calendar.google.com" target="_blank" rel="noreferrer" className="shortcut-item" style={{ gridColumn: '1 / -1' }}>
-          <div className="shortcut-icon" style={{ background: '#FBBC05' }}><span className="material-icons-round" style={{fontSize:'16px'}}>event</span></div>
+
+        <a href="https://calendar.google.com" target="_blank" rel="noreferrer" className="shortcut-item" style={{ gridColumn: '1 / -1' }} title="Google Agenda">
+          <div className="shortcut-icon" style={{ background: 'rgba(66, 133, 244, 0.1)' }}>
+            <img 
+              src="https://www.google.com/s2/favicons?domain=calendar.google.com&sz=64" 
+              alt="Google Agenda" 
+              style={{ width: '18px', height: '18px', display: 'block' }} 
+            />
+          </div>
           Google Agenda
         </a>
       </div>
