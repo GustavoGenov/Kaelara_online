@@ -105,24 +105,28 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 32px 24px;
+  padding: 24px 20px;
   height: 100%;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(247, 141, 167, 0.4) transparent;
 }
-.left-panel::-webkit-scrollbar { width: 0; }
+.left-panel::-webkit-scrollbar { width: 4px; }
+.left-panel::-webkit-scrollbar-track { background: transparent; }
+.left-panel::-webkit-scrollbar-thumb { background: rgba(247, 141, 167, 0.4); border-radius: 4px; }
 
 .brand-header {
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
 .brand-icon {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   background: linear-gradient(135deg, var(--primary-pink), var(--primary-peach));
-  border-radius: 16px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -132,12 +136,12 @@ body {
 
 .brand-title {
   font-weight: 800;
-  font-size: 22px;
+  font-size: 20px;
   color: var(--text-dark);
   letter-spacing: -0.5px;
 }
 .brand-subtitle {
-  font-size: 15px;
+  font-size: 13px;
   color: var(--primary-pink);
   font-weight: 600;
 }
@@ -148,15 +152,15 @@ body {
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 /* Tool Buttons (Audio, Video, File) */
 .tools-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 40px;
+  gap: 10px;
+  margin-bottom: 24px;
 }
 
 .tool-btn {

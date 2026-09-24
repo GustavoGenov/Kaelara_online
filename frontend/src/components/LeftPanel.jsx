@@ -55,7 +55,7 @@ function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onT
           title="Jornal Arcanjo — Broadsheet Digital, Cultura & Notícias"
         >
           <div className="ecosystem-shortcut-icon">
-            <img src="/ecosystem/arcanjo.svg" alt="Jornal Arcanjo" />
+            <img src="/ecosystem/arcanjo.svg" alt="Jornal Arcanjo" width="28" height="28" style={{ width: '28px', height: '28px', display: 'block' }} />
           </div>
           <div className="ecosystem-shortcut-text">
             <div className="ecosystem-shortcut-name">
@@ -74,7 +74,7 @@ function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onT
           title="Cursos Livres Tech & IA — Capacitação e Formação Tecnológica"
         >
           <div className="ecosystem-shortcut-icon">
-            <img src="/ecosystem/cursos.svg" alt="Cursos Livres Tech & IA" />
+            <img src="/ecosystem/cursos.svg" alt="Cursos Livres Tech & IA" width="28" height="28" style={{ width: '28px', height: '28px', display: 'block' }} />
           </div>
           <div className="ecosystem-shortcut-text">
             <div className="ecosystem-shortcut-name">
@@ -93,7 +93,7 @@ function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onT
           title="Voz da IA — Inteligência Artificial, Ciência & Tecnologia"
         >
           <div className="ecosystem-shortcut-icon">
-            <img src="/ecosystem/vozdaia.svg" alt="Voz da IA" />
+            <img src="/ecosystem/vozdaia.svg" alt="Voz da IA" width="28" height="28" style={{ width: '28px', height: '28px', display: 'block' }} />
           </div>
           <div className="ecosystem-shortcut-text">
             <div className="ecosystem-shortcut-name">

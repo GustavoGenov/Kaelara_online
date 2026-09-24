@@ -1,6 +1,7 @@
 {
   "version": 2,
   "routes": [
+    { "handle": "filesystem" },
     {
       "src": "/sitemap.xml",
       "dest": "/sitemap.xml"
@@ -10,12 +11,8 @@
       "dest": "/projeto.html"
     },
     {
-      "src": "/google62kaLeT9Cbih2V6KHKXkv3e2thS6fXOtROjhRANRI_8.html",
-      "dest": "/google62kaLeT9Cbih2V6KHKXkv3e2thS6fXOtROjhRANRI_8.html"
-    },
-    {
-      "src": "/ads.txt",
-      "dest": "/ads.txt"
+      "src": "/sobre",
+      "dest": "/sobre.html"
     },
     {
       "src": "/termos",
@@ -26,12 +23,8 @@
       "dest": "/politica-de-privacidade.html"
     },
     {
-      "src": "/assets/(.*)",
-      "dest": "/assets/"
-    },
-    {
-      "src": "/sobre",
-      "dest": "/sobre.html"
+      "src": "/google62kaLeT9Cbih2V6KHKXkv3e2thS6fXOtROjhRANRI_8.html",
+      "dest": "/google62kaLeT9Cbih2V6KHKXkv3e2thS6fXOtROjhRANRI_8.html"
     },
     {
       "src": "/(.*)",
