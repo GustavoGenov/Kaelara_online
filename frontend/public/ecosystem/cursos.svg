@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="bg-cur" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#091326"/>
+      <stop offset="50%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="amber-texugo" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047"/>
+      <stop offset="40%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <linearGradient id="teal-accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2dd4bf"/>
+      <stop offset="100%" stop-color="#0d9488"/>
+    </linearGradient>
+    <filter id="glow-cur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="64" height="64" rx="16" fill="url(#bg-cur)"/>
+  <rect width="62" height="62" x="1" y="1" rx="15" stroke="url(#amber-texugo)" stroke-width="1.5" stroke-opacity="0.5"/>
+
+  <g filter="url(#glow-cur)">
+    <!-- Tech Graduation / Shield Crest Base -->
+    <path d="M14 26L32 17L50 26L32 35L14 26Z" fill="url(#amber-texugo)"/>
+    <path d="M32 36L46 29.5V40C46 44 39.5 48 32 49C24.5 48 18 44 18 40V29.5L32 36Z" fill="#0f172a" stroke="url(#teal-accent)" stroke-width="2"/>
+    
+    <!-- Badger Stripe & Tech Circuit inside the shield -->
+    <path d="M32 23L32 46" stroke="#f8fafc" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M25 31L32 37L39 31" stroke="url(#amber-texugo)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Code / Fast Forward Nodes -->
+    <circle cx="25" cy="31" r="2" fill="url(#teal-accent)"/>
+    <circle cx="39" cy="31" r="2" fill="url(#teal-accent)"/>
+    <circle cx="32" cy="46" r="2.5" fill="url(#amber-texugo)"/>
+
+    <!-- Badge Spark -->
+    <path d="M49 20L51 15L53 20L58 22L53 24L51 29L49 24L44 22L49 20Z" fill="#fde047"/>
+  </g>
+</svg>

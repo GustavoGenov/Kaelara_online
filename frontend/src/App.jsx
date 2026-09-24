@@ -365,6 +365,21 @@ function App() {
       </div>
 
         <footer className="kaelara-footer">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', flexWrap: 'wrap', marginBottom: '8px' }}>
+            <span style={{ fontSize: '11px', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)', fontWeight: 700 }}>Rede Oficial Integrada:</span>
+            <a href="https://vozdaia.com/" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#38bdf8', textDecoration: 'none', fontSize: '12px', fontWeight: 600 }}>
+              <img src="/ecosystem/vozdaia.svg" alt="Voz da IA" style={{ width: '16px', height: '16px', borderRadius: '4px' }} />
+              Voz da I.A ↗
+            </a>
+            <a href="https://jornal-arcanjo.vercel.app/" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#f59e0b', textDecoration: 'none', fontSize: '12px', fontWeight: 600 }}>
+              <img src="/ecosystem/arcanjo.svg" alt="Jornal Arcanjo" style={{ width: '16px', height: '16px', borderRadius: '4px' }} />
+              Jornal Arcanjo ↗
+            </a>
+            <a href="https://cursos-livres-tech-ia.vercel.app/" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', color: '#2dd4bf', textDecoration: 'none', fontSize: '12px', fontWeight: 600 }}>
+              <img src="/ecosystem/cursos.svg" alt="Cursos Tech & IA" style={{ width: '16px', height: '16px', borderRadius: '4px' }} />
+              Cursos Tech & I.A ↗
+            </a>
+          </div>
           <a href="/projeto" style={{color: '#ff7f76', fontWeight: 'bold'}}>O Projeto Kaelara (Manifesto & Engenharia)</a>
           <a href="/sobre">Quem Somos / Equipe</a>
           <a href="/termos">Termos de Uso</a>

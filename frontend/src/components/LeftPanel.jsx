@@ -47,15 +47,25 @@ function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onT
 
       <div className="section-title">Meus Projetos</div>
       <div className="shortcuts-grid" style={{ marginBottom: '16px' }}>
-        <a href="https://vozdaia.com/" target="_blank" rel="noreferrer" className="shortcut-item">
-          <div className="shortcut-icon" style={{ background: '#9c27b0' }}><span className="material-icons-round" style={{fontSize:'16px'}}>article</span></div>
+        <a href="https://vozdaia.com/" target="_blank" rel="noreferrer" className="shortcut-item" title="Voz da I.A - Combate a Fake News com Tecnologia">
+          <div className="shortcut-icon" style={{ background: 'transparent' }}>
+            <img src="/ecosystem/vozdaia.svg" alt="Voz da IA" style={{ width: '32px', height: '32px', borderRadius: '8px' }} />
+          </div>
           Voz da IA
         </a>
-        <a href="https://marketplace-cd2h.vercel.app/profile" target="_blank" rel="noreferrer" className="shortcut-item">
-          <div className="shortcut-icon" style={{ background: '#ff9800' }}><span className="material-icons-round" style={{fontSize:'16px'}}>storefront</span></div>
-          Marketplace
+        <a href="https://jornal-arcanjo.vercel.app/" target="_blank" rel="noreferrer" className="shortcut-item" title="Jornal Arcanjo - Cultura, Tradições e Espiritualidade">
+          <div className="shortcut-icon" style={{ background: 'transparent' }}>
+            <img src="/ecosystem/arcanjo.svg" alt="Jornal Arcanjo" style={{ width: '32px', height: '32px', borderRadius: '8px' }} />
+          </div>
+          Jornal Arcanjo
         </a>
-        <a href="https://buscador-processos.vercel.app/?mode=jurisprudencia" target="_blank" rel="noreferrer" className="shortcut-item">
+        <a href="https://cursos-livres-tech-ia.vercel.app/" target="_blank" rel="noreferrer" className="shortcut-item" title="Cursos Livres Tech & I.A - Apostilas e Capacitação">
+          <div className="shortcut-icon" style={{ background: 'transparent' }}>
+            <img src="/ecosystem/cursos.svg" alt="Cursos Livres Tech & IA" style={{ width: '32px', height: '32px', borderRadius: '8px' }} />
+          </div>
+          Cursos Tech
+        </a>
+        <a href="https://buscador-processos.vercel.app/?mode=jurisprudencia" target="_blank" rel="noreferrer" className="shortcut-item" title="Buscador de Jurisprudência">
           <div className="shortcut-icon" style={{ background: '#607d8b' }}><span className="material-icons-round" style={{fontSize:'16px'}}>gavel</span></div>
           Processos
         </a>
