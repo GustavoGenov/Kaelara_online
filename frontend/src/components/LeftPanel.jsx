@@ -46,32 +46,66 @@ function LeftPanel({ onVoiceClick, onFileAttach, isListening, onCameraClick, onT
       </div>
 
       <div className="section-title">Meus Projetos</div>
-      <div className="shortcuts-grid" style={{ marginBottom: '16px' }}>
-        <a href="https://vozdaia.com/" target="_blank" rel="noreferrer" className="shortcut-item" title="Voz da I.A - Combate a Fake News com Tecnologia">
-          <div className="shortcut-icon" style={{ background: 'transparent' }}>
-            <img src="/ecosystem/vozdaia.svg" alt="Voz da IA" style={{ width: '32px', height: '32px', borderRadius: '8px' }} />
+      <div className="ecosystem-shortcuts">
+        <a 
+          href="https://jornal-arcanjo.vercel.app/" 
+          target="_blank" 
+          rel="noreferrer" 
+          className="ecosystem-shortcut-item" 
+          title="Jornal Arcanjo — Broadsheet Digital, Cultura & Notícias"
+        >
+          <div className="ecosystem-shortcut-icon">
+            <img src="/ecosystem/arcanjo.svg" alt="Jornal Arcanjo" />
           </div>
-          Voz da IA
-        </a>
-        <a href="https://jornal-arcanjo.vercel.app/" target="_blank" rel="noreferrer" className="shortcut-item" title="Jornal Arcanjo - Cultura, Tradições e Espiritualidade">
-          <div className="shortcut-icon" style={{ background: 'transparent' }}>
-            <img src="/ecosystem/arcanjo.svg" alt="Jornal Arcanjo" style={{ width: '32px', height: '32px', borderRadius: '8px' }} />
+          <div className="ecosystem-shortcut-text">
+            <div className="ecosystem-shortcut-name">
+              <span>Jornal Arcanjo</span>
+              <span className="ecosystem-shortcut-arrow">↗</span>
+            </div>
+            <span className="ecosystem-shortcut-desc">Cultura, Sociedade & Memória</span>
           </div>
-          Jornal Arcanjo
         </a>
-        <a href="https://cursos-livres-tech-ia.vercel.app/" target="_blank" rel="noreferrer" className="shortcut-item" title="Cursos Livres Tech & I.A - Apostilas e Capacitação">
-          <div className="shortcut-icon" style={{ background: 'transparent' }}>
-            <img src="/ecosystem/cursos.svg" alt="Cursos Livres Tech & IA" style={{ width: '32px', height: '32px', borderRadius: '8px' }} />
+
+        <a 
+          href="https://cursos-livres-tech-ia.vercel.app/" 
+          target="_blank" 
+          rel="noreferrer" 
+          className="ecosystem-shortcut-item" 
+          title="Cursos Livres Tech & IA — Capacitação e Formação Tecnológica"
+        >
+          <div className="ecosystem-shortcut-icon">
+            <img src="/ecosystem/cursos.svg" alt="Cursos Livres Tech & IA" />
           </div>
-          Cursos Tech
+          <div className="ecosystem-shortcut-text">
+            <div className="ecosystem-shortcut-name">
+              <span>Cursos Tech &amp; IA</span>
+              <span className="ecosystem-shortcut-arrow">↗</span>
+            </div>
+            <span className="ecosystem-shortcut-desc">Formação Aberta em IA</span>
+          </div>
         </a>
-        <a href="https://buscador-processos.vercel.app/?mode=jurisprudencia" target="_blank" rel="noreferrer" className="shortcut-item" title="Buscador de Jurisprudência">
-          <div className="shortcut-icon" style={{ background: '#607d8b' }}><span className="material-icons-round" style={{fontSize:'16px'}}>gavel</span></div>
-          Processos
+
+        <a 
+          href="https://vozdaia.com/" 
+          target="_blank" 
+          rel="noreferrer" 
+          className="ecosystem-shortcut-item" 
+          title="Voz da IA — Inteligência Artificial, Ciência & Tecnologia"
+        >
+          <div className="ecosystem-shortcut-icon">
+            <img src="/ecosystem/vozdaia.svg" alt="Voz da IA" />
+          </div>
+          <div className="ecosystem-shortcut-text">
+            <div className="ecosystem-shortcut-name">
+              <span>Voz da IA</span>
+              <span className="ecosystem-shortcut-arrow">↗</span>
+            </div>
+            <span className="ecosystem-shortcut-desc">Jornalismo de IA & Futuro</span>
+          </div>
         </a>
       </div>
 
-            <div className="section-title">Atalhos do Google</div>
+      <div className="section-title">Atalhos do Google</div>
       <div className="shortcuts-grid">
         <a href="https://docs.google.com" target="_blank" rel="noreferrer" className="shortcut-item">
           <div className="shortcut-icon" style={{ background: '#4285F4' }}><span className="material-icons-round" style={{fontSize:'16px'}}>description</span></div>
