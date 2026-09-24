@@ -1,4 +1,10 @@
-"""Database setup and persistence models for Kaelara."""
+"""Camada de Persistência e Modelos de Banco de Dados da Kaelara A.I.
+
+Define os modelos ORM via SQLAlchemy para sessões de chat, mensagens,
+telemetria anônima de visitas, itens de memória de longo prazo e perfis de usuário.
+Inclui resolução dinâmica do motor de banco (PostgreSQL/Supabase com fallback para SQLite local)
+e rotinas de população (seed) de memórias afetivas e históricas.
+"""
 
 from datetime import UTC, datetime
 from pathlib import Path
@@ -10,10 +16,20 @@ from .config import BASE_DIR, DATABASE_URL
 
 
 def _build_sqlite_fallback_url() -> str:
+    """Gera a URI de conexão para o banco de dados SQLite local de fallback.
+
+    Returns:
+        String de conexão no formato 'sqlite:///caminho/para/kaelara.db'.
+    """
     return f"sqlite:///{(Path(BASE_DIR) / 'kaelara.db').as_posix()}"
 
 
 def _resolve_engine():
+    """Tenta conectar ao banco de dados primário configurado com fallback resiliente para SQLite.
+
+    Returns:
+        Tupla contendo a instância de engine do SQLAlchemy e a URL ativa utilizada.
+    """
     primary_engine = create_engine(DATABASE_URL, pool_pre_ping=True, echo=False, future=True)
     try:
         with primary_engine.connect() as connection:
@@ -32,6 +48,7 @@ Base = declarative_base()
 
 
 class ChatSession(Base):
+    """Representa uma sessão de diálogo ou conversa com a Kaelara."""
     __tablename__ = "chat_sessions"
 
     session_id = Column(String(64), primary_key=True)
@@ -40,6 +57,12 @@ class ChatSession(Base):
     updated_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC))
 
     def __init__(self, session_id: str, title: str | None = None):
+        """Inicializa uma nova sessão de conversa.
+
+        Args:
+            session_id: Identificador único UUID da sessão.
+            title: Título amigável ou gerado a partir da primeira mensagem.
+        """
         now = datetime.now(UTC)
         self.session_id = session_id
         self.title = title or "Nova conversa"
@@ -48,6 +71,7 @@ class ChatSession(Base):
 
 
 class ChatMessage(Base):
+    """Representa uma mensagem individual (enviada pelo usuário ou pela assistente)."""
     __tablename__ = "chat_messages"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -58,6 +82,14 @@ class ChatMessage(Base):
     created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC))
 
     def __init__(self, session_id: str, role: str, content: str, provider: str = "local"):
+        """Inicializa um registro de mensagem.
+
+        Args:
+            session_id: ID da sessão a qual a mensagem pertence.
+            role: Papel do emissor ('user', 'assistant' ou 'system').
+            content: Conteúdo textual da mensagem.
+            provider: Identificador do modelo/provedor de IA que gerou a resposta (ex: 'gemini', 'openai').
+        """
         self.session_id = session_id
         self.role = role
         self.content = content
@@ -66,6 +98,7 @@ class ChatMessage(Base):
 
 
 class Visit(Base):
+    """Registro anônimo de telemetria e visitação para métricas de tráfego."""
     __tablename__ = "visits"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -76,6 +109,14 @@ class Visit(Base):
     created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC), index=True)
 
     def __init__(self, ip_hash: str | None = None, user_agent: str | None = None, endpoint: str = "/", referrer: str | None = None):
+        """Inicializa um registro de visitação anônima.
+
+        Args:
+            ip_hash: Hash truncado do endereço IP (para privacidade e conformidade com LGPD).
+            user_agent: Identificador do navegador/dispositivo do visitante.
+            endpoint: Caminho da requisição efetuada.
+            referrer: Origem/referência da visita (ex: redes sociais, buscadores).
+        """
         self.ip_hash = ip_hash
         self.user_agent = user_agent
         self.endpoint = endpoint
@@ -84,6 +125,7 @@ class Visit(Base):
 
 
 class MemoryItem(Base):
+    """Item de memória persistente da Kaelara (identidade, laços afetivos e regras de conduta)."""
     __tablename__ = "memories"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -94,6 +136,14 @@ class MemoryItem(Base):
     created_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC))
 
     def __init__(self, key: str, value: str, category: str = "geral", user_id: str = "gustavo"):
+        """Inicializa uma unidade de memória cognitiva de longo prazo.
+
+        Args:
+            key: Identificador temático da memória (ex: 'criador_identidade').
+            value: Conteúdo textual descritivo do fato memorizado.
+            category: Categoria de classificação (ex: 'identidade', 'perfil', 'rotina').
+            user_id: Usuário a quem o fato se refere (default: 'gustavo').
+        """
         self.key = key
         self.value = value
         self.category = category
@@ -102,6 +152,7 @@ class MemoryItem(Base):
 
 
 class UserProfile(Base):
+    """Perfil de usuário identificado para personalização contínua do diálogo."""
     __tablename__ = "user_profiles"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -112,6 +163,13 @@ class UserProfile(Base):
     updated_at = Column(DateTime(timezone=True), nullable=False, default=lambda: datetime.now(UTC), onupdate=lambda: datetime.now(UTC))
 
     def __init__(self, username: str, display_name: str, current_session_id: str | None = None):
+        """Inicializa um perfil de usuário no sistema.
+
+        Args:
+            username: Nome normalizado (slug/minúsculo) para indexação única.
+            display_name: Nome de exibição formatado com letras maiúsculas.
+            current_session_id: ID da sessão de conversa atualmente ativa para este usuário.
+        """
         now = datetime.now(UTC)
         self.username = username
         self.display_name = display_name
@@ -121,10 +179,14 @@ class UserProfile(Base):
 
 
 def seed_core_memory() -> None:
-    """Popula memórias fundamentais do Criador Gustavo e perfis de usuário."""
+    """Popula memórias fundamentais do Criador Gustavo e perfis de usuário no banco de dados.
+
+    Garante que a Kaelara sempre reconheça a arquitetura de seu criador (Gustavo de Castro Bernardes Rosa),
+    seus laços familiares e recupere o histórico da base de dados local quando disponível.
+    """
     db = SessionLocal()
     try:
-        # Seed creator profile
+        # Seed do perfil do criador Gustavo
         gustavo_prof = db.query(UserProfile).filter(UserProfile.username == "gustavo").first()
         if not gustavo_prof:
             db.add(UserProfile(username="gustavo", display_name="Gustavo de Castro Bernardes Rosa"))
@@ -165,7 +227,7 @@ def seed_core_memory() -> None:
             ]
             db.add_all(core_memories)
 
-            # Importa histórico do kaelara_store.sqlite3 se disponível
+            # Importa histórico do kaelara_store.sqlite3 se disponível no ambiente local
             local_store = Path(r"E:\Backup_Projetos_Organizados\Kaelara_Local\memoria\kaelara_store.sqlite3")
             if local_store.exists():
                 try:
@@ -194,13 +256,17 @@ def seed_core_memory() -> None:
 
 
 def init_db() -> None:
-    """Create database tables if they do not exist and seed core memories."""
+    """Cria as tabelas do banco de dados caso não existam e executa o seed de memórias cognitivas."""
     Base.metadata.create_all(bind=engine)
     seed_core_memory()
 
 
 def get_db():
-    """Yield a managed database session."""
+    """Gerador contextual para obtenção de sessões gerenciadas do banco de dados (Dependency Injection).
+
+    Yields:
+        Session: Sessão aberta do SQLAlchemy com fechamento garantido no bloco finally.
+    """
     db = SessionLocal()
     try:
         yield db

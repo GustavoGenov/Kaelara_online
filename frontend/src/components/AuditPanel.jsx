@@ -1,5 +1,26 @@
+/**
+ * ============================================================================
+ * KAELARA A.I — PAINEL DE AUDITORIA, TELEMETRIA & GERENCIAMENTO COGNITIVO
+ * ============================================================================
+ * Dashboard completo contendo abas de:
+ * 1. Conversas: Listagem, busca e expansão de diálogos detalhados.
+ * 2. Telemetria de Visitas: Monitoramento de tráfego, dispositivos e endpoints.
+ * 3. Memórias: Itens de memória de longo prazo aprendidos pela Kaelara.
+ * 4. Perfis de Usuários: Preferências e nomes memorizados.
+ * 5. Explorador RAG: Teste interativo de busca semântica na base de conhecimento.
+ * 6. Insights & Métricas: Taxas de engajamento, sessões únicas e volume total.
+ * 
+ * @module frontend/src/components/AuditPanel
+ */
+
 import React, { useState } from 'react';
 
+/**
+ * Componente do painel analítico administrativo de auditoria.
+ * 
+ * @param {Object} props - Propriedades do painel de auditoria.
+ * @returns {React.JSX.Element} Interface com abas de diagnóstico e tabelas.
+ */
 function AuditPanel({
   historyItems,
   historyQuery,
@@ -17,7 +38,7 @@ function AuditPanel({
   const [sessionDetail, setSessionDetail] = useState(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
 
-  // RAG Search State
+  // Estado para busca e inspeção do mecanismo de RAG
   const [ragQuery, setRagQuery] = useState('');
   const [ragResults, setRagResults] = useState([]);
   const [ragLoading, setRagLoading] = useState(false);
@@ -28,6 +49,11 @@ function AuditPanel({
       ? 'http://127.0.0.1:5000'
       : 'https://kaelara-online.onrender.com');
 
+  /**
+   * Executa busca semântica de teste nos embeddings de conhecimento da Kaelara.
+   * 
+   * @param {React.FormEvent} [e] - Evento de submissão do formulário.
+   */
   const handleSearchRag = async (e) => {
     if (e) e.preventDefault();
     if (!ragQuery.trim()) return;
@@ -43,6 +69,11 @@ function AuditPanel({
     }
   };
 
+  /**
+   * Expande ou recolhe o histórico de mensagens individuais de uma sessão específica.
+   * 
+   * @param {string} sessionId - ID da sessão selecionada.
+   */
   const loadSessionDetail = async (sessionId) => {
     if (expandedSession === sessionId) {
       setExpandedSession(null);

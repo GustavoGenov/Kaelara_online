@@ -1,4 +1,9 @@
-"""RAG (Retrieval-Augmented Generation) engine for Kaelara knowledge base."""
+"""Módulo de Conhecimento e RAG Semântico Especializado da Kaelara.
+
+Fornece mecanismos de recuperação textual e autoconhecimento operacional,
+permitindo que a IA consulte diretrizes, documentos técnicos (mais de 500 títulos em medicina,
+direito, cibersegurança, enfermagem, etc.) e o manual operacional de sua própria arquitetura.
+"""
 
 from __future__ import annotations
 
@@ -23,6 +28,14 @@ _catalog_cache: dict[str, Any] | None = None
 
 
 def _load_autoconhecimento() -> list[dict[str, str]]:
+    """Carrega e segmenta em seções o documento de Autoconhecimento Operacional da Kaelara.
+
+    Busca primariamente no pacote interno `kaelara/knowledge/` e, como fallback,
+    no acervo local da máquina de desenvolvimento.
+
+    Returns:
+        Lista de seções com título, conteúdo, fonte e categoria.
+    """
     global _autoconhecimento_cache
     if _autoconhecimento_cache is not None:
         return _autoconhecimento_cache
@@ -57,6 +70,11 @@ def _load_autoconhecimento() -> list[dict[str, str]]:
 
 
 def _load_catalog() -> dict[str, Any]:
+    """Carrega o catálogo JSON de documentos especializados compilados no acervo.
+
+    Returns:
+        Dicionário com o total de documentos e índice por categoria temática.
+    """
     global _catalog_cache
     if _catalog_cache is not None:
         return _catalog_cache
@@ -75,6 +93,15 @@ def _load_catalog() -> dict[str, Any]:
 
 
 def _score_text(query_terms: set[str], text: str) -> float:
+    """Calcula pontuação de relevância léxica de um texto com base na frequência dos termos.
+
+    Args:
+        query_terms: Conjunto de palavras-chave da consulta.
+        text: Texto alvo para análise de frequência.
+
+    Returns:
+        Pontuação numérica ponderada.
+    """
     text_lower = text.lower()
     score = 0.0
     for term in query_terms:
@@ -87,7 +114,18 @@ def _score_text(query_terms: set[str], text: str) -> float:
 
 
 def search_knowledge(query: str, top_k: int = 3) -> list[dict[str, str]]:
-    """Search for relevant knowledge across autoconhecimento and domain documents."""
+    """Pesquisa por trechos relevantes no acervo de autoconhecimento e documentos temáticos.
+
+    Realiza scoring ponderado de correspondência, dando prioridade para títulos de módulos,
+    seções de autoconhecimento sobre o Criador Gustavo e categorias especializadas.
+
+    Args:
+        query: Consulta ou pergunta enviada pelo usuário.
+        top_k: Número máximo de resultados deduplicados a retornar.
+
+    Returns:
+        Lista de dicionários contendo title, content, source e category.
+    """
     if not query or not query.strip():
         return []
 
@@ -156,7 +194,11 @@ def search_knowledge(query: str, top_k: int = 3) -> list[dict[str, str]]:
 
 
 def get_knowledge_status() -> dict[str, Any]:
-    """Return status of Kaelara knowledge base (local & embedded)."""
+    """Retorna o estado e métricas de cobertura da base de conhecimento da Kaelara.
+
+    Returns:
+        Dicionário com contagem de documentos catalogados, categorias e seções de autoconhecimento.
+    """
     catalog = _load_catalog()
     autoconhecimento = _load_autoconhecimento()
     local_connected = LOCAL_KNOWLEDGE_DIR.exists()

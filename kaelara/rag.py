@@ -1,4 +1,10 @@
-"""LLM orchestration for Kaelara with optional multi-provider support."""
+"""Motor de Orquestração Cognitiva e RAG (Retrieval-Augmented Generation) da Kaelara.
+
+Gerencia o pipeline de inferência multi-provedor (Google Gemini, OpenAI, Groq, xAI Grok),
+executa o protocolo estrito de verificação de identidade do Criador (Gustavo de Castro Bernardes Rosa),
+injeta contexto de memórias afetivas e busca semântica em base especializada de documentos.
+Suporta inferência síncrona e streaming via Server-Sent Events (SSE).
+"""
 
 from __future__ import annotations
 
@@ -53,6 +59,14 @@ SYSTEM_PROMPT = (
 
 
 def _normalize_auth_text(text: str) -> str:
+    """Normaliza o texto para comparação estrita de autenticação (sem acentos e em minúsculas).
+
+    Args:
+        text: String original enviada pelo usuário.
+
+    Returns:
+        String sanitizada sem caracteres diacríticos e com espaços padronizados.
+    """
     text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("utf-8")
     return re.sub(r"\s+", " ", text.strip().lower())
 
@@ -139,7 +153,11 @@ def evaluate_identity_state(history: Iterable[dict[str, str]], message: str) -> 
 
 
 def _get_active_memory_context() -> str:
-    """Carrega memórias fundamentais do criador e da Kaelara."""
+    """Carrega memórias fundamentais do criador e da Kaelara do banco de dados relacional.
+
+    Returns:
+        Texto formatado contendo os fatos centrais de identidade e vínculo afetivo.
+    """
     try:
         from .database import MemoryItem, SessionLocal
         db = SessionLocal()
@@ -158,7 +176,14 @@ def _get_active_memory_context() -> str:
 
 
 def _get_rag_context(message: str) -> str:
-    """Busca trechos relevantes na base de conhecimento (598 documentos + autoconhecimento)."""
+    """Busca trechos relevantes na base de conhecimento especializada (598 documentos + autoconhecimento).
+
+    Args:
+        message: Pergunta ou mensagem atual do usuário.
+
+    Returns:
+        Trechos concatenados com metadados de categoria e fonte, ou string vazia se nada relevante.
+    """
     try:
         from .rag_knowledge import search_knowledge
         hits = search_knowledge(message, top_k=2)
@@ -173,18 +198,38 @@ def _get_rag_context(message: str) -> str:
 
 
 class RAGEngine:
+    """Motor central de inferência cognitiva e geração aumentada por recuperação (RAG)."""
+
     def __init__(self, cache=None):
+        """Inicializa a engine configurando o cache e descobrindo provedores ativos.
+
+        Args:
+            cache: Instância opcional da classe Cache para armazenamento de respostas.
+        """
         self.cache = cache
         self.providers = self._load_providers()
         self._gemini_clients: dict[str, any] = {}
 
     def _get_gemini_client(self, api_key: str):
+        """Obtém ou instancia um cliente singleton do SDK Google GenAI para a chave de API fornecida.
+
+        Args:
+            api_key: Chave de API do Google Gemini.
+
+        Returns:
+            Instância do cliente `genai.Client`.
+        """
         clean_key = api_key.strip().strip("'\"").strip()
         if clean_key not in self._gemini_clients:
             self._gemini_clients[clean_key] = genai.Client(api_key=clean_key)
         return self._gemini_clients[clean_key]
 
     def _load_providers(self) -> list[dict[str, str]]:
+        """Carrega e prioriza a lista de provedores de IA disponíveis conforme as chaves configuradas.
+
+        Returns:
+            Lista de dicionários descrevendo o nome, modelo e credenciais de cada provedor ativo.
+        """
         providers: list[dict[str, str]] = []
 
         if GEMINI_API_KEY and genai is not None:
@@ -236,6 +281,18 @@ class RAGEngine:
         mime_type: str = "image/jpeg",
         profile_info: dict | None = None,
     ) -> tuple[str, str]:
+        """Gera uma resposta síncrona completa consultando os provedores de IA em cascata.
+
+        Args:
+            message: Mensagem de entrada do usuário.
+            history: Histórico recente de turnos da conversa.
+            image_base64: String Base64 opcional contendo imagem para análise multimodal.
+            mime_type: Tipo MIME da imagem (default: 'image/jpeg').
+            profile_info: Dados opcionais do perfil do usuário identificado.
+
+        Returns:
+            Tupla contendo (texto_da_resposta, nome_do_provedor_utilizado).
+        """
         last_error = ""
         for provider in self.providers:
             try:
@@ -267,7 +324,18 @@ class RAGEngine:
         mime_type: str = "image/jpeg",
         profile_info: dict | None = None,
     ) -> Generator[tuple[str, str], None, None]:
-        """Yield chunks of (chunk_text, provider_name)."""
+        """Gera resposta em fluxo contínuo (streaming) produzindo fragmentos de texto via generator.
+
+        Args:
+            message: Mensagem atual do usuário.
+            history: Histórico de turnos da conversa para contexto.
+            image_base64: Imagem codificada em Base64 para inferência visual multimodal.
+            mime_type: Tipo de mídia da imagem (ex: 'image/jpeg', 'image/png').
+            profile_info: Metadados do perfil do usuário para personalização.
+
+        Yields:
+            Tuplas no formato (chunk_text, provider_name).
+        """
         last_error = ""
         for provider in self.providers:
             try:
@@ -308,7 +376,7 @@ class RAGEngine:
                             raise stream_err
                     return
 
-                # Non-Gemini fallback: generate non-streaming chunk
+                # Fallback de inferência para provedores sem streaming ativado
                 prompt = self._build_prompt(message, history or [], profile_info=profile_info)
                 text = self._ask_openai_compatible(provider, prompt)
                 yield text, provider["name"]
@@ -324,6 +392,16 @@ class RAGEngine:
         yield fallback, "fallback"
 
     def _build_prompt(self, message: str, history: Iterable[dict[str, str]], profile_info: dict | None = None) -> str:
+        """Constrói o prompt consolidado para modelos compatíveis com o padrão OpenAI.
+
+        Args:
+            message: Mensagem de entrada do usuário.
+            history: Histórico de turnos anteriores.
+            profile_info: Metadados do perfil do interlocutor.
+
+        Returns:
+            Prompt em formato de texto estruturado com instruções, memórias e contexto RAG.
+        """
         memory_lines = []
         for item in history:
             role = "Usuário" if item.get("role") == "user" else "Kaelara"
@@ -360,6 +438,16 @@ class RAGEngine:
         return "\n\n".join(parts)
 
     def _build_gemini_prompt(self, message: str, history: Iterable[dict[str, str]], profile_info: dict | None = None) -> str:
+        """Constrói o prompt direcionado ao Google Gemini aproveitando system_instruction nativo.
+
+        Args:
+            message: Mensagem atual do usuário.
+            history: Histórico de turnos.
+            profile_info: Informações de perfil do usuário.
+
+        Returns:
+            Prompt em formato de blocos de contexto contextualizados para o Gemini.
+        """
         memory_lines = []
         for item in history:
             role = "Usuário" if item.get("role") == "user" else "Kaelara"
@@ -402,6 +490,17 @@ class RAGEngine:
         image_base64: str | None = None,
         mime_type: str = "image/jpeg",
     ) -> str:
+        """Executa chamada à API do Google Gemini via SDK oficial google-genai.
+
+        Args:
+            provider: Dicionário contendo modelo e chave da API do Gemini.
+            prompt: Texto do prompt montado.
+            image_base64: String Base64 opcional de imagem para análise multimodal.
+            mime_type: Tipo MIME da imagem.
+
+        Returns:
+            Texto gerado pela resposta do modelo Gemini.
+        """
         client = self._get_gemini_client(provider["key"])
 
         contents: list[any] = []
@@ -440,6 +539,15 @@ class RAGEngine:
         return ""
 
     def _ask_openai_compatible(self, provider: dict[str, str], prompt: str) -> str:
+        """Executa chamada HTTP POST a endpoints compatíveis com a especificação da OpenAI.
+
+        Args:
+            provider: Dicionário contendo base_url, model e API key.
+            prompt: Prompt de entrada do usuário.
+
+        Returns:
+            Texto extraído do choices[0].message.content retornado pela API.
+        """
         response = requests.post(
             f"{provider['base_url']}/chat/completions",
             headers={

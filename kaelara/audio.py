@@ -1,37 +1,43 @@
 # kaelara/audio.py
-"""Audio utilities.
-- `listen()` captures microphone audio, performs speech‑to‑text using **SpeechRecognition** (pocketsphinx fallback).
-- `speak(text)` converts text to speech with **pyttsx3** (offline, cross‑platform).
-Both functions are **on‑demand**; they are only used when the `/api/audio` endpoint is called.
-Media files are temporary and will be removed by the cache cleanup (TTL 24 h).
+"""Módulo de Áudio e Voz da Kaelara A.I.
+
+Implementa capacidades de escuta (Speech-to-Text) com cancelamento de ruído e transcrição
+via PocketSphinx (modo offline) e Google Web Speech (modo online).
+Implementa também síntese de fala (Text-to-Speech) offline e multiplataforma com pyttsx3.
+Os arquivos de áudio temporários são gerados com UUID e limpos automaticamente pelo TTL.
 """
+
 import os
+import subprocess
 import time
 import uuid
-import json
 from pathlib import Path
-import subprocess
 
-import speech_recognition as sr
 import pyttsx3
+import speech_recognition as sr
 
-from .config import MEDIA_TTL
 from .cache import Cache
+from .config import MEDIA_TTL
 
-# Temporary directory for audio recordings
+# Diretório temporário para gravações e renderizações de áudio
 BASE_DIR = Path(__file__).resolve().parents[1]
 AUDIO_DIR = BASE_DIR / "media" / "temp"
 AUDIO_DIR.mkdir(parents=True, exist_ok=True)
 
+
 class Audio:
+    """Controlador de recursos de voz (STT e TTS) da Kaelara."""
+
     def __init__(self):
+        """Inicializa o motor de síntese de fala (pyttsx3) e o cache de mídias."""
         self.cache = Cache()
         self.tts_engine = pyttsx3.init()
-        # Adjust voice properties (optional)
-        self.tts_engine.setProperty('rate', 170)
-        self.tts_engine.setProperty('volume', 1.0)
+        # Ajusta propriedades da voz (velocidade e volume)
+        self.tts_engine.setProperty("rate", 170)
+        self.tts_engine.setProperty("volume", 1.0)
 
     def _cleanup_expired(self):
+        """Remove arquivos de áudio temporários cujo tempo de modificação ultrapassou o MEDIA_TTL."""
         now = time.time()
         for file in list(AUDIO_DIR.iterdir()):
             try:
@@ -42,24 +48,35 @@ class Audio:
                 continue
 
     def listen(self, timeout: int = 5, phrase_time_limit: int = 10) -> str:
-        """Capture audio from the default microphone and return a transcription.
-        Uses PocketSphinx (offline) if internet is unavailable; otherwise falls back to Google Web Speech.
+        """Captura áudio do microfone padrão e retorna o texto transcrito.
+
+        Aplica ajuste de ruído ambiente, tenta reconhecimento offline via PocketSphinx
+        e realiza fallback para a Google Web Speech API quando conectado à internet.
+
+        Args:
+            timeout: Tempo limite em segundos aguardando o início da fala.
+            phrase_time_limit: Duração máxima da frase gravada em segundos.
+
+        Returns:
+            String contendo a transcrição do áudio capturado.
         """
         self._cleanup_expired()
         recognizer = sr.Recognizer()
         with sr.Microphone() as source:
             recognizer.adjust_for_ambient_noise(source)
             audio_data = recognizer.listen(source, timeout=timeout, phrase_time_limit=phrase_time_limit)
-        # Try offline recognizer first
+
+        # Tenta motor offline primeiro
         try:
             transcript = recognizer.recognize_sphinx(audio_data)
         except sr.RequestError:
-            # No PocketSphinx engine – fallback to Google (requires internet)
+            # Sem motor PocketSphinx – fallback para Google Web Speech
             try:
                 transcript = recognizer.recognize_google(audio_data)
             except sr.UnknownValueError:
                 transcript = ""
-        # Save raw audio (wav) for possible audit – TTL ensures deletion after 24 h
+
+        # Salva áudio WAV bruto para fins de auditoria ou reprodução
         wav_path = AUDIO_DIR / f"audio_{uuid.uuid4().hex}.wav"
         with open(wav_path, "wb") as f:
             f.write(audio_data.get_wav_data())
@@ -67,15 +84,20 @@ class Audio:
         return transcript
 
     def speak(self, text: str) -> None:
-        """Convert *text* to speech and play it through the default speaker.
-        The generated audio file is stored temporarily and removed after the TTL.
+        """Converte texto em fala audível e executa no dispositivo de som padrão.
+
+        Gera um arquivo WAV temporário que é reproduzido pelo player nativo do SO
+        e registrado no cache para expiração controlada por TTL.
+
+        Args:
+            text: Conteúdo textual a ser falado pela Kaelara.
         """
         self._cleanup_expired()
-        # Generate temporary wav file using pyttsx3 (engine saves to file)
         wav_path = AUDIO_DIR / f"tts_{uuid.uuid4().hex}.wav"
         self.tts_engine.save_to_file(text, str(wav_path))
         self.tts_engine.runAndWait()
-        # Play the file (cross‑platform) – use `ffplay` if available, else default OS player
+
+        # Execução de áudio nativa por sistema operacional
         if os.name == "nt":
             os.startfile(str(wav_path))
         else:

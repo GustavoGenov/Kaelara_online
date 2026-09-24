@@ -1,4 +1,9 @@
-"""Flask application entry point for Kaelara AI."""
+"""Aplicação Web Flask e API RESTful da Kaelara A.I.
+
+Fornece endpoints para chat síncrono e streaming SSE (Server-Sent Events),
+histórico de conversas, telemetria e auditoria de visitas, perfil cognitivo de usuários,
+busca semântica em base de conhecimento RAG, visão computacional e síntese vocal.
+"""
 
 from __future__ import annotations
 
@@ -31,6 +36,7 @@ except ImportError:  # pragma: no cover - optional dependency path
     Audio = None
 
 
+# Instanciação da aplicação Flask com suporte a CORS para o frontend Vite/React
 app = Flask(__name__)
 CORS(app)
 
@@ -46,11 +52,27 @@ audio = Audio() if Audio is not None else None
 
 
 def _session_title(message: str) -> str:
+    """Gera um título truncado e limpo para a sessão com base no primeiro prompt do usuário.
+
+    Args:
+        message: Primeira mensagem enviada na sessão.
+
+    Returns:
+        Título formatado com até 60 caracteres.
+    """
     title = " ".join(message.strip().split())
     return (title[:57] + "...") if len(title) > 60 else (title or "Nova conversa")
 
 
 def _serialize_message(message: ChatMessage) -> dict[str, str]:
+    """Serializa uma instância ORM de ChatMessage para um dicionário JSON serializável.
+
+    Args:
+        message: Objeto da mensagem no banco de dados.
+
+    Returns:
+        Dicionário com id, session_id, role, content, provider e timestamp ISO.
+    """
     return {
         "id": message.id,
         "session_id": message.session_id,
@@ -62,6 +84,16 @@ def _serialize_message(message: ChatMessage) -> dict[str, str]:
 
 
 def _get_or_create_session(db, session_id: str | None, first_message: str) -> ChatSession:
+    """Recupera uma sessão de chat existente ou cria uma nova com identificador UUID.
+
+    Args:
+        db: Sessão ativa do SQLAlchemy.
+        session_id: ID opcional da sessão fornecido pelo cliente.
+        first_message: Mensagem inicial usada para definir o título da conversa.
+
+    Returns:
+        Instância ativa de ChatSession.
+    """
     current_session_id = session_id or uuid4().hex
     session = db.get(ChatSession, current_session_id)
     if session is None:
@@ -75,6 +107,16 @@ def _get_or_create_session(db, session_id: str | None, first_message: str) -> Ch
 
 
 def _recent_history(db, session_id: str, limit: int = 12) -> list[dict[str, str]]:
+    """Carrega os turnos mais recentes da conversa para alimentar a janela de contexto da LLM.
+
+    Args:
+        db: Sessão ativa do SQLAlchemy.
+        session_id: ID da conversa.
+        limit: Quantidade máxima de mensagens a recuperar.
+
+    Returns:
+        Lista ordenada cronologicamente de mensagens contendo 'role' e 'content'.
+    """
     rows = (
         db.query(ChatMessage)
         .filter(ChatMessage.session_id == session_id)
@@ -87,16 +129,28 @@ def _recent_history(db, session_id: str, limit: int = 12) -> list[dict[str, str]
 
 
 def _normalize_name(text: str) -> str:
+    """Normaliza nomes próprios removendo acentuação e convertendo para minúsculas."""
     text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("utf-8")
     return re.sub(r"\s+", " ", text.strip().lower())
 
 
 def extract_name_intent(text: str) -> str | None:
+    """Analisa o texto do usuário para detectar intenção de apresentação pessoal de nome.
+
+    Identifica padrões como 'me chamo X', 'meu nome é X', 'sou o X', ou respostas diretas
+    a perguntas de identificação.
+
+    Args:
+        text: Mensagem enviada pelo usuário.
+
+    Returns:
+        Nome extraído e capitalizado (ex: 'Carlos Eduardo'), ou None se não for identificação.
+    """
     if not text:
         return None
     norm = _normalize_name(text)
 
-    # 1. Patterns with explicit intro keywords
+    # 1. Padrões com palavras-chave explícitas de introdução pessoal
     connectors = r"(?:\s+(?:e|que|como|mas|queria|gostaria|qual|o\s+que|prazer)\b|[,\.!\?]|$)"
     patterns = [
         r"(?:me\s+chamo|meu\s+nome\s+e|chamo-me)\s+([a-z]+(?:\s+(?!(?:e|que|como|mas|queria|gostaria)\b)[a-z]+)?)" + connectors,
@@ -111,7 +165,7 @@ def extract_name_intent(text: str) -> str | None:
             if cand_words:
                 return " ".join(cand_words).title()
 
-    # 2. Short response answering "Como posso te chamar?" (1 to 3 words)
+    # 2. Resposta curta respondendo 'Como posso te chamar?' (de 1 a 3 palavras)
     words = text.strip().split()
     if 1 <= len(words) <= 3:
         w1_norm = _normalize_name(words[0])
@@ -129,6 +183,14 @@ def extract_name_intent(text: str) -> str | None:
 
 @app.route("/api/chat", methods=["POST"])
 def chat():
+    """Endpoint HTTP síncrono para envio e processamento de mensagens.
+
+    Recebe JSON com 'message', 'session_id' e opcional 'image' (Base64).
+    Atualiza perfis de usuário, persiste a mensagem no banco e invoca a RAGEngine.
+
+    Returns:
+        JSON com session_id, session_title, answer, provider, profile e messages.
+    """
     data = request.get_json(silent=True) or {}
     user_msg = (data.get("message") or "").strip()
     image_b64 = data.get("image")
@@ -231,6 +293,14 @@ def chat():
 
 @app.route("/api/chat/stream", methods=["POST"])
 def chat_stream():
+    """Endpoint de streaming em tempo real via Server-Sent Events (SSE).
+
+    Emite eventos contínuos ('chunk', 'done', 'error') permitindo renderização
+    progressiva da resposta no frontend com latência mínima.
+
+    Returns:
+        Response com mimetype 'text/event-stream'.
+    """
     data = request.get_json(silent=True) or {}
     user_msg = (data.get("message") or "").strip()
     image_b64 = data.get("image")
@@ -329,6 +399,15 @@ def chat_stream():
 
 @app.route("/api/history", methods=["GET"])
 def history():
+    """Lista as sessões de conversas anteriores com prévias e contagem de mensagens.
+
+    Query params:
+        limit (int): Máximo de sessões retornadas (padrão: 20, máx: 100).
+        q (str): Filtro de busca textual no conteúdo das mensagens.
+
+    Returns:
+        JSON com a lista de sessões cadastradas.
+    """
     limit = min(max(int(request.args.get("limit", 20)), 1), 100)
     query = (request.args.get("q") or "").strip().lower()
 
@@ -362,6 +441,14 @@ def history():
 
 @app.route("/api/history/<session_id>", methods=["GET"])
 def history_detail(session_id: str):
+    """Retorna o histórico completo e ordenado de mensagens de uma sessão específica.
+
+    Args:
+        session_id: Identificador único da sessão.
+
+    Returns:
+        JSON com session_id, title, timestamps e array de mensagens.
+    """
     db = SessionLocal()
     try:
         session = db.get(ChatSession, session_id)
@@ -388,6 +475,14 @@ def history_detail(session_id: str):
 
 @app.route("/api/history/<session_id>", methods=["DELETE"])
 def history_delete(session_id: str):
+    """Exclui permanentemente uma sessão de conversa e todas as mensagens associadas.
+
+    Args:
+        session_id: Identificador da conversa a ser excluída.
+
+    Returns:
+        JSON com status 'deleted' e session_id.
+    """
     db = SessionLocal()
     try:
         session = db.get(ChatSession, session_id)
@@ -406,6 +501,11 @@ def history_delete(session_id: str):
 
 @app.route("/api/visit", methods=["POST"])
 def record_visit():
+    """Registra uma visita anônima para telemetria de audiência com IP anonimizado por hash.
+
+    Returns:
+        JSON com status 'recorded' e ID do registro.
+    """
     data = request.get_json(silent=True) or {}
     endpoint = str(data.get("endpoint") or "/")[:128]
     referrer = str(data.get("referrer") or request.referrer or "")[:256] or None
@@ -431,6 +531,11 @@ def record_visit():
 
 @app.route("/api/visits", methods=["GET"])
 def get_visits():
+    """Retorna métricas consolidadas de visitas (totais, únicos, diários e lista recente).
+
+    Returns:
+        JSON com total_visits, unique_visitors, today_visits e recent.
+    """
     limit = min(max(int(request.args.get("limit", 50)), 1), 100)
     db = SessionLocal()
     try:
@@ -467,6 +572,13 @@ def get_visits():
 
 @app.route("/api/insights", methods=["GET"])
 def insights():
+    """Retorna visão geral executiva do sistema para o painel de auditoria (PIN 2506).
+
+    Inclui contadores de sessões, mensagens, visitas, perfis, memórias e estado do RAG.
+
+    Returns:
+        JSON com os indicadores operacionais da Kaelara.
+    """
     db = SessionLocal()
     try:
         total_sessions = db.query(func.count(ChatSession.session_id)).scalar() or 0
@@ -505,6 +617,11 @@ def insights():
 
 @app.route("/api/profiles", methods=["GET"])
 def get_profiles():
+    """Retorna a listagem de perfis de usuários identificados e cadastrados no sistema.
+
+    Returns:
+        JSON com total de perfis e array detalhado de cada usuário.
+    """
     db = SessionLocal()
     try:
         profiles = db.query(UserProfile).order_by(desc(UserProfile.updated_at)).all()
@@ -528,6 +645,11 @@ def get_profiles():
 
 @app.route("/api/memory", methods=["GET"])
 def get_memory():
+    """Retorna as unidades de memória de longo prazo persistidas no banco.
+
+    Returns:
+        JSON com total de memórias e array de itens cognitivos.
+    """
     db = SessionLocal()
     try:
         memories = db.query(MemoryItem).order_by(MemoryItem.id.asc()).all()
@@ -551,12 +673,22 @@ def get_memory():
 
 @app.route("/api/rag/status", methods=["GET"])
 def rag_status():
+    """Retorna o status detalhado da base de conhecimento RAG e módulos disponíveis."""
     status = get_knowledge_status()
     return jsonify(status)
 
 
 @app.route("/api/rag/search", methods=["GET"])
 def rag_search():
+    """Executa busca textual ou semântica direta na base de conhecimento especializada.
+
+    Query params:
+        q (str): Texto da pesquisa.
+        limit (int): Número máximo de fragmentos relevantes (default: 5).
+
+    Returns:
+        JSON contendo query e array de resultados ranqueados por score.
+    """
     q = (request.args.get("q") or "").strip()
     limit = min(max(int(request.args.get("limit", 5)), 1), 20)
     results = search_knowledge(q, top_k=limit)
@@ -565,6 +697,14 @@ def rag_search():
 
 @app.route("/api/vision", methods=["POST"])
 def vision_endpoint():
+    """Endpoint de processamento de visão computacional (captura de frame ou detecção facial).
+
+    Payload:
+        action (str): 'capture' para foto da webcam ou 'detect' para reconhecimento facial.
+
+    Returns:
+        JSON com frame_path ou array de faces detectadas.
+    """
     if vision is None:
         return jsonify({"error": "Vision support not available. Install opencv-python-headless and face_recognition."}), 400
 
@@ -580,6 +720,14 @@ def vision_endpoint():
 
 @app.route("/api/audio", methods=["POST"])
 def audio_endpoint():
+    """Endpoint de processamento de áudio (escuta via microfone ou síntese vocal TTS).
+
+    Payload:
+        action (str): 'listen' para capturar voz ou 'speak' para falar o texto enviado em 'text'.
+
+    Returns:
+        JSON com transcrição ou status de reprodução sonora.
+    """
     if audio is None:
         return jsonify({"error": "Audio support not available"}), 400
 
@@ -597,6 +745,7 @@ def audio_endpoint():
 
 @app.route("/health", methods=["GET"])
 def health():
+    """Health check endpoint para monitoramento de liveness e readiness de serviços em nuvem."""
     return jsonify({"status": "ok"})
 
 
